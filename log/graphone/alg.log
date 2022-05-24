@@ -1,0 +1,16 @@
+GRAPH	LiveJournal	[Sun May 22 14:00:33 2022]
+Using threads :	1
+	[Sun May 22 14:00:36 2022]AVG	test=BFS	time=0.78687
+	[Sun May 22 14:00:52 2022]AVG	test=PR	time=3.8148
+	[Sun May 22 14:00:57 2022]AVG	test=SSSP	time=1.32503
+	[Sun May 22 14:01:02 2022]AVG	test=CC	time=1.19954
+GRAPH	LiveJournal	[Sun May 22 14:06:15 2022]
+Using threads :	1
+	[Sun May 22 14:06:19 2022]AVG	test=BFS	time=0.784512
+	[Sun May 22 14:06:35 2022]AVG	test=PR	time=3.98929
+	[Sun May 22 14:06:40 2022]AVG	test=SSSP	time=1.28921
+	[Sun May 22 14:06:45 2022]AVG	test=CC	time=1.20435
+	[Sun May 22 14:33:10 2022]AVG	test=1-HOP	time=396.198
+	[Sun May 22 15:21:15 2022]AVG	test=2-HOP	time=720.966
+	[Sun May 22 15:21:43 2022]AVG	test=LP	time=7.04086
+	[Sun May 22 15:37:27 2022]AVG	test=TC	time=236.057

@@ -1,0 +1,76 @@
+GRAPH	LiveJournal	[Thu May 19 07:56:55 2022]
+Using threads :	1
+	[Thu May 19 07:57:45 2022]AVG	test=LP	time=12.5624
+GRAPH	LiveJournal	[Thu May 19 08:00:52 2022]
+Using threads :	1
+	[Thu May 19 08:01:33 2022]AVG	test=LP	time=10.206
+GRAPH	LiveJournal	[Thu May 19 08:03:05 2022]
+Using threads :	1
+GRAPH	LiveJournal	[Thu May 19 08:06:09 2022]
+Using threads :	1
+GRAPH	LiveJournal	[Thu May 19 09:14:53 2022]
+Using threads :	1
+	[Thu May 19 09:14:55 2022]AVG	test=BFS	time=0.456347
+	[Thu May 19 09:15:32 2022]AVG	test=PR	time=9.18804
+	[Thu May 19 09:16:12 2022]AVG	test=LP	time=10.1725
+	[Thu May 19 09:16:17 2022]AVG	test=CC	time=1.12023
+GRAPH	LiveJournal	[Thu May 19 09:17:12 2022]
+Using threads :	16
+	[Thu May 19 09:17:14 2022]AVG	test=BFS	time=0.454784
+	[Thu May 19 09:17:50 2022]AVG	test=PR	time=9.17329
+	[Thu May 19 09:18:33 2022]AVG	test=LP	time=10.169
+	[Thu May 19 09:18:37 2022]AVG	test=CC	time=1.11433
+GRAPH	LiveJournal	[Thu May 19 09:27:56 2022]
+Using threads :	16
+	[Thu May 19 09:27:58 2022]AVG	test=BFS	time=0.454285
+	[Thu May 19 09:28:35 2022]AVG	test=PR	time=9.18026
+	[Thu May 19 09:29:16 2022]AVG	test=LP	time=10.1801
+	[Thu May 19 09:29:20 2022]AVG	test=CC	time=1.12091
+GRAPH	LiveJournal	[Thu May 19 09:34:48 2022]
+Using threads :	16
+	[Thu May 19 09:34:50 2022]AVG	test=BFS	time=0.455534
+GRAPH	LiveJournal	[Thu May 19 09:36:59 2022]
+Using threads :	16
+	[Thu May 19 09:37:01 2022]AVG	test=BFS	time=0.455493
+GRAPH	LiveJournal	[Thu May 19 14:21:00 2022]
+Using threads :	16
+	[Thu May 19 14:21:01 2022]AVG	test=BFS	time=0.162648
+	[Thu May 19 14:21:10 2022]AVG	test=PR	time=2.31737
+	[Thu May 19 14:21:20 2022]AVG	test=LP	time=2.36074
+	[Thu May 19 14:21:21 2022]AVG	test=CC	time=0.316643
+GRAPH	LiveJournal	[Thu May 19 14:39:02 2022]
+Using threads :	16
+	[Thu May 19 14:39:03 2022]AVG	test=BFS	time=0.156981
+	[Thu May 19 14:39:12 2022]AVG	test=PR	time=2.30108
+	[Thu May 19 14:39:22 2022]AVG	test=LP	time=2.39127
+	[Thu May 19 14:39:23 2022]AVG	test=CC	time=0.314705
+GRAPH	LiveJournal	[Thu May 19 14:46:30 2022]
+Using threads :	16
+	[Thu May 19 14:46:31 2022]AVG	test=BFS	time=0.158798
+	[Thu May 19 14:46:40 2022]AVG	test=PR	time=2.25333
+	[Thu May 19 14:46:49 2022]AVG	test=LP	time=2.39418
+	[Thu May 19 14:46:51 2022]AVG	test=CC	time=0.323555
+GRAPH	LiveJournal	[Thu May 19 14:49:48 2022]
+Using threads :	16
+	[Thu May 19 14:49:49 2022]AVG	test=BFS	time=0.157845
+	[Thu May 19 14:49:58 2022]AVG	test=PR	time=2.30268
+	[Thu May 19 14:50:08 2022]AVG	test=LP	time=2.4131
+	[Thu May 19 14:50:09 2022]AVG	test=CC	time=0.316841
+	[Thu May 19 14:50:10 2022]AVG	test=1-HOP	time=0.30846
+	[Thu May 19 14:51:05 2022]AVG	test=2-HOP	time=13.721
+GRAPH	LiveJournal	[Fri May 20 00:45:36 2022]
+Using threads :	16
+	[Fri May 20 00:45:37 2022]AVG	test=BFS	time=0.156946
+	[Fri May 20 00:45:46 2022]AVG	test=PR	time=2.29742
+	[Fri May 20 00:45:56 2022]AVG	test=LP	time=2.40661
+	[Fri May 20 00:45:57 2022]AVG	test=CC	time=0.310061
+	[Fri May 20 00:45:58 2022]AVG	test=1-HOP	time=0.309373
+	[Fri May 20 00:46:53 2022]AVG	test=2-HOP	time=13.7717
+GRAPH	LiveJournal	[Fri May 20 00:48:53 2022]
+Using threads :	1
+	[Fri May 20 00:48:59 2022]AVG	test=BFS	time=1.42156
+	[Fri May 20 00:50:35 2022]AVG	test=PR	time=24.0994
+	[Fri May 20 00:52:13 2022]AVG	test=LP	time=24.3897
+	[Fri May 20 00:52:24 2022]AVG	test=CC	time=2.89804
+	[Fri May 20 00:52:36 2022]AVG	test=1-HOP	time=3.00176
+	[Fri May 20 01:03:28 2022]AVG	test=2-HOP	time=162.812

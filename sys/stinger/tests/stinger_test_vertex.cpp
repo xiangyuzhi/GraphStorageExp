@@ -1,0 +1,69 @@
+//
+// Created by zxy on 5/6/22.
+//
+//
+// Created by zxy on 4/25/22.
+//
+#include <iostream>
+using  namespace  std;
+#include "stinger_test.h"
+
+#define printeb(eb) cout<<eb->vertexID<<' '<<eb->etype<<' '<<eb->high<<' '<<eb->smallStamp<<' '<<eb->largeStamp<<' '<<ebpool->ebpool + eb->next<<endl;
+
+
+
+void batch_ins_read_v(){
+    std::vector<uint32_t> vertex_sizes = {10, 100, 1000 ,10000,100000,1000000,10000000};
+    PRINT("=============== Load&Read Graph BEGIN ===============");
+
+    for (auto vsize : vertex_sizes){
+        gettimeofday(&t_start, &tzp);
+
+        struct stinger_config_t * stinger_config;
+        stinger_config = (struct stinger_config_t *)xcalloc(1,sizeof(struct stinger_config_t));
+        stinger_config->nv = vsize;
+        stinger_config->nebs = 0;
+        stinger_config->netypes = 1;
+        stinger_config->nvtypes = 1;
+        stinger_config->memory_size = 1<<33;
+        G = stinger_new_full(stinger_config);
+        int64_t consistency = stinger_consistency_check(G,G->max_nv);
+        cout<<consistency<<endl;
+        xfree(stinger_config);
+        gettimeofday(&t_end, &tzp);
+
+
+        float size_gb = G->length / (float) 1073741824;
+        PRINT("Load Graph: Nodes: " << G->max_nv << " Size: " << size_gb << " GB");
+        print_time_elapsed("Load Graph Cost: ", &t_start, &t_end);
+        PRINT("Throughput: " << G->max_nv / (float) cal_time_elapsed(&t_start, &t_end));
+
+        gettimeofday(&t_start, &tzp);
+        for (uint32_t i = 0; i < vsize; i++)
+            vweight_t weight = stinger_vweight_get(G,i);
+        gettimeofday(&t_end, &tzp);
+        print_time_elapsed("Read Vertex Cost: ", &t_start, &t_end);
+        PRINT("Throughput: " << G->max_nv / (float) cal_time_elapsed(&t_start, &t_end));
+
+
+        gettimeofday(&t_start, &tzp);
+        for (uint32_t i = 0; i < vsize; i++)
+            stinger_remove_vertex(G,i);
+        gettimeofday(&t_end, &tzp);
+        print_time_elapsed("Delete Vertex Cost: ", &t_start, &t_end);
+        PRINT("Throughput: " << G->max_nv / (float) cal_time_elapsed(&t_start, &t_end));
+
+    }
+    PRINT("================ Load&Read Graph END ================");
+}
+
+
+int main(){
+    srand(time(NULL));
+    batch_ins_read_v();
+    printf("!!!!! TEST OVER !!!!!\n");
+
+    del_G();
+
+}
+

@@ -1,0 +1,28 @@
+Using threads :	1
+	[Wed May 18 12:28:57 2022]Insert	Batch size=10	Latency=7.5e-06	Throughput=133333
+	[Wed May 18 12:28:57 2022]Read	Batch size=10	Latency=0	Throughput=inf
+	[Wed May 18 12:28:57 2022]Insert	Batch size=100	Latency=3.43e-06	Throughput=291545
+	[Wed May 18 12:28:57 2022]Read	Batch size=100	Latency=0	Throughput=inf
+	[Wed May 18 12:28:57 2022]Insert	Batch size=1000	Latency=5.928e-06	Throughput=168691
+	[Wed May 18 12:28:57 2022]Read	Batch size=1000	Latency=0	Throughput=inf
+	[Wed May 18 12:28:57 2022]Insert	Batch size=10000	Latency=3.8939e-06	Throughput=256812
+	[Wed May 18 12:28:57 2022]Read	Batch size=10000	Latency=0	Throughput=inf
+	[Wed May 18 12:28:57 2022]Insert	Batch size=100000	Latency=5.40379e-06	Throughput=185055
+	[Wed May 18 12:28:57 2022]Read	Batch size=100000	Latency=0	Throughput=inf
+	[Wed May 18 12:29:04 2022]Insert	Batch size=1000000	Latency=7.05529e-06	Throughput=141738
+	[Wed May 18 12:29:04 2022]Read	Batch size=1000000	Latency=0	Throughput=inf
+	[Wed May 18 12:30:37 2022]Insert	Batch size=10000000	Latency=9.31625e-06	Throughput=107339
+	[Wed May 18 12:30:37 2022]Read	Batch size=10000000	Latency=0	Throughput=inf
+Using threads :	16
+	[Wed May 18 12:42:14 2022]Insert	Batch size=10	Latency=7.8e-06	Throughput=128205
+	[Wed May 18 12:42:14 2022]Read	Batch size=10	Latency=0	Throughput=inf
+	[Wed May 18 12:42:14 2022]Insert	Batch size=100	Latency=3.44e-06	Throughput=290698
+	[Wed May 18 12:42:14 2022]Read	Batch size=100	Latency=0	Throughput=inf
+	[Wed May 18 12:42:14 2022]Insert	Batch size=1000	Latency=5.918e-06	Throughput=168976
+	[Wed May 18 12:42:14 2022]Read	Batch size=1000	Latency=0	Throughput=inf
+	[Wed May 18 12:42:14 2022]Insert	Batch size=10000	Latency=3.9677e-06	Throughput=252035
+	[Wed May 18 12:42:14 2022]Read	Batch size=10000	Latency=0	Throughput=inf
+	[Wed May 18 12:42:15 2022]Insert	Batch size=100000	Latency=5.40438e-06	Throughput=185035
+	[Wed May 18 12:42:15 2022]Read	Batch size=100000	Latency=0	Throughput=inf
+	[Wed May 18 12:42:22 2022]Insert	Batch size=1000000	Latency=7.0581e-06	Throughput=141681
+	[Wed May 18 12:42:22 2022]Read	Batch size=1000000	Latency=0	Throughput=inf
