@@ -1,7 +1,8 @@
 //
 // Created by zxy on 5/9/22.
 //
-
+#define OPENMP 1
+#define _OPENMP 1
 #include "stinger_test.h"
 #include "BFS.h"
 #include "PR.h"
@@ -109,33 +110,39 @@ void run_algorithm(commandLine& P) {
     size_t rounds = P.getOptionLongValue("-rounds", 4);
     std::vector<std::string> test_ids;
     // if testname is TC, include it, otherwise exclude it
-    test_ids = {"BFS","PR","SSSP","CC","1-HOP","2-HOP","LP","TC"};
+    test_ids = {"BFS","PR","SSSP","CC","LP","TC"};//"1-HOP","2-HOP",
+
+    auto gname = P.getOptionValue("-gname", "none");
+    std::ofstream alg_file("../../../log/stinger/alg.log",ios::app);
+    alg_file << "GRAPH" << "\t"+gname <<"\t["<<getCurrentTime0()<<']'<<std::endl;
+    auto thd_num = P.getOptionLongValue("-core", 1);
+    alg_file << "Using threads :" << "\t"<<thd_num<<endl;
 
     for (auto test_id : test_ids) {
-        double total_time = 0.0;
+        std::vector<double> total_time;
         for (size_t i=0; i<rounds; i++) {
             double tm = execute(P, test_id);
 
-            std::cout << "\ttest=" << test_id
-                      << "\ttime=" << tm
-                      << "\titeration=" << i << std::endl;
-            total_time += tm;
+            std::cout << "\ttest=" << test_id << "\ttime=" << tm << "\titeration=" << i << std::endl;
+            total_time.emplace_back(tm);
         }
-        std::cout << "AVG"
-                  << "\ttest=" << test_id
-                  << "\ttime=" << (total_time / rounds)
-                  << "\tgraph=" << filename << std::endl;
+        double avg_time = cal_time(total_time);
+        std::cout <<"["<<getCurrentTime0()<<']'<< "AVG"<< "\ttest=" << test_id<< "\ttime=" << avg_time << "\tgraph=" << filename << std::endl;
+        alg_file <<"\t["<<getCurrentTime0()<<']' << "AVG"<< "\ttest=" << test_id<< "\ttime=" << avg_time << std::endl;
     }
+    alg_file.close();
 
     PRINT("=============== Run Algorithm END ===============");
 }
 
 
-// -t BFS -src 1 -r 4 -s -f ../../../data/LiveJournal.adj
+// -src 9 -s -gname LiveJournal -core 1 -f ../../../data/ADJgraph/LiveJournal.adj
 // -t BFS -src 1 -r 4 -s -f ../../../data/slashdot.adj
 int main(int argc, char** argv) {
-    printf("Running LiveGraph using %ld threads.\n", getWorkers());
-    commandLine P(argc, argv, "./test_parallel [-t testname -r rounds -f file -m (mmap)]");
+    commandLine P(argc, argv );
+    auto thd_num = P.getOptionLongValue("-core", 1);
+    omp_set_num_threads(thd_num);
+    printf("Running Stinger using %ld threads.\n", thd_num );
 
     load_graph(P);
     run_algorithm(P);

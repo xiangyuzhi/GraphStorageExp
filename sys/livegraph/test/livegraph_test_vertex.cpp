@@ -31,12 +31,13 @@ void batch_ins_read_v(commandLine& P){
         tx.commit();
         gettimeofday(&t_end, &tzp);
 
-        PRINT(">>> Load Graph Nodes: " << G->get_max_vertex_id() );
+
 //        float size_gb = pcsr.get_size() / (float) 1073741824;
 //        PRINT("Load Graph: Nodes: " << G->get_max_vertex_id() << " Size: " << size_gb << " GB");
         auto txr = G->begin_read_only_transaction();
         uint64_t n = G->get_max_vertex_id();
         txr.abort();
+        PRINT(">>> Load Graph Nodes: " << G->get_max_vertex_id() );
         float time = cal_time_elapsed(&t_start, &t_end);
         PRINT("Throughput: " <<  n/time);
         alg_file <<"\t["<<getCurrentTime0()<<']'<< "Insert"<< "\tBatch size=" << vsize << "\tLatency=" << time/(float)n << "\tThroughput=" << n/time << std::endl;

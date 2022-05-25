@@ -34,7 +34,7 @@ void K_HOP(Graph *G, long k) {
 
     uint64_t n = G->max_nv;
     long _tk = k;
-    for(uint64_t i = 0; i < n; i ++){
+    parallel_for(uint64_t i = 0; i < n; i ++){
         VertexSubset frontier = VertexSubset(i, n);
         k = _tk;
         while(k--){

@@ -22,8 +22,20 @@ link_directories(../../lib/tbb/)
 set(LINK_FLAGS_COMMON "-fopenmp")
 set(COMPILE_FLAGS64 "${COMPILE_FLAGS_COMMON} -DB64")
 
-add_executable(risgraph test/risgraph_test_alg.cpp)
-target_link_libraries(risgraph tbb)
-set_target_properties(risgraph PROPERTIES  COMPILE_FLAGS ${COMPILE_FLAGS64}
+add_executable(risgraph_alg test/risgraph_test_alg.cpp)
+target_link_libraries(risgraph_alg tbb)
+set_target_properties(risgraph_alg PROPERTIES  COMPILE_FLAGS ${COMPILE_FLAGS64}
         LINK_FLAGS ${LINK_FLAGS_COMMON})
+
+add_executable(risgraph_edge test/risgraph_test_edge.cpp)
+target_link_libraries(risgraph_edge tbb)
+set_target_properties(risgraph_edge PROPERTIES  COMPILE_FLAGS ${COMPILE_FLAGS64}
+        LINK_FLAGS ${LINK_FLAGS_COMMON})
+
+add_executable(risgraph_vertex test/risgraph_test_vertex.cpp)
+target_link_libraries(risgraph_vertex tbb)
+set_target_properties(risgraph_vertex PROPERTIES  COMPILE_FLAGS ${COMPILE_FLAGS64}
+        LINK_FLAGS ${LINK_FLAGS_COMMON})
+
+
 #  -src 9 -maxiters 5 -f ../../../data/slashdot.adj

@@ -10,34 +10,16 @@
 //assumes sorted neighbor lists
 template<typename Graph>
 uint64_t countCommon(Graph *G, uint32_t a, uint32_t b) {
-    uint64_t deg_A = G->get_outgoing_degree(a);
-    auto* a_ngh = new uint64_t[deg_A];
-    uint64_t cnt = 0;
-    for (auto e : G->outgoing.get_adjlist(a)) {
-        a_ngh[cnt++] = e.nbr;
-    }
 
-    uint64_t deg_B = G->get_outgoing_degree(b);
-    auto* b_ngh = new uint64_t[deg_B];
-    cnt = 0;
-    for (auto e : G->outgoing.get_adjlist(b)) {
-        b_ngh[cnt++] = e.nbr;
-    }
-
-    std::sort(a_ngh,a_ngh + deg_A);
-    std::sort(b_ngh,b_ngh + deg_B);
-
+    auto a_ngh = G->outgoing.get_adjlist(a);
+    auto b_ngh = G->outgoing.get_adjlist(b);
     uint64_t ans=0;
     uint32_t it_A = 0, it_B = 0;
-    while (it_A!=deg_A && it_B!=deg_B && a_ngh[it_A] < a && b_ngh[it_B] < b) { //count "directed" triangles
-        if (a_ngh[it_A] == b_ngh[it_B]) ++it_A, ++it_B, ans++;
-        else if (a_ngh[it_A] < b_ngh[it_B]) ++it_A;
+    while (it_A<a_ngh.size() && it_B<b_ngh.size() && a_ngh[it_A].nbr < a && b_ngh[it_B].nbr < b) { //count "directed" triangles
+        if (a_ngh[it_A].nbr == b_ngh[it_B].nbr) ++it_A, ++it_B, ans++;
+        else if (a_ngh[it_A].nbr < b_ngh[it_B].nbr) ++it_A;
         else ++it_B;
     }
-
-    free(a_ngh);
-    free(b_ngh);
-
     return ans;
 }
 

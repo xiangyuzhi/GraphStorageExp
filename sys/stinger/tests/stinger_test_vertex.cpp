@@ -12,9 +12,13 @@ using  namespace  std;
 
 
 
-void batch_ins_read_v(){
+void batch_ins_read_v(commandLine& P){
     std::vector<uint32_t> vertex_sizes = {10, 100, 1000 ,10000,100000,1000000,10000000};
     PRINT("=============== Load&Read Graph BEGIN ===============");
+
+    std::ofstream alg_file("../../../log/stinger/vertex.log",ios::app);
+    auto thd_num = P.getOptionLongValue("-core", 1);
+    alg_file << "Using threads :" << "\t"<<thd_num<<endl;
 
     for (auto vsize : vertex_sizes){
         gettimeofday(&t_start, &tzp);
@@ -34,16 +38,21 @@ void batch_ins_read_v(){
 
 
         float size_gb = G->length / (float) 1073741824;
-        PRINT("Load Graph: Nodes: " << G->max_nv << " Size: " << size_gb << " GB");
+        uint64_t n = G->max_nv;
+        PRINT("Load Graph Nodes: " << n << " Size: " << size_gb << " GB");
         print_time_elapsed("Load Graph Cost: ", &t_start, &t_end);
-        PRINT("Throughput: " << G->max_nv / (float) cal_time_elapsed(&t_start, &t_end));
+        float time = cal_time_elapsed(&t_start, &t_end);
+        PRINT("Throughput: " <<  n/time);
+        alg_file <<"\t["<<getCurrentTime0()<<']'<< "Insert"<< "\tBatch size=" << vsize << "\tLatency=" << time/(float)n << "\tThroughput=" << n/time << std::endl;
 
         gettimeofday(&t_start, &tzp);
         for (uint32_t i = 0; i < vsize; i++)
             vweight_t weight = stinger_vweight_get(G,i);
         gettimeofday(&t_end, &tzp);
         print_time_elapsed("Read Vertex Cost: ", &t_start, &t_end);
-        PRINT("Throughput: " << G->max_nv / (float) cal_time_elapsed(&t_start, &t_end));
+        time = cal_time_elapsed(&t_start, &t_end);
+        PRINT("Throughput: " <<  n/time);
+        alg_file <<"\t["<<getCurrentTime0()<<']'<< "Read"<< "\tBatch size=" << vsize << "\tLatency=" << time/(float)n << "\tThroughput=" << n/time << std::endl;
 
 
         gettimeofday(&t_start, &tzp);
@@ -51,16 +60,21 @@ void batch_ins_read_v(){
             stinger_remove_vertex(G,i);
         gettimeofday(&t_end, &tzp);
         print_time_elapsed("Delete Vertex Cost: ", &t_start, &t_end);
-        PRINT("Throughput: " << G->max_nv / (float) cal_time_elapsed(&t_start, &t_end));
+        time = cal_time_elapsed(&t_start, &t_end);
+        PRINT("Throughput: " <<  n/time);
+        alg_file <<"\t["<<getCurrentTime0()<<']'<< "Delete"<< "\tBatch size=" << vsize << "\tLatency=" << time/(float)n << "\tThroughput=" << n/time << std::endl;
 
     }
     PRINT("================ Load&Read Graph END ================");
 }
 
 
-int main(){
+int main(int argc, char** argv){
     srand(time(NULL));
-    batch_ins_read_v();
+    commandLine P(argc, argv);
+    auto thd_num = P.getOptionLongValue("-core", 1);
+    printf("Running Stinger using %ld threads.\n", getWorkers());
+    batch_ins_read_v(P);
     printf("!!!!! TEST OVER !!!!!\n");
 
     del_G();

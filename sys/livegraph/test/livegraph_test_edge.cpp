@@ -119,7 +119,7 @@ void batch_ins_del_read(commandLine& P){
 // -gname LiveJournal -core 1 -f ../../../data/ADJgraph/LiveJournal.adj
 int main(int argc, char** argv) {
     srand(time(NULL));
-    commandLine P(argc, argv, "./graph_bm [-t testname -r rounds -f file");
+    commandLine P(argc, argv);
     auto thd_num = P.getOptionLongValue("-core", 1);
     printf("Running LiveGraph using %ld threads.\n", thd_num );
 

@@ -40,6 +40,25 @@ void del_G(){
         free(G);
 }
 
+double cal_time(std::vector<double> timelist){
+    if(timelist.size() == 1) return timelist[0];
+    sort(timelist.begin(),timelist.end());
+    double st = 0.0;
+    for(uint32_t i = 1 ;i < timelist.size()-1;i++)
+        st += timelist[i];
+    return st/double(timelist.size()-2);
+}
+
+static std::string getCurrentTime0() {
+    time_t result = time(nullptr);
+    std::string ret;
+    ret.resize(64);
+    int wsize = sprintf((char *)&ret[0], "%s", ctime(&result));
+    ret.resize(wsize-1);
+    return ret;
+}
+
+
 void print_time_elapsed(std::string desc, struct timeval* start, struct
         timeval* end)
 {

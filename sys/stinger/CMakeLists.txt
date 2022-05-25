@@ -1,4 +1,10 @@
 
+set(CMAKE_CXX_STANDARD 17)
+if(CMAKE_COMPILER_IS_GNUCXX)
+    SET (CMAKE_CXX_FLAGS "-std=c++17 ${CXX_FLAGS_Common} -O3 -march=native -mfma -fopenmp")
+    message(STATUS "optional:-std=c++17")
+endif(CMAKE_COMPILER_IS_GNUCXX)
+
 
 include_directories(include)
 include_directories(include/utils)
@@ -6,9 +12,17 @@ add_subdirectory(src)
 
 include_directories(include/algorithms)
 
-add_executable(stinger_tst tests/stinger_test_alg.cpp)
+add_executable(stinger_alg tests/stinger_test_alg.cpp)
+target_link_libraries(stinger_alg stinger)
+
+add_executable(stinger_edge tests/stinger_test_edge.cpp)
+target_link_libraries(stinger_edge stinger)
+
+add_executable(stinger_vertex tests/stinger_test_vertex.cpp)
+target_link_libraries(stinger_vertex stinger)
+
 #add_executable(stinger_tst tests/stinger_tst.cpp)
-target_link_libraries(stinger_tst stinger)
+
 
 #  -src 9 -maxiters 5 -f ../../../data/slashdot.adj
 
