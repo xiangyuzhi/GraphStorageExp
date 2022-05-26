@@ -29,12 +29,15 @@ struct HOP_Vertex_F {
 };
 
 
-void K_HOP(Graph &G, long k) {
-    long n = G.get_num_vertices();
-    // printf("HOP_1 num_vertices %lu\n", n);
-    parallel_for (long khop_src = 0; khop_src < n ;khop_src ++){
-        VertexSubset frontier = VertexSubset(khop_src, n);
-        int tk = k;
+template <typename Graph>
+void K_HOP(Graph &G, uint32_t k) {
+
+    uint64_t n = G.get_num_vertices();
+    int nsrc = n/10;
+    for(int i = 1; i<nsrc;i+=10){
+        uint64_t src = i;//r.ith_rand(n) % n;
+        uint32_t tk = k;
+        VertexSubset frontier = VertexSubset(src, n);
         while(tk--){
             VertexSubset next_frontier = edgeMap(G, frontier, HOP_F(), true, 1);
             frontier.del();
@@ -42,6 +45,23 @@ void K_HOP(Graph &G, long k) {
         }
         frontier.del();
     }
+
 }
+
+
+//void K_HOP(Graph &G, long k) {
+//    long n = G.get_num_vertices();
+//    // printf("HOP_1 num_vertices %lu\n", n);
+//    parallel_for (long khop_src = 0; khop_src < n ;khop_src ++){
+//        VertexSubset frontier = VertexSubset(khop_src, n);
+//        int tk = k;
+//        while(tk--){
+//            VertexSubset next_frontier = edgeMap(G, frontier, HOP_F(), true, 1);
+//            frontier.del();
+//            frontier = next_frontier;
+//        }
+//        frontier.del();
+//    }
+//}
 
 #endif //EXP_K_HOP_H

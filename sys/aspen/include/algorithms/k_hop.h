@@ -30,9 +30,26 @@ struct HOP_Vertex_F {
 };
 
 template <typename Graph>
-void K_HOP(Graph &G, long k) {
-    if( k == 1){ oneHop_par(G);}
-    else twoHop_par(G);
+void K_HOP(Graph &G, uint32_t k) {
+
+    uint64_t n = G.num_vertices();
+    auto r = pbbs::random();
+    timer sparse_t, dense_t, fetch_t, other_t;
+    int nsrc = n/10;
+    for(int i = 1; i<nsrc;i+=10){
+        uintV src = i;//r.ith_rand(n) % n;
+        uint32_t tk = k;
+        auto frontier = vertex_subset(n, src);
+        while(tk--){
+            auto output = G.edge_map(frontier, HOP_F(), sparse_t, dense_t, fetch_t, other_t, stay_dense);
+            frontier.del();
+            frontier = output;
+        }
+        frontier.del();
+    }
+
+//    if( k == 1){ oneHop_par(G);}
+//    else twoHop_par(G);
 }
 
 

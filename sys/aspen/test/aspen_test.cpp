@@ -41,17 +41,24 @@ void memory_footprint(commandLine& P) {
     // Print memory statistics of the compressed graph.
     auto S = VG.acquire_version();
 
-    S.graph.print_compression_stats();
-    print_stats(S.graph);
+    //S.graph.print_compression_stats();
+    //print_stats(S.graph);
+    size_t deg = S.graph.find_vertex(1).value.degree();
+    auto *edge = S.graph.find_vertex(1).value.get_edges(1);
+    cout<<"deg: "<<deg<<endl;
+    for(int i=0;i<deg;i++)
+        cout<<edge[i]<<' ';
+    cout<<endl;
+    //size_t rep_size = S.graph.size_in_bytes();
+    //cout << "calculated size in GB (bytes/1024**3) = " << ((rep_size*1.0)/1024/1024/1024) << endl;
 
-    size_t rep_size = S.graph.size_in_bytes();
-    cout << "calculated size in GB (bytes/1024**3) = " << ((rep_size*1.0)/1024/1024/1024) << endl;
+
 }
 
 
-
+// -f ../../../data/ADJgraph/LiveJournal.adj
 int main(int argc, char** argv) {
     cout << "Running Aspen using " << num_workers() << " threads." << endl;
-    commandLine P(argc, argv, "./memory_footprint [-f graph_file -m (mmap)]");
+    commandLine P(argc, argv);
     memory_footprint(P);
 }

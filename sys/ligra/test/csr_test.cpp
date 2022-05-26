@@ -4,11 +4,11 @@
 
 #include "csr_test.h"
 
-// -src 9 -maxiters 5 -f ../../../data/slashdot.adj
+// -f ../../../data/ADJgraph/LiveJournal.adj
 int main(int argc, char** argv){
 
     G = new CSR(true, true);
-    commandLine P(argc, argv, "./graph_bm [-t testname -r rounds -f file");
+    commandLine P(argc, argv);
     load_graph(P);
-
+    cout<< G->get_deg(1);
 }

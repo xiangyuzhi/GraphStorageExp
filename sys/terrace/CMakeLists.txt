@@ -4,7 +4,7 @@ project(terrace)
 #set(CMAKE_CXX_COMPILER /home/zxy/Desktop/Code/cilk/OpenCilk-12.0.0-Linux/bin/clang++)
 set(CMAKE_CXX_STANDARD 17)
 if(CMAKE_COMPILER_IS_GNUCXX)
-    SET (CMAKE_CXX_FLAGS "-std=c++17 ${CXX_FLAGS_Common} -O3  -lpthread -march=native -mtune=native -lnuma -fopenmp") # -levent
+    SET (CMAKE_CXX_FLAGS "-std=c++17 ${CXX_FLAGS_Common} -O3  -lpthread -march=native -mtune=native -lnuma -fopenmp -fcilkplus") # -levent
     message(STATUS "optional:-std=c++17")
 endif(CMAKE_COMPILER_IS_GNUCXX)
 set(CMAKE_CXX_STANDARD 17)

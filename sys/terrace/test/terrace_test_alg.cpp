@@ -5,8 +5,8 @@
 #define ENABLE_LOCK 1
 #define WEIGHTED 0
 #define VERIFY 0
-//#define CILK 1
-#define OPENMP 1
+#define CILK 1
+//#define OPENMP 1
 
 #include "terrace_test.h"
 #include "BellmanFordUnweighted.h"
@@ -207,7 +207,8 @@ int main(int argc, char** argv) {
 
     commandLine P(argc, argv );
     auto thd_num = P.getOptionLongValue("-core", 1);
-    omp_set_num_threads(thd_num);
+//    omp_set_num_threads(thd_num);
+    set_num_workers(thd_num);
     printf("Running Terrace using %ld threads.\n", thd_num );
 
     auto gname = P.getOptionValue("-gname", "none");

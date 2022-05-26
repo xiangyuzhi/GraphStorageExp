@@ -1,5 +1,5 @@
 //#define OPENMP 1
-//#define CILK 1
+#define CILK 1
 
 #include "graph/api.h"
 #include "algorithms/BFS.h"
@@ -7,6 +7,7 @@
 #include "algorithms/LDD.h"
 //#include "algorithms/k-Hop.h"
 #include "algorithms/k_hop.h"
+#include "algorithms/TC.h"
 #include "algorithms/mutual_friends.h"
 #include "algorithms/MIS.h"
 #include "algorithms/Nibble.h"
@@ -107,26 +108,11 @@ double test_lp(G& GA, commandLine& P) {
 
 template <class G>
 double test_tc(G& GA, commandLine& P) {
-    size_t num_sources = static_cast<size_t>(P.getOptionLongValue("-nsrc",1024));
-    double epsilon = P.getOptionDoubleValue("-e",0.000001);
-    size_t T = static_cast<size_t>(P.getOptionLongValue("-T",10));
-    std::cout << std::scientific << setprecision(3) << "Running Nibble,  epsilon = " << epsilon << " T = " << T << std::endl;
 
-    size_t n = GA.num_vertices();
-    auto r = pbbs::random();
-    timer t; t.start();
-    size_t i = 0;
-    size_t b_size = P.getOptionLongValue("-BS", num_sources);
-    while (i < num_sources) {
-        size_t end = std::min(i + b_size, num_sources);
-        parallel_for(i, end, [&] (size_t j) {
-            uintV src = r.ith_rand(j) % n;
-            NibbleSerial(GA, src, epsilon, T);
-        }, 1);
-        i += b_size;
-    }
-    t.stop();
-    return (t.get_total() / num_sources);
+    timer tmr; tmr.start();
+    auto count = TC(GA);
+    tmr.stop();
+    return (tmr.get_total());
 }
 
 
@@ -169,13 +155,14 @@ void run_algorithm(commandLine& P) {
     alg_file << "Using threads :" << "\t"<<thd_num<<endl;
 
     std::vector<std::string> test_ids;
-    test_ids = {"BFS","PR","LP","CC","1-HOP","2-HOP"};//
+    test_ids = {"BFS","PR","LP","CC","TC","1-HOP","2-HOP"};
 
     for (auto test_id : test_ids) {
         std::vector<double> total_time;
         for (size_t i = 0; i < rounds; i++) {
             auto S = VG.acquire_version();
             double tm = execute(S.graph, P, test_id);
+
             std::cout << "RESULT" << fixed << setprecision(6)<< "\ttest=" << test_id<< "\ttime=" << tm<< "\titeration=" << i<< std::endl;
             total_time.emplace_back(tm);
             VG.release_version(std::move(S));
@@ -187,23 +174,14 @@ void run_algorithm(commandLine& P) {
 }
 
 
-// -src 9 -s -gname LiveJournal -core 1 -f ../../../data/ADJgraph/LiveJournal.adj
+// -src 9 -gname LiveJournal -core 16 -f ../../../data/ADJgraph/LiveJournal.adj
 // -t BFS -src 1 -r 4 -s -f ../../../data/slashdot.adj
 int main(int argc, char** argv) {
 
     commandLine P(argc, argv );
-    auto thd_num = P.getOptionLongValue("-core", 2);
-//    omp_set_num_threads(thd_num);
+    auto thd_num = P.getOptionLongValue("-core", 1);
+    set_num_workers(thd_num);
     printf("Running Aspen using %ld threads.\n", thd_num );
 
-//    parallel_for(0,100,[&](int i){
-//        printf("%d ", i);
-//    },1);
-//    _Pragma("omp parallel for") for
-//#pragma omp parallel for
-//    for(int i = 0;i<100;i++){
-//        printf("%d ", i);
-//    }
-//    cout<<endl;
     run_algorithm(P);
 }

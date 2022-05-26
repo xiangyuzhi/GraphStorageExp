@@ -261,7 +261,8 @@ size_t oneHop_par(Graph& G, uintV src) {
 }
 
 template <typename Graph>
-void K_HOP(Graph &G, long k) {
+void K_HOP(Graph &G, uint32_t k, uint32_t nsrc) {
+
     if( k == 1){
         uint32_t n = G.num_vertices();
         for(int i=0;i<2;i++)

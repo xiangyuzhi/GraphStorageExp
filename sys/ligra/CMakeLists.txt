@@ -11,6 +11,9 @@ include_directories(include/algorithms)
 
 add_library(csr SHARED src/csr.cpp)
 
+add_executable(ligra_tst test/csr_test.cpp)
+target_link_libraries(ligra_tst csr -lnuma)
+
 add_executable(ligra_vertex test/csr_test_vertex.cpp)
 target_link_libraries(ligra_vertex csr -lnuma)
 
