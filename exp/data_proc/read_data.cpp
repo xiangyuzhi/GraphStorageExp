@@ -1,24 +1,21 @@
-#include <iostream>
-#include <fstream>
-#include <string>
+//
+// Created by 15743 on 2022/5/27.
+//
 
 #define OPENMP 1
 #include "transfer_utils/graphIO.h"
 #include "transfer_utils/parseCommandLine.h"
 
-
-
 using namespace std;
 #define newA(__E,__n) (__E*) malloc((__n)*sizeof(__E))
 
 
-// ../../data/TSVgraph/out.soc-LiveJournal1 ../../data/ADJgraph/livejournal.adj
-// ../../data/TSVgraph/out.orkut-links ../../data/ADJgraph/orkut.adj
+// -core 1 -f ../../data/TSVgraph/out.soc-LiveJournal1
+// -core 1 -f ../../data/TSVgraph/out.orkut-links
 int main(int argc, char* argv[])
 {
     commandLine P(argc,argv,"[-s] <input SNAP file> <output Ligra file>");
-    char* iFile = P.getArgument(1);
-    char* oFile = P.getArgument(0);
+    char* iFile = P.getArgument(0);
     bool sym = P.getOption("-s");
 
 
@@ -42,9 +39,8 @@ int main(int argc, char* argv[])
         infile >> src >> dst;
         //cout << src <<' ' <<dst<< endl;
         E[i] = edge<uintT>(src , dst);
+        if(i==NumEdge-1) cout<<src<<' '<<dst<<endl;
     }
-
-    cout<<" Transfer use "<<getWorkers()<<" threads."<<endl;
 
     uintT maxrc = max(MaxSrc,MaxDst)+1;
     edgeArray<uintT> G = edgeArray<uintT>(E, maxrc, maxrc, NumEdge);
@@ -52,8 +48,14 @@ int main(int argc, char* argv[])
 
 
 
-    writeGraphToFile<uintT>(graphFromEdges(G,sym),oFile);
-
-    cout<<" Transfer Over."<<endl;
-
 }
+
+
+
+
+
+
+
+
+
+

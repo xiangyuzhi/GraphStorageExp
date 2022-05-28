@@ -1,51 +1,26 @@
-GRAPH	none	[Thu May 19 15:18:35 2022]
-Using threads :	16
-	[Thu May 19 15:18:39 2022]Insert	batch_size=10	time=0.000183451	throughput=54510.4
-	[Thu May 19 15:18:39 2022]Read	batch_size=10	time=1.49012e-06	throughput=6.71089e+06
-	[Thu May 19 15:18:39 2022]Delete	batch_size=10	time=0.000179994	throughput=55557.4
-	[Thu May 19 15:18:39 2022]Insert	batch_size=100	time=0.000466049	throughput=214570
-	[Thu May 19 15:18:39 2022]Read	batch_size=100	time=6.34193e-06	throughput=1.57681e+07
-	[Thu May 19 15:18:39 2022]Delete	batch_size=100	time=0.000445378	throughput=224528
-	[Thu May 19 15:18:39 2022]Insert	batch_size=1000	time=0.00208118	throughput=480497
-	[Thu May 19 15:18:39 2022]Read	batch_size=1000	time=6.21796e-05	throughput=1.60825e+07
-	[Thu May 19 15:18:39 2022]Delete	batch_size=1000	time=0.00205578	throughput=486434
-GRAPH	none	[Thu May 19 15:19:22 2022]
-Using threads :	16
-	[Thu May 19 15:19:52 2022]Insert	batch_size=10	time=8.86679e-05	throughput=112780
-	[Thu May 19 15:19:52 2022]Read	batch_size=10	time=8.34465e-07	throughput=1.19837e+07
-	[Thu May 19 15:19:52 2022]Delete	batch_size=10	time=8.39353e-05	throughput=119139
-	[Thu May 19 15:19:52 2022]Insert	batch_size=100	time=0.000760937	throughput=131417
-	[Thu May 19 15:19:52 2022]Read	batch_size=100	time=6.31809e-06	throughput=1.58276e+07
-	[Thu May 19 15:19:52 2022]Delete	batch_size=100	time=0.000732934	throughput=136438
-	[Thu May 19 15:19:52 2022]Insert	batch_size=1000	time=0.00750656	throughput=133217
-	[Thu May 19 15:19:52 2022]Read	batch_size=1000	time=7.0715e-05	throughput=1.41413e+07
-	[Thu May 19 15:19:52 2022]Delete	batch_size=1000	time=0.00672023	throughput=148804
-GRAPH	none	[Thu May 19 15:21:35 2022]
-Using threads :	16
-GRAPH	none	[Thu May 19 15:21:46 2022]
-Using threads :	16
-GRAPH	none	[Thu May 19 15:23:01 2022]
-Using threads :	16
-GRAPH	none	[Thu May 19 15:25:40 2022]
-Using threads :	16
-	[Thu May 19 15:25:40 2022]Insert	batch_size=10	time=0.000143814	throughput=69534.2
-	[Thu May 19 15:25:40 2022]Read	batch_size=10	time=1.45435e-06	throughput=6.87591e+06
-	[Thu May 19 15:25:40 2022]Delete	batch_size=10	time=0.000135744	throughput=73668.3
-	[Thu May 19 15:25:40 2022]Insert	batch_size=100	time=0.000361884	throughput=276332
-	[Thu May 19 15:25:40 2022]Read	batch_size=100	time=6.8903e-06	throughput=1.45132e+07
-	[Thu May 19 15:25:40 2022]Delete	batch_size=100	time=0.00035063	throughput=285201
-	[Thu May 19 15:25:40 2022]Insert	batch_size=1000	time=0.00157754	throughput=633897
-	[Thu May 19 15:25:40 2022]Read	batch_size=1000	time=6.11663e-05	throughput=1.63489e+07
-	[Thu May 19 15:25:40 2022]Delete	batch_size=1000	time=0.00165277	throughput=605047
-	[Thu May 19 15:25:40 2022]Insert	batch_size=10000	time=0.00749142	throughput=1.33486e+06
-	[Thu May 19 15:25:40 2022]Read	batch_size=10000	time=0.00060184	throughput=1.66157e+07
-	[Thu May 19 15:25:40 2022]Delete	batch_size=10000	time=0.0073284	throughput=1.36455e+06
-	[Thu May 19 15:25:43 2022]Insert	batch_size=100000	time=0.0444145	throughput=2.25152e+06
-	[Thu May 19 15:25:43 2022]Read	batch_size=100000	time=0.00584168	throughput=1.71184e+07
-	[Thu May 19 15:25:43 2022]Delete	batch_size=100000	time=0.044162	throughput=2.26439e+06
-	[Thu May 19 15:26:00 2022]Insert	batch_size=1000000	time=0.077364	throughput=1.29259e+07
-	[Thu May 19 15:26:00 2022]Read	batch_size=1000000	time=0.0587098	throughput=1.70329e+07
-	[Thu May 19 15:26:00 2022]Delete	batch_size=1000000	time=0.0749199	throughput=1.33476e+07
-	[Thu May 19 15:28:32 2022]Insert	batch_size=10000000	time=0.451699	throughput=2.21386e+07
-	[Thu May 19 15:28:32 2022]Read	batch_size=10000000	time=0.580999	throughput=1.72117e+07
-	[Thu May 19 15:28:32 2022]Delete	batch_size=10000000	time=0.434489	throughput=2.30155e+07
+GRAPH	LiveJournal	[Fri May 27 08:06:06 2022]
+Using threads :	1
+	[Fri May 27 08:06:13 2022]Insert	batch_size=10	time=2.52128e-05	throughput=396624
+	[Fri May 27 08:06:13 2022]Read	batch_size=10	time=4.76837e-08	throughput=2.09715e+08
+	[Fri May 27 08:06:13 2022]Delete	batch_size=10	time=2.25425e-05	throughput=443607
+	[Fri May 27 08:06:13 2022]Insert	batch_size=100	time=0.000207686	throughput=481495
+	[Fri May 27 08:06:13 2022]Read	batch_size=100	time=3.8147e-07	throughput=2.62144e+08
+	[Fri May 27 08:06:13 2022]Delete	batch_size=100	time=0.000194871	throughput=513159
+	[Fri May 27 08:06:13 2022]Insert	batch_size=1000	time=0.00218216	throughput=458261
+	[Fri May 27 08:06:13 2022]Read	batch_size=1000	time=3.95775e-06	throughput=2.52669e+08
+	[Fri May 27 08:06:13 2022]Delete	batch_size=1000	time=0.00197545	throughput=506213
+GRAPH	LiveJournal	[Fri May 27 08:06:36 2022]
+Using threads :	1
+	[Fri May 27 08:06:44 2022]Insert	batch_size=10	time=2.5022e-05	throughput=399648
+	[Fri May 27 08:06:44 2022]Read	batch_size=10	time=1.07288e-07	throughput=9.32068e+07
+	[Fri May 27 08:06:44 2022]Delete	batch_size=10	time=2.23517e-05	throughput=447392
+	[Fri May 27 08:06:44 2022]Insert	batch_size=100	time=0.000207162	throughput=482714
+	[Fri May 27 08:06:44 2022]Read	batch_size=100	time=4.41074e-07	throughput=2.26719e+08
+	[Fri May 27 08:06:44 2022]Delete	batch_size=100	time=0.000194502	throughput=514134
+	[Fri May 27 08:06:44 2022]Insert	batch_size=1000	time=0.00228808	throughput=437048
+	[Fri May 27 08:06:44 2022]Read	batch_size=1000	time=4.00543e-06	throughput=2.49661e+08
+	[Fri May 27 08:06:44 2022]Delete	batch_size=1000	time=0.00192271	throughput=520098
+GRAPH	LiveJournal	[Fri May 27 08:10:05 2022]
+Using threads :	1
+GRAPH	LiveJournal	[Fri May 27 08:10:52 2022]
+Using threads :	1

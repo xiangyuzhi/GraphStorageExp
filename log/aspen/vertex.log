@@ -1,15 +1,14 @@
-Using threads :	16
-	[Thu May 19 15:11:19 2022]Insert	Batch size=10	Latency=0.0077314	Throughput=129.343
-	[Thu May 19 15:11:19 2022]Read	Batch size=10	Latency=1e-07	Throughput=1e+07
-	[Thu May 19 15:11:19 2022]Insert	Batch size=100	Latency=5.112e-05	Throughput=19561.8
-	[Thu May 19 15:11:19 2022]Read	Batch size=100	Latency=1.2e-07	Throughput=8.33333e+06
-	[Thu May 19 15:11:19 2022]Insert	Batch size=1000	Latency=7.056e-06	Throughput=141723
-	[Thu May 19 15:11:19 2022]Read	Batch size=1000	Latency=1.5e-07	Throughput=6.66667e+06
-	[Thu May 19 15:11:19 2022]Insert	Batch size=10000	Latency=8.459e-07	Throughput=1.18217e+06
-	[Thu May 19 15:11:19 2022]Read	Batch size=10000	Latency=1.835e-07	Throughput=5.44959e+06
-	[Thu May 19 15:11:19 2022]Insert	Batch size=100000	Latency=2.2283e-07	Throughput=4.48773e+06
-	[Thu May 19 15:11:19 2022]Read	Batch size=100000	Latency=2.1929e-07	Throughput=4.56017e+06
-	[Thu May 19 15:11:19 2022]Insert	Batch size=1000000	Latency=1.55871e-07	Throughput=6.41556e+06
-	[Thu May 19 15:11:19 2022]Read	Batch size=1000000	Latency=2.56818e-07	Throughput=3.89381e+06
-	[Thu May 19 15:11:22 2022]Insert	Batch size=10000000	Latency=1.83695e-07	Throughput=5.4438e+06
-	[Thu May 19 15:11:25 2022]Read	Batch size=10000000	Latency=3.00834e-07	Throughput=3.3241e+06
+16,insert,10,142.163
+16,read,10,1e+07
+16,insert,100,21748.6
+16,read,100,2.5e+07
+16,insert,1000,160565
+16,read,1000,2.32558e+07
+16,insert,10000,1.54751e+06
+16,read,10000,2.00803e+07
+16,insert,100000,1.13148e+07
+16,read,100000,1.93911e+07
+16,insert,1000000,2.90664e+07
+16,read,1000000,1.76044e+07
+16,insert,10000000,1.94632e+07
+16,read,10000000,1.63091e+07

@@ -126,7 +126,7 @@ void batch_ins_del_read(commandLine& P){
 
 // -src 9 -maxiters 5 -f ../../../data/slashdot.adj
 // -src 9 -maxiters 5 -f ../../../data/orkut.adj
-// -gname LiveJournal -core 16 -f ../../../data/ADJgraph/LiveJournal.adj
+
 int main(int argc, char** argv) {
     srand(time(NULL));
 

@@ -11,4 +11,6 @@ set(CMAKE_CXX_STANDARD 17)
 
 add_executable(data data_proc/data_test.cpp)
 
+add_executable(read_data data_proc/read_data.cpp)
+
 add_executable(transfer_data data_proc/transfer.cpp)

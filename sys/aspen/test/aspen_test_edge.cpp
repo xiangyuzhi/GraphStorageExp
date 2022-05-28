@@ -21,7 +21,7 @@ std::vector<uint32_t> new_srcs;
 std::vector<uint32_t> new_dests;
 
 template <class Graph>
-void find_e(Graph& G, uintV src, uintV dst) {
+bool find_e(Graph& G, uintV src, uintV dst) {
     const auto& v = G.find_vertex(src).value;
     bool found = false;
     auto map_f = [&] (uintV ngh_id, size_t ind) {
@@ -30,6 +30,7 @@ void find_e(Graph& G, uintV src, uintV dst) {
         }
     };
     v.map_elms(src, map_f);
+    return found;
 }
 
 
@@ -37,9 +38,9 @@ void batch_ins_del_read(commandLine& P) {
 
     auto gname = P.getOptionValue("-gname", "none");
     std::ofstream alg_file("../../../log/aspen/edge.log",ios::app);
-    alg_file << "GRAPH" << "\t"+gname <<"\t["<<getCurrentTime0()<<']'<<std::endl;
+//    alg_file << "GRAPH" << "\t"+gname <<"\t["<<getCurrentTime0()<<']'<<std::endl;
     auto thd_num = P.getOptionLongValue("-core", 1);
-    alg_file << "Using threads :" << "\t"<<thd_num<<endl;
+    //alg_file << "Using threads :" << "\t"<<thd_num<<endl;
 
     string update_fname = P.getOptionValue("-update-file", "updates.dat");
 
@@ -58,16 +59,7 @@ void batch_ins_del_read(commandLine& P) {
     // 2. Generate the sequence of insertions and deletions
 
     auto update_sizes = pbbs::sequence<size_t>(7);
-    update_sizes[0] = 10;
-    update_sizes[1] = 100;
-    update_sizes[2] = 1000;
-    update_sizes[3] = 10000;
-    update_sizes[4] = 100000;
-    update_sizes[5] = 1000000;
-    update_sizes[6] = 10000000;
-//    update_sizes[7] = 100000000;
-//    update_sizes[8] = 1000000000;
-//    update_sizes[9] = 2000000000;
+    update_sizes = {10,100,1000,10000,100000,1000000,10000000};//
 
     auto update_times = std::vector<double>();
     size_t n_trials = 3;
@@ -89,7 +81,6 @@ void batch_ins_del_read(commandLine& P) {
         for (size_t ts=0; ts<n_trials; ts++) {
             size_t updates_to_run = update_sizes[us];
             auto updates = pbbs::sequence<pair_vertex>(updates_to_run);
-
             double a = 0.5;
             double b = 0.1;
             double c = 0.1;
@@ -98,72 +89,75 @@ void batch_ins_del_read(commandLine& P) {
 
             parallel_for(0, updates.size(), [&] (size_t i) {
                 updates[i] = rmat(i);
+
             });
 
+            {  // test for duplicate edges
+                for (uint32_t i = 0; i < updates.size(); i++) {
+                    if(find_e(S.graph,get<0>(updates[i]),get<1>(updates[i]))){
+                        cout<<"Found!!!"<<endl;
+                        exit(0);
+                    }
+                }
+            }
+
+
             {
-                //cout << "Inserting" << endl;
                 timer st; st.start();
                 VG.insert_edges_batch(update_sizes[us], updates.begin(), false, true, nn, false);
                 double batch_time = st.stop();
-
-                // cout << "batch time = " << batch_time << endl;
                 avg_insert += batch_time;
             }
 
             {
-                // cout << "Deleting" << endl;
                 timer st; st.start();
-                VG.delete_edges_batch(update_sizes[us], updates.begin(), false, true, nn, false);
-                double batch_time = st.stop();
-
-                // cout << "batch time = " << batch_time << endl;
-                avg_delete += batch_time;
-            }
-
-
-            {
-                for( uint32_t i = 0; i < updates_to_run; i++) {
-                    std::pair<uint32_t, uint32_t> edge = rmat(i);
-                    new_srcs.push_back(edge.first);
-                    new_dests.push_back(edge.second);
-                }
-                timer st; st.start();
-                for (uint32_t i =0 ; i< updates_to_run;i++){
-                    find_e(S.graph,new_srcs[i],new_dests[i]);
+                for (uint32_t i =0 ; i< updates.size();i++){
+                    find_e(S.graph,get<0>(updates[i]),get<1>(updates[i]));
                 }
                 double batch_time = st.stop();
                 avg_read += batch_time;
             }
+
+
+            {
+                timer st; st.start();
+                VG.delete_edges_batch(update_sizes[us], updates.begin(), false, true, nn, false);
+                double batch_time = st.stop();
+                avg_delete += batch_time;
+            }
+
         }
 
         double time_i = (double) avg_insert / n_trials;
         double insert_throughput = update_sizes[us] / time_i;
         printf("batch_size = %zu, average insert: %f, throughput %e\n", update_sizes[us], time_i, insert_throughput);
-        alg_file <<"\t["<<getCurrentTime0()<<']' << "Insert"<< "\tbatch_size=" << update_sizes[us]<< "\ttime=" << time_i<< "\tthroughput=" << insert_throughput << std::endl;
+//        alg_file <<"\t["<<getCurrentTime0()<<']' << "Insert"<< "\tbatch_size=" << update_sizes[us]<< "\ttime=" << time_i<< "\tthroughput=" << insert_throughput << std::endl;
+        alg_file<< gname<<","<<thd_num<<",insert,"<< update_sizes[us] <<","<<insert_throughput << "\n";
 
         double time_r = (double) avg_read / n_trials;
         double read_throughput = update_sizes[us] / time_r;
         printf("batch_size = %zu, average read: %f, throughput %e\n", update_sizes[us], time_r, read_throughput);
-        alg_file <<"\t["<<getCurrentTime0()<<']' << "Read"<< "\tbatch_size=" << update_sizes[us]<< "\ttime=" << time_r<< "\tthroughput=" << read_throughput << std::endl;
+//        alg_file <<"\t["<<getCurrentTime0()<<']' << "Read"<< "\tbatch_size=" << update_sizes[us]<< "\ttime=" << time_r<< "\tthroughput=" << read_throughput << std::endl;
+        alg_file<< gname<<","<<thd_num<<",read,"<< update_sizes[us] <<","<<read_throughput << "\n";
 
         double time_d = (double) avg_delete / n_trials;
         double delete_throughput = update_sizes[us] / time_d;
         printf("batch_size = %zu, average delete: %f, throughput %e\n", update_sizes[us], time_d, delete_throughput);
-        alg_file <<"\t["<<getCurrentTime0()<<']' << "Delete"<< "\tbatch_size=" << update_sizes[us]<< "\ttime=" << time_d<< "\tthroughput=" << delete_throughput << std::endl;
+//        alg_file <<"\t["<<getCurrentTime0()<<']' << "Delete"<< "\tbatch_size=" << update_sizes[us]<< "\ttime=" << time_d<< "\tthroughput=" << delete_throughput << std::endl;
+        alg_file<< gname<<"," <<thd_num<<",delete,"<< update_sizes[us] <<","<<delete_throughput << "\n";
 
-
-        // cout << "Finished bs: " << update_sizes[us] << endl;
-//        cout << "Avg insert: " << (avg_insert / n_trials) << endl;
-//        cout << "Avg delete: " << (avg_delete / n_trials) << endl << endl;
-//        cout << "Avg read: " << (avg_read / n_trials) << endl << endl;
     }
 }
 
-// -core 16 -s -f ../../../data/ADJgraph/LiveJournal.adj
+// -gname livejournal -core 1 -f ../../../data/ADJgraph/livejournal.adj
+// -gname slashdot -core 1 -f ../../../data/ADJgraph/slashdot.adj
+// -gname orkut -s -core 1 -f ../../../data/ADJgraph/orkut.adj
 int main(int argc, char** argv) {
+
+    commandLine P(argc, argv);
+    auto thd_num = P.getOptionLongValue("-core", 1);
+    set_num_workers(thd_num);
     cout << "Running Aspen using " << num_workers() << " threads." << endl;
-    commandLine P(argc, argv, "./test_graph [-f file -m (mmap) <testid>]");
-    auto thd_num = P.getOptionLongValue("-core", 16);
 
     batch_ins_del_read(P);
 }

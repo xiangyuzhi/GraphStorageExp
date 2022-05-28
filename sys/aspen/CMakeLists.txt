@@ -5,7 +5,7 @@ set(CMAKE_CXX_STANDARD 14)
 
 
 if(CMAKE_COMPILER_IS_GNUCXX)
-    SET (CMAKE_CXX_FLAGS "-std=c++14 ${CXX_FLAGS_Common} -O3 -DEDGELONG -mcx16 -march=native -fcilkplus -fopenmp")
+    SET (CMAKE_CXX_FLAGS "-std=c++14 ${CXX_FLAGS_Common} -O3 -DEDGELONG -mcx16 -march=native -fcilkplus -fopenmp -pthread")
     message(STATUS "optional:-std=c++14")
 endif(CMAKE_COMPILER_IS_GNUCXX)
 

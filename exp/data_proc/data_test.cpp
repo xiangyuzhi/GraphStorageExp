@@ -52,7 +52,7 @@ void load_graph(commandLine& P){
         if(edges[i].y >= num_nodes) spar = true;
         vis[edges[i].x] = true;
         vis[edges[i].y] = true;
-        printf("%u %u\n",edges[i].x, edges[i].y);
+//        printf("%u %u\n",edges[i].x, edges[i].y);
     }
     if(repeated_edge) printf(" ! Repeated Edge ! \n");
     if(own_circle) printf("! Own Circle ! \n");

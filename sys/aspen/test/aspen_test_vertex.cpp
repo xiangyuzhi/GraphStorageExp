@@ -20,7 +20,7 @@ void batch_ins_read_v(commandLine& P){
 
     std::ofstream alg_file("../../../log/aspen/vertex.log",ios::app);
     auto thd_num = P.getOptionLongValue("-core", 1);
-    alg_file << "Using threads :" << "\t"<<thd_num<<endl;
+//    alg_file << "Using threads :" << "\t"<<thd_num<<endl;
 
     for (auto vsize : vertex_sizes){
         gettimeofday(&t_start, &tzp);
@@ -34,7 +34,8 @@ void batch_ins_read_v(commandLine& P){
         int n = S.graph.num_vertices();
         float time = cal_time_elapsed(&t_start, &t_end);
         PRINT("Throughput: " <<  n/time);
-        alg_file <<"\t["<<getCurrentTime0()<<']'<< "Insert"<< "\tBatch size=" << vsize << "\tLatency=" << time/(float)n << "\tThroughput=" << n/time << std::endl;
+//        alg_file <<"\t["<<getCurrentTime0()<<']'<< "Insert"<< "\tBatch size=" << vsize << "\tLatency=" << time/(float)n << "\tThroughput=" << n/time << std::endl;
+        alg_file <<thd_num<<",insert,"<< vsize <<","<<n/time << "\n";
 
 
         gettimeofday(&t_start, &tzp);
@@ -44,8 +45,8 @@ void batch_ins_read_v(commandLine& P){
         print_time_elapsed("Read Vertex Cost: ", &t_start, &t_end);
         time = cal_time_elapsed(&t_start, &t_end);
         PRINT("Throughput: " <<  n/time);
-        alg_file <<"\t["<<getCurrentTime0()<<']'<< "Read"<< "\tBatch size=" << vsize << "\tLatency=" << time/(float)n << "\tThroughput=" << n/time << std::endl;
-
+//        alg_file <<"\t["<<getCurrentTime0()<<']'<< "Read"<< "\tBatch size=" << vsize << "\tLatency=" << time/(float)n << "\tThroughput=" << n/time << std::endl;
+        alg_file <<thd_num<<",read,"<< vsize <<","<<n/time << "\n";
 
     }
     PRINT("================ Load&Read Graph END ================");
