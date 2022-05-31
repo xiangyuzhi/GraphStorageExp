@@ -732,10 +732,44 @@ namespace tree_plus {
     }
   }
 
+
+
+  void tst_split(AT* to_insert, uintV src){
+
+      if (to_insert) {
+          auto read_iter = compressed_iter::read_iter(to_insert, src);
+          size_t deg = read_iter.deg;
+          uintV privNGH = 0;
+          bool flag = false;
+          for (size_t i=0; i<deg; i++) {
+              uintV NGH = read_iter.next();
+              if(NGH <= privNGH){
+                  flag = true;
+                  break;
+              }
+              else privNGH = NGH;
+          }
+          if(flag){
+              auto read_iter = compressed_iter::read_iter(to_insert, src);
+              size_t deg = read_iter.deg;
+              cout<<"src: "<<src<<endl;
+              cout<<"deg: "<<deg<<endl<<"ngh: ";
+              for (size_t i=0; i<deg; i++) {
+                  uintV NGH = read_iter.next();
+                  cout<<NGH<<" ";
+              }
+              cout<<endl;
+          }
+      }
+  }
+
+
+
   // Union Invariant: returned value is only visible to the caller.
   // Writing all code purely functionally for now. Can add back extra_ptr checks
   // later.
   static treeplus_c union_bc(AT* b1_plus, treeplus_c b2, uintV src, bool run_seq) {
+
     if (b2.has_plus() && !b2.has_tree()) {
       return treeplus_c(lists::union_nodes(b1_plus, b2.plus, src), nullptr);
     }
@@ -757,10 +791,12 @@ namespace tree_plus {
       return treeplus_c(new_plus, b2.root);
     }
 
+
     bool found_key;
     AT* to_insert = nullptr, *split_plus = nullptr;
     std::tie(split_plus, to_insert, found_key) =
       lists::split_node(b1_plus, src, leftmost);
+
     // can't be a found_key---otherwise it would not be in the plus.
     assert(!found_key);
     if (split_plus) {
@@ -790,6 +826,7 @@ namespace tree_plus {
         if (mk == nullptr) {
           b2.print_structure(src);
           cout << "Tried finding key = " << key << " start = " << start << " end = " << end << " src = " << src << endl;
+            Tree::find2(b2.root, key);
         }
         assert(mk != nullptr);
         const auto& key_node = Tree::get_entry(mk);
@@ -805,7 +842,12 @@ namespace tree_plus {
       };
 
       auto map_f = [&] (uintV ngh, size_t i) {
-        auto mp = Tree::previous(b2.root, ngh); assert(mp != nullptr);
+        auto mp = Tree::previous(b2.root, ngh);
+        if(mp == nullptr){
+            //printf("i: %d  ngh: %u\n", i, ngh );
+            throw "Unknown Exception";
+        }
+        assert(mp != nullptr);
         uintV cur_key = Tree::get_entry(mp).first;
         if (cur_key != last_key) {
           if (last_key != UINT_V_MAX) {
@@ -818,7 +860,33 @@ namespace tree_plus {
           create_new_key(cur_key, start, size);
         }
       };
-      lists::map_array(to_insert, src, 0, map_f);
+      try{
+          lists::map_array(to_insert, src, 0, map_f);
+      }
+      catch(const char* &e){
+//          cout<<e<<endl;
+          //printf("%s\n",e);
+            //rintf("b2.root is null pointer? : %d\n",(b2.root == nullptr));
+
+//          if (to_insert) {
+//              auto read_iter = compressed_iter::read_iter(to_insert, src);
+//              size_t deg = read_iter.deg;
+//              cout<<"deg :"<<deg<<endl;
+//              b2.print_structure(src);
+//              for (size_t i=0; i<deg; i++) {
+//                  uintV NGH = read_iter.next();
+//                  auto mp = Tree::previous(b2.root, NGH);
+//                  if(mp == nullptr){
+//                      printf("not find i: %d  ngh: %u\n", i, NGH );
+//                      break;
+//                  }
+//                  else{
+//                      printf("find i: %d  ngh: %u\n", i, NGH );
+//                  }
+//              }
+//          }
+          //exit(0);
+      }
 
       // insert kvs
       auto replace = [] (const V& a, const V& b) {
@@ -844,6 +912,9 @@ namespace tree_plus {
   static treeplus_c union_rec(treeplus_c b1, treeplus_c b2, uintV src, bool run_seq) {
     if (b1.empty()) return b2.copy_treeplus(src);
     if (b2.empty()) return b1.copy_treeplus(src);
+
+//      tst_split(b1.plus, src); // problem
+//      tst_split(b2.plus, src); // no problem
 
     if (b1.has_plus() && !b1.has_tree())
       return union_bc(b1.plus, b2, src, run_seq);

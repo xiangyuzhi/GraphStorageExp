@@ -344,12 +344,41 @@ struct sym_immutable_graph_tree_plus {
     }
   }
 
+    template<class AT>
+    void tst_split(AT* to_insert, uintV src) const {
+        if (to_insert) {
+            auto read_iter = compressed_iter::read_iter(to_insert, src);
+            size_t deg = read_iter.deg;
+            uintV privNGH = 0;
+            bool flag = false;
+            for (size_t i=0; i<deg; i++) {
+                uintV NGH = read_iter.next();
+                if(NGH <= privNGH){
+                    flag = true;
+                    break;
+                }
+                else privNGH = NGH;
+            }
+            if(flag){
+                auto read_iter = compressed_iter::read_iter(to_insert, src);
+                size_t deg = read_iter.deg;
+                cout<<"src: "<<src<<endl;
+                cout<<"deg: "<<deg<<endl;
+            }
+        }
+    }
+
+
+
   // m : number of edges
   // edges: pairs of edges to insert. Currently working with undirected graphs;
   // assuming that an edge already shows up in both directions
   // Let the caller delete edges.
   auto insert_edges_batch(size_t m, tuple<uintV, uintV>* edges, bool sorted=false, bool remove_dups=false, size_t nn=std::numeric_limits<size_t>::max(), bool run_seq=false) const {
     // sort edges by their endpoint
+
+      vertices_tree::check_tree(V.root);
+
     using edge = tuple<uintV, uintV>;
     auto E_orig = pbbs::make_range(edges, edges + m);
     edge* E_alloc = nullptr;
@@ -396,7 +425,10 @@ struct sym_immutable_graph_tree_plus {
       new_verts[i] = std::make_pair(v, edge_struct(S, v, fl));
     }, (run_seq) ? std::numeric_limits<long>::max() : 1);
 
-    auto replace = [run_seq] (const uintV& v, const edge_struct& a, const edge_struct& b) {
+
+    auto replace = [run_seq, this] (const uintV& v, const edge_struct& a, const edge_struct& b) {
+        //tst_split(b.plus, v);// no problem
+//        tst_split(a.plus, v);// have problem
       auto ret = tree_plus::uniont(a, b, v, run_seq);
 
       // Should decrement ref-ct, free if only owner
@@ -410,6 +442,7 @@ struct sym_immutable_graph_tree_plus {
       return ret;
     };
 
+
     // Note that replace is only called if the element currently has a value.
     auto V_next = vertices_tree::multi_insert_sorted_with_values(V.root, new_verts, num_starts, replace, true, run_seq);
 
@@ -422,6 +455,7 @@ struct sym_immutable_graph_tree_plus {
   // Can also implement a simpler API for removing entire vertices.
   auto delete_edges_batch(size_t m, tuple<uintV, uintV>* edges, bool sorted=false, bool remove_dups=false, size_t nn=std::numeric_limits<size_t>::max(), bool run_seq=false) const {
     // sort edges by their endpoint
+
     using edge = tuple<uintV, uintV>;
     auto E_orig = pbbs::make_range(edges, edges + m);
     edge* E_alloc = nullptr;

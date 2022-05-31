@@ -2,7 +2,7 @@
 #include "utils.h"
 #include "sequence_ops.h"
 #include "../pbbslib/binary_search.h"
-
+#include "../graph/tree_plus/compressed_lists.h"
 // *******************************************
 //   MAPS and SETS
 // *******************************************
@@ -21,6 +21,7 @@ struct map_ops : Seq {
   static V get_val(node *s) { return Entry::get_val(*Seq::get_entry_p(s));}
 
   static node* find(node* b, const K& key) {
+//      assert(b!=nullptr);
     while (b) {
       if (Entry::comp(key, get_key(b))) b = b->lc;
       else if (Entry::comp(get_key(b), key)) b = b->rc;
@@ -28,6 +29,22 @@ struct map_ops : Seq {
     }
     return NULL;
   }
+
+
+    static node* find2(node* b, const K& key) {
+      assert(b!=nullptr);
+        cout<<"b : "<<get_key(b)<<endl;
+        cout<<"b->lc: "<<get_key(b->lc)<<"--- b->rc: "<<get_key(b->rc)<<endl;
+        while (b) {
+            cout<<"b key: "<<get_key(b)<<"||| key: "<<key<<endl;
+            if (Entry::comp(key, get_key(b))) b = b->lc;
+            else if (Entry::comp(get_key(b), key)) b = b->rc;
+            else return b;
+        }
+        return NULL;
+    }
+
+
 
   template <class BinaryOp>
   static inline void update_value(node* a, const BinaryOp& op) {
@@ -81,6 +98,7 @@ struct map_ops : Seq {
   }
 
   static node* previous(node* b, const K& key) {
+      assert(b!=nullptr);
     node* r = NULL;
     while (b) {
       if (Entry::comp(get_key(b), key)) {r = b; b = b->rc;}
@@ -212,9 +230,11 @@ struct map_ops : Seq {
     Seq::set_entry(a, re);
   }
 
+
   template <class BinaryOp>
   static inline void combine_values_with_key(node* a, ET e, bool reverse, const BinaryOp& op) {
     ET re = Seq::get_entry(a);
+      //tst_split222(Entry::get_val(re).plus, Entry::get_key(re));// have problem
     if (reverse) Entry::set_val(re, op(Entry::get_key(e), Entry::get_val(e), Entry::get_val(re)));
     else Entry::set_val(re, op(Entry::get_key(e), Entry::get_val(re), Entry::get_val(e)));
     Seq::set_entry(a, re);
@@ -484,7 +504,47 @@ struct map_ops : Seq {
     return Seq::node_join(P.first, P.second, r);
   }
 
-  // assumes array A is of length n and is sorted with no duplicates
+
+    template<class AT>
+    static void tst_split222(const AT* to_insert, const uintV src){
+        if (to_insert) {
+            auto read_iter = compressed_iter::read_iter(to_insert, src);
+            size_t deg = read_iter.deg;
+            uintV privNGH = 0;
+            bool flag = false;
+            for (size_t i=0; i<deg; i++) {
+                uintV NGH = read_iter.next();
+                if(NGH <= privNGH){
+                    flag = true;
+                    break;
+                }
+                else privNGH = NGH;
+            }
+            if(flag){
+                auto read_iter = compressed_iter::read_iter(to_insert, src);
+                size_t deg = read_iter.deg;
+                cout<<"src: "<<src<<endl;
+                cout<<"deg: "<<deg<<endl;
+//                cout<<"ngh: ";
+//                for (size_t i=0; i<deg; i++) {
+//                    uintV NGH = read_iter.next();
+//                    cout<<NGH<<" ";
+//                }
+//                cout<<endl;
+            }
+        }
+    }
+
+
+    static void check_tree(node* b) {
+        if(b->lc) check_tree(b->lc);
+        if(b->rc) check_tree(b->rc);
+        ET re = Seq::get_entry(b);
+        tst_split222(Entry::get_val(re).plus, Entry::get_key(re));// have problem
+    }
+
+
+    // assumes array A is of length n and is sorted with no duplicates
   template <class BinaryOp>
   static node* multi_insert_sorted_with_values(node* b, ET* A, size_t n,
 				   const BinaryOp& op, bool extra_ptr = false, bool run_seq=false) {
@@ -495,14 +555,18 @@ struct map_ops : Seq {
     auto less_val = [&] (ET a) -> bool {return Entry::comp(Entry::get_key(a),bk);};
     size_t mid = pbbs::binary_search(pbbs::make_range(A, A+n), less_val);
     bool dup = (mid < n) && (!Entry::comp(bk, Entry::get_key(A[mid])));
-
     auto P = utils::fork<node*>(utils::do_parallel(Seq::size(b), n) && !run_seq,
 	       [&] () {return multi_insert_sorted_with_values(b->lc, A, mid, op, copy, run_seq);},
 	       [&] () {return multi_insert_sorted_with_values(b->rc, A+mid+dup,
 						  n-mid-dup, op, copy, run_seq);});
 
     node* r = GC::copy_if(b, copy, extra_ptr);
-    if (dup) combine_values_with_key(r, A[mid], false, op);
+    if (dup) {
+        //tst_split222(Entry::get_val(A[mid]).plus, Entry::get_key(A[mid])); //no problem
+        //ET re = Seq::get_entry(r);
+        //tst_split222(Entry::get_val(re).plus, Entry::get_key(re));// have problem
+        combine_values_with_key(r, A[mid], false, op);
+    }
     return Seq::node_join(P.first, P.second, r);
   }
 

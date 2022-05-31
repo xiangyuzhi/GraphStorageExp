@@ -4,6 +4,7 @@
 #include <cstring>
 #include <cmath>
 #include <iostream>
+#include "utils/rmat_util.h"
 using namespace std;
 using edge_seq = pair<uintV, uintV>;
 
@@ -43,12 +44,20 @@ void memory_footprint(commandLine& P) {
 
     //S.graph.print_compression_stats();
     //print_stats(S.graph);
+    int n = S.graph.num_vertices();
+    cout<<"v num : "<<n<<endl;
     size_t deg = S.graph.find_vertex(1).value.degree();
     auto *edge = S.graph.find_vertex(1).value.get_edges(1);
     cout<<"deg: "<<deg<<endl;
     for(int i=0;i<deg;i++)
         cout<<edge[i]<<' ';
     cout<<endl;
+
+    size_t nn = 1 << (pbbs::log2_up(n) - 1);
+    using pair_vertex = tuple<uintV, uintV>;
+    auto updates = pbbs::sequence<pair_vertex>(1);
+    updates[1] = make_tuple(7,1);
+    S.graph.insert_edges_batch(1, updates.begin(), false, true, nn, false);
     //size_t rep_size = S.graph.size_in_bytes();
     //cout << "calculated size in GB (bytes/1024**3) = " << ((rep_size*1.0)/1024/1024/1024) << endl;
 
@@ -57,6 +66,7 @@ void memory_footprint(commandLine& P) {
 
 
 // -f ../../../data/ADJgraph/LiveJournal.adj
+// -f ../../../data/ADJgraph/test.adj
 int main(int argc, char** argv) {
     cout << "Running Aspen using " << num_workers() << " threads." << endl;
     commandLine P(argc, argv);

@@ -1,6 +1,3 @@
-cmake_minimum_required(VERSION 3.10)
-project(aspen)
-
 set(CMAKE_CXX_STANDARD 14)
 
 
@@ -10,7 +7,7 @@ if(CMAKE_COMPILER_IS_GNUCXX)
 endif(CMAKE_COMPILER_IS_GNUCXX)
 
 include_directories(include)
-
+include_directories(../../lib)
 
 # ./run_static_algorithm -t BFS -src 1 -r 4 -s -f ../../../data/ADJgraph/LiveJournal.adj
 add_executable(aspen_tst test/aspen_test.cpp)
