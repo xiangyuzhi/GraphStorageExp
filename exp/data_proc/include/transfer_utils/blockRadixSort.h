@@ -198,7 +198,7 @@ namespace intSort {
 	      char* tmpSpace, F f) {
     typedef bint bucketsT[BUCKETS];
     long esize = (n >= INT_MAX) ? sizeof(long) : sizeof(int);
-
+    cout<<"esize :"<<esize<<' '<<(n >= INT_MAX)<<endl;
     long bits = log2Up(m);
     long numBK = 1+n/(BUCKETS*8);
 
@@ -241,9 +241,14 @@ namespace intSort {
     // if n fits in 32 bits then use unsigned ints for bucket counts
     // otherwise use unsigned longs
     // Doesn't make much difference in performance
-    if (n < UINT_MAX)
-      iSortX<unsigned int>(A, bucketOffsets, n, m, bottomUp, tmpSpace, f);
-    else iSortX<unsigned long>(A, bucketOffsets, n, m, bottomUp, tmpSpace, f);
+    if (n < UINT_MAX){
+        cout<<"n less UINT_MAX"<<endl;
+        iSortX<unsigned int>(A, bucketOffsets, n, m, bottomUp, tmpSpace, f);
+    }
+    else {
+        cout<<"n ge UINT_MAX"<<endl;
+        iSortX<unsigned long>(A, bucketOffsets, n, m, bottomUp, tmpSpace, f);
+    }
   }
 
   // THE REST ARE JUST SPECIAL CASES

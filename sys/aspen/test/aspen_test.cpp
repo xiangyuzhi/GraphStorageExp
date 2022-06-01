@@ -58,6 +58,7 @@ void memory_footprint(commandLine& P) {
     auto updates = pbbs::sequence<pair_vertex>(1);
     updates[1] = make_tuple(7,1);
     S.graph.insert_edges_batch(1, updates.begin(), false, true, nn, false);
+    S.graph.check_v();
     //size_t rep_size = S.graph.size_in_bytes();
     //cout << "calculated size in GB (bytes/1024**3) = " << ((rep_size*1.0)/1024/1024/1024) << endl;
 

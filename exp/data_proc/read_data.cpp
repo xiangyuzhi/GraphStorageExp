@@ -45,7 +45,22 @@ int main(int argc, char* argv[])
     uintT maxrc = max(MaxSrc,MaxDst)+1;
     edgeArray<uintT> G = edgeArray<uintT>(E, maxrc, maxrc, NumEdge);
 
+//    uint64_t nume = G.nonZeros;
+//    for(uint64_t i = 1 ;i< nume ;i++){
+//        if(G.E[i].u==G.E[i-1].u && G.E[i].v>G.E[i-1].v){
+//            cout<<"edge false"<<endl;
+//        }
+//    }
 
+    graph gg =  graphFromEdges(G,0);
+//    for(int i = 0;i<gg.n;i++) {
+//        uint deg = gg.V[i].degree;
+//
+//        for (intT j = 1; j < deg; j++) {
+//            if (gg.V[i].Neighbors[j] > gg.V[i].Neighbors[j - 1])
+//                cout << "false" << endl;
+//        }
+//    }
 
 
 }

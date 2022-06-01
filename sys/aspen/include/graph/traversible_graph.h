@@ -364,6 +364,9 @@ struct traversable_graph : private graph {
     return traversable_graph(G::delete_edges_batch(m, edges, sorted, remove_dups, nn, run_seq));
   }
 
+  void check_v() const {
+      G::check_V();
+  }
 
 public:
   using G::num_vertices;

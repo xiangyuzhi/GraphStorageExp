@@ -50,6 +50,8 @@ void batch_ins_del_read(commandLine& P) {
     auto S = VG.acquire_version();
     const auto& GA = S.graph;
 
+    //GA.check_v(); have problem
+
     size_t n = GA.num_vertices();
     cout << "n = " << n << endl;
     VG.release_version(std::move(S));
@@ -90,39 +92,8 @@ void batch_ins_del_read(commandLine& P) {
 
             parallel_for(0, updates.size(), [&] (size_t i) {
                 updates[i] = rmat(i);
-//                new_srcs.push_back(get<0>(updates[i]));
-//                new_dests.push_back(get<1>(updates[i]));
             });
-//            pair_uint *edges = (pair_uint*)calloc(updates_to_run, sizeof(pair_uint));
-//            for (uint32_t i = 0; i < updates_to_run; i++) {
-//                edges[i].x = new_srcs[i];
-//                edges[i].y = new_dests[i];
-//            }
-//            integerSort_y((pair_els*)edges, updates_to_run, num_nodes);
-//            integerSort_x((pair_els*)edges, updates_to_run, num_nodes);
-//            new_srcs.clear();
-//            new_srcs.clear();
 
-//            {  // test for duplicate edges
-//                for (uint32_t i = 0; i < updates.size(); i++) {
-//                    if(find_e(S.graph,get<0>(updates[i]),get<1>(updates[i]))){
-//                        cout<<"Found!!!"<<endl;
-//                        exit(0);
-//                    }
-//                }
-//            }
-
-
-//            {
-//                timer st; st.start();
-//                for(int i = 0; i < update_sizes[us] ; i++){
-//                    auto single_update = pbbs::sequence<pair_vertex>(1);
-//                    single_update[0] = updates[i];
-//                    VG.insert_edges_batch(1, single_update.begin(), false, true, nn, false);
-//                }
-//                double batch_time = st.stop();
-//                avg_insert += batch_time;
-//            }
 
             {
                 timer st; st.start();

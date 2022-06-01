@@ -8,7 +8,7 @@
 #include "../../pbbslib/merge_sort.h"
 #include "../../trees/pam.h"
 #include "tree_plus.h"
-
+#include "compressed_lists.h"
 #include <limits>
 
 
@@ -345,7 +345,7 @@ struct sym_immutable_graph_tree_plus {
   }
 
     template<class AT>
-    void tst_split(AT* to_insert, uintV src) const {
+    void tst_split(AT* to_insert, uintV src) const { // TODO
         if (to_insert) {
             auto read_iter = compressed_iter::read_iter(to_insert, src);
             size_t deg = read_iter.deg;
@@ -368,7 +368,9 @@ struct sym_immutable_graph_tree_plus {
         }
     }
 
-
+    void check_V() const {
+     vertices_tree::check_tree(V.root);
+  }
 
   // m : number of edges
   // edges: pairs of edges to insert. Currently working with undirected graphs;
@@ -376,8 +378,6 @@ struct sym_immutable_graph_tree_plus {
   // Let the caller delete edges.
   auto insert_edges_batch(size_t m, tuple<uintV, uintV>* edges, bool sorted=false, bool remove_dups=false, size_t nn=std::numeric_limits<size_t>::max(), bool run_seq=false) const {
     // sort edges by their endpoint
-
-      vertices_tree::check_tree(V.root);
 
     using edge = tuple<uintV, uintV>;
     auto E_orig = pbbs::make_range(edges, edges + m);
@@ -427,8 +427,7 @@ struct sym_immutable_graph_tree_plus {
 
 
     auto replace = [run_seq, this] (const uintV& v, const edge_struct& a, const edge_struct& b) {
-        //tst_split(b.plus, v);// no problem
-//        tst_split(a.plus, v);// have problem
+
       auto ret = tree_plus::uniont(a, b, v, run_seq);
 
       // Should decrement ref-ct, free if only owner
@@ -584,6 +583,7 @@ struct sym_immutable_graph_tree_plus {
     timer build_t; build_t.start();
     using KV = pair<uintV, edge_struct>;
     auto new_verts = pbbs::sequence<KV>(n);
+
     parallel_for(0, n, [&] (size_t i) { // TODO: granularity
       size_t off = offsets[i];
       size_t deg = ((i == (n-1)) ? m : offsets[i+1]) - off;
@@ -602,7 +602,11 @@ struct sym_immutable_graph_tree_plus {
     cout << "stats after parallel build" << endl << endl;
 
     auto replace = [] (const edge_struct& a, const edge_struct& b) {return b;};
+
+
     V = vertices_tree::multi_insert_sorted(nullptr, new_verts.begin(), new_verts.size(), replace, true);
+
+      //check_V();//have problem
 
     print_stats();
     cout << "stats after multi_insert" << endl << endl;
@@ -610,6 +614,7 @@ struct sym_immutable_graph_tree_plus {
     pbbs::free_array(offsets); pbbs::free_array(edges);
     new_verts.clear();
     build_t.next("Build time");
+
 
 //    // Create a list of edge pairs representing the graph.
 //    timer build_t; build_t.start();

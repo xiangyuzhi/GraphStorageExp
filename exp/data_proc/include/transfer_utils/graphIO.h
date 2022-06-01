@@ -352,6 +352,24 @@ graph<intT> graphFromEdges(edgeArray<intT> EA, bool makeSym) {
   intT n = max<intT>(A.numCols,A.numRows);
   intT* offsets = newA(intT,n);
   intSort::iSort(A.E,offsets,m,n,getuF<intT>());
+
+    intT*vv = newA(intT,n);
+    for (intT i=0; i < n; i++) {
+        intT o = offsets[i];
+        intT l = ((i == n-1) ? m : offsets[i+1])-offsets[i];
+        for (intT j=0; j < l; j++) {
+            vv[j]= A.E[o+j].v;
+        }
+        std::sort(vv,vv+l);
+        for (intT j=0; j < l; j++) {
+            A.E[o+j].v = vv[j];
+        }
+    }
+
+//    for (intT i=0; i < m; i++) {
+//        cout<<A.E[i].u<<' '<<A.E[i].v<<endl;
+//    }
+
   intT *X = newA(intT,m);
   vertex<intT> *v = newA(vertex<intT>,n);
   parallel_for (intT i=0; i < n; i++) {

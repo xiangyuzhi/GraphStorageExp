@@ -50,8 +50,6 @@ int main(int argc, char* argv[])
     edgeArray<uintT> G = edgeArray<uintT>(E, maxrc, maxrc, NumEdge);
 
 
-
-
     writeGraphToFile<uintT>(graphFromEdges(G,sym),oFile);
 
     cout<<" Transfer Over."<<endl;

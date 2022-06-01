@@ -101,10 +101,12 @@ struct versioned_graph {
     typename table::T empty = make_tuple(max_ts, make_tuple(0, nullptr));
     live_versions = table(initial_ht_size, empty, tombstone);
 
-    auto G = snapshot_graph(n, m, offsets, edges);
+    auto G = snapshot_graph(n, m, offsets, edges);// init
     ts timestamp = current_timestamp++;
     live_versions.insert(make_tuple(timestamp, make_tuple(refct_utils::make_refct(timestamp, 1), G.get_root())));
     G.clear_root();
+
+
   }
 
   ts latest_timestamp() {
@@ -178,6 +180,8 @@ struct versioned_graph {
   void insert_edges_batch(size_t m, tuple<uintV, uintV>* edges, bool sorted=false, bool remove_dups=false, size_t nn = std::numeric_limits<size_t>::max(), bool run_seq=false) {
     auto S = acquire_version();
     const auto& G = S.graph;
+
+    //G.check_V();
 
     // 1. Insert the new graph (not yet visible) into the live versions set
     snapshot_graph G_next = G.insert_edges_batch(m, edges, sorted, remove_dups, nn, run_seq);

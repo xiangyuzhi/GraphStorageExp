@@ -500,7 +500,10 @@ struct map_ops : Seq {
 						  n-mid-dup, op, copy, run_seq);});
 
     node* r = GC::copy_if(b, copy, extra_ptr);
-    if (dup) combine_values(r, A[mid], false, op);
+    if (dup) {
+        //tst_split222(Entry::get_val(A[mid]).plus, Entry::get_key(A[mid]));
+        combine_values(r, A[mid], false, op);
+    }
     return Seq::node_join(P.first, P.second, r);
   }
 

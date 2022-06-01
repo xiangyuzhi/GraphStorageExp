@@ -209,7 +209,13 @@ auto initialize_treeplus_graph(commandLine& P) {
   bool compressed = P.getOption("-c");
   size_t n_parts = P.getOptionLongValue("-nparts", 1);
 
-  return initialize_graph(fname, mmap, is_symmetric, compressed, n_parts);
+
+    auto ret = initialize_graph(fname, mmap, is_symmetric, compressed, n_parts);
+
+    //auto S = ret.acquire_version();const auto& GA = S.graph;GA.check_v();//have problem
+
+
+  return ret;
 }
 
 auto get_graph_edges(const char* fname, bool is_symmetric, bool mmap=false) {
