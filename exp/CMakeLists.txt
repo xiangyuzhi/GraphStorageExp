@@ -9,8 +9,11 @@ endif(CMAKE_COMPILER_IS_GNUCXX)
 set(CMAKE_CXX_STANDARD 17)
 
 
-add_executable(data data_proc/data_test.cpp)
+add_executable(read_adj data_proc/read_adj.cpp)
 
-add_executable(read_data data_proc/read_data.cpp)
+add_executable(read_tsv data_proc/read_tsv.cpp)
 
-add_executable(transfer_data data_proc/transfer.cpp)
+add_executable(transfer data_proc/transfer.cpp)
+
+add_executable(test_memory memory_tst/test_memory.cpp)
+target_link_libraries(test_memory -ldl)

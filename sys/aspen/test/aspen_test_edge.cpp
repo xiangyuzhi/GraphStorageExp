@@ -11,7 +11,8 @@
 //#include <cmath>
 //#include <iostream>
 //#include <fstream>
-//#define CILK 1
+#define CILK 1
+//#define OPENMP 1
 #include "aspen_test.h"
 #include "utils/rmat_util.h"
 #include "utils/util.h"
@@ -62,7 +63,7 @@ void batch_ins_del_read(commandLine& P) {
     // 2. Generate the sequence of insertions and deletions
 
     auto update_sizes = pbbs::sequence<size_t>(7);
-    update_sizes = {100000,1000000,10000000};//10,100,1000,10000,
+    update_sizes = {10,100,1000,10000,100000,1000000,10000000};
 
     auto update_times = std::vector<double>();
     size_t n_trials = 3;
@@ -142,8 +143,10 @@ void batch_ins_del_read(commandLine& P) {
 }
 
 // -gname livejournal -core 1 -f ../../../data/ADJgraph/livejournal.adj
+// -gname twitter -core 1 -f ../../../data/ADJgraph/twitter.adj
 // -gname slashdot -core 1 -f ../../../data/ADJgraph/slashdot.adj
 // -gname orkut -s -core 1 -f ../../../data/ADJgraph/orkut.adj
+// -gname friendster -core 1 -f ../../../data/ADJgraph/friendster.adj
 int main(int argc, char** argv) {
 
     commandLine P(argc, argv);

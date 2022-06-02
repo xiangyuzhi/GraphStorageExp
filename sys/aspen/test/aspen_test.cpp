@@ -35,6 +35,22 @@ double test_deg(G& GA, commandLine& P) {
     return (tmr.get_total() );
 }
 
+template <class Graph>
+bool find_e(Graph& G, uintV src, uintV dst) {
+    const auto& v = G.find_vertex(src).value;
+    bool found = false;
+    auto map_f = [&] (uintV ngh_id, size_t ind) {
+        if (dst == ngh_id) {
+            found = true;
+        }
+    };
+    v.map_elms(src, map_f);
+    return found;
+}
+
+
+
+
 void memory_footprint(commandLine& P) {
     // Initialize the graph.
     auto VG = initialize_treeplus_graph(P);
@@ -46,19 +62,28 @@ void memory_footprint(commandLine& P) {
     //print_stats(S.graph);
     int n = S.graph.num_vertices();
     cout<<"v num : "<<n<<endl;
-    size_t deg = S.graph.find_vertex(1).value.degree();
-    auto *edge = S.graph.find_vertex(1).value.get_edges(1);
+    uint src = 3;
+    size_t deg = S.graph.find_vertex(src).value.degree();
+    auto *edge = S.graph.find_vertex(src).value.get_edges(src);
     cout<<"deg: "<<deg<<endl;
-    for(int i=0;i<deg;i++)
-        cout<<edge[i]<<' ';
+    for(int i=0;i<deg;i++){
+        cout<<edge[i]<<"==="<<endl;
+        cout<<(bool)find_e(S.graph, src, edge[i])<<' '<<endl;
+        cout<<"----"<<endl;
+        for(int j = 0;j<7;j++){
+            cout<<(bool) find_e(S.graph, src,j)<<endl;
+        }
+
+    }
+
     cout<<endl;
 
-    size_t nn = 1 << (pbbs::log2_up(n) - 1);
-    using pair_vertex = tuple<uintV, uintV>;
-    auto updates = pbbs::sequence<pair_vertex>(1);
-    updates[1] = make_tuple(7,1);
-    S.graph.insert_edges_batch(1, updates.begin(), false, true, nn, false);
-    S.graph.check_v();
+//    size_t nn = 1 << (pbbs::log2_up(n) - 1);
+//    using pair_vertex = tuple<uintV, uintV>;
+//    auto updates = pbbs::sequence<pair_vertex>(1);
+//    updates[1] = make_tuple(7,1);
+//    S.graph.insert_edges_batch(1, updates.begin(), false, true, nn, false);
+//    S.graph.check_v();
     //size_t rep_size = S.graph.size_in_bytes();
     //cout << "calculated size in GB (bytes/1024**3) = " << ((rep_size*1.0)/1024/1024/1024) << endl;
 

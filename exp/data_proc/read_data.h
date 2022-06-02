@@ -2,8 +2,8 @@
 // Created by zxy on 5/13/22.
 //
 
-#ifndef EXP_DATA_TEST_H
-#define EXP_DATA_TEST_H
+#ifndef EXP_READ_DATA_H
+#define EXP_READ_DATA_H
 
 #include <stdlib.h>
 #include <assert.h>
@@ -167,4 +167,4 @@ struct commandLine {
 };
 
 
-#endif //EXP_DATA_TEST_H
+#endif //EXP_READ_DATA_H

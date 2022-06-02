@@ -1,26 +1,105 @@
-GRAPH	LiveJournal	[Fri May 27 08:06:06 2022]
-Using threads :	1
-	[Fri May 27 08:06:13 2022]Insert	batch_size=10	time=2.52128e-05	throughput=396624
-	[Fri May 27 08:06:13 2022]Read	batch_size=10	time=4.76837e-08	throughput=2.09715e+08
-	[Fri May 27 08:06:13 2022]Delete	batch_size=10	time=2.25425e-05	throughput=443607
-	[Fri May 27 08:06:13 2022]Insert	batch_size=100	time=0.000207686	throughput=481495
-	[Fri May 27 08:06:13 2022]Read	batch_size=100	time=3.8147e-07	throughput=2.62144e+08
-	[Fri May 27 08:06:13 2022]Delete	batch_size=100	time=0.000194871	throughput=513159
-	[Fri May 27 08:06:13 2022]Insert	batch_size=1000	time=0.00218216	throughput=458261
-	[Fri May 27 08:06:13 2022]Read	batch_size=1000	time=3.95775e-06	throughput=2.52669e+08
-	[Fri May 27 08:06:13 2022]Delete	batch_size=1000	time=0.00197545	throughput=506213
-GRAPH	LiveJournal	[Fri May 27 08:06:36 2022]
-Using threads :	1
-	[Fri May 27 08:06:44 2022]Insert	batch_size=10	time=2.5022e-05	throughput=399648
-	[Fri May 27 08:06:44 2022]Read	batch_size=10	time=1.07288e-07	throughput=9.32068e+07
-	[Fri May 27 08:06:44 2022]Delete	batch_size=10	time=2.23517e-05	throughput=447392
-	[Fri May 27 08:06:44 2022]Insert	batch_size=100	time=0.000207162	throughput=482714
-	[Fri May 27 08:06:44 2022]Read	batch_size=100	time=4.41074e-07	throughput=2.26719e+08
-	[Fri May 27 08:06:44 2022]Delete	batch_size=100	time=0.000194502	throughput=514134
-	[Fri May 27 08:06:44 2022]Insert	batch_size=1000	time=0.00228808	throughput=437048
-	[Fri May 27 08:06:44 2022]Read	batch_size=1000	time=4.00543e-06	throughput=2.49661e+08
-	[Fri May 27 08:06:44 2022]Delete	batch_size=1000	time=0.00192271	throughput=520098
-GRAPH	LiveJournal	[Fri May 27 08:10:05 2022]
-Using threads :	1
-GRAPH	LiveJournal	[Fri May 27 08:10:52 2022]
-Using threads :	1
+livejournal,1,insert,10,202721
+livejournal,1,read,10,1.04858e+08
+livejournal,1,delete,10,716975
+livejournal,1,insert,100,297352
+livejournal,1,read,100,1.23362e+08
+livejournal,1,delete,100,825244
+livejournal,1,insert,1000,337850
+livejournal,1,read,1000,1.75128e+08
+livejournal,1,delete,1000,692278
+livejournal,1,insert,10000,359651
+livejournal,1,read,10000,1.50793e+08
+livejournal,1,delete,10000,465915
+livejournal,1,insert,100000,470502
+livejournal,1,read,100000,1.75098e+08
+livejournal,1,delete,100000,612793
+livejournal,1,insert,1000000,1.5207e+06
+livejournal,1,read,1000000,1.74159e+08
+livejournal,1,delete,1000000,1.68088e+06
+livejournal,1,insert,10000000,4.62776e+06
+livejournal,1,read,10000000,1.80485e+08
+livejournal,1,delete,10000000,4.96782e+06
+slashdot,1,insert,10,814428
+slashdot,1,read,10,6.99051e+07
+slashdot,1,delete,10,969781
+slashdot,1,insert,100,1.22838e+06
+slashdot,1,read,100,1.9065e+08
+slashdot,1,delete,100,1.35826e+06
+slashdot,1,insert,1000,1.49213e+06
+slashdot,1,read,1000,1.77349e+08
+slashdot,1,delete,1000,1.68676e+06
+slashdot,1,insert,10000,2.75834e+06
+slashdot,1,read,10000,1.82242e+08
+slashdot,1,delete,10000,2.9158e+06
+slashdot,1,insert,100000,6.21574e+06
+slashdot,1,read,100000,1.85425e+08
+slashdot,1,delete,100000,6.42529e+06
+slashdot,1,insert,1000000,1.43259e+07
+slashdot,1,read,1000000,1.75578e+08
+slashdot,1,delete,1000000,1.43545e+07
+slashdot,1,insert,10000000,2.78118e+07
+slashdot,1,read,10000000,1.85518e+08
+slashdot,1,delete,10000000,3.02651e+07
+livejournal,1,insert,10,206108
+livejournal,1,read,10,6.45278e+07
+livejournal,1,delete,10,403687
+livejournal,1,insert,100,253249
+livejournal,1,read,100,2.46724e+08
+livejournal,1,delete,100,528316
+livejournal,1,insert,1000,331632
+livejournal,1,read,1000,2.62966e+08
+livejournal,1,delete,1000,478925
+livejournal,1,insert,10000,407139
+livejournal,1,read,10000,2.34122e+08
+livejournal,1,delete,10000,472739
+livejournal,1,insert,100000,577176
+livejournal,1,read,100000,2.58063e+08
+livejournal,1,delete,100000,632368
+livejournal,1,insert,1000000,1.27233e+06
+livejournal,1,read,1000000,2.68502e+08
+livejournal,1,delete,1000000,1.36226e+06
+livejournal,1,insert,10000000,3.86718e+06
+livejournal,1,read,10000000,2.69012e+08
+livejournal,1,delete,10000000,4.07107e+06
+livejournal,16,insert,10,78899.6
+livejournal,16,read,10,2.09715e+08
+livejournal,16,delete,10,86542.9
+livejournal,16,insert,100,396081
+livejournal,16,read,100,1.023e+08
+livejournal,16,delete,100,174552
+livejournal,16,insert,1000,1.1906e+06
+livejournal,16,read,1000,1.44631e+08
+livejournal,16,delete,1000,1.26567e+06
+livejournal,16,insert,10000,1.77835e+06
+livejournal,16,read,10000,1.4063e+08
+livejournal,16,delete,10000,2.03251e+06
+livejournal,16,insert,100000,3.84945e+06
+livejournal,16,read,100000,2.28641e+08
+livejournal,16,delete,100000,4.19565e+06
+livejournal,16,insert,1000000,9.74696e+06
+livejournal,16,read,1000000,2.65907e+08
+livejournal,16,delete,1000000,9.77287e+06
+livejournal,16,insert,10000000,3.0997e+07
+livejournal,16,read,10000000,2.66852e+08
+livejournal,16,delete,10000000,3.2329e+07
+orkut,1,insert,10,172570
+orkut,1,read,10,1.04858e+08
+orkut,1,delete,10,324637
+orkut,1,insert,100,239586
+orkut,1,read,100,2.046e+08
+orkut,1,delete,100,394517
+orkut,1,insert,1000,281126
+orkut,1,read,1000,2.5191e+08
+orkut,1,delete,1000,392940
+orkut,1,insert,10000,332356
+orkut,1,read,10000,2.40844e+08
+orkut,1,delete,10000,378085
+orkut,1,insert,100000,473036
+orkut,1,read,100000,2.56274e+08
+orkut,1,delete,100000,515033
+orkut,1,insert,1000000,1.05268e+06
+orkut,1,read,1000000,2.63169e+08
+orkut,1,delete,1000000,1.12194e+06
+orkut,1,insert,10000000,3.32553e+06
+orkut,1,read,10000000,2.65684e+08
+orkut,1,delete,10000000,3.58577e+06
