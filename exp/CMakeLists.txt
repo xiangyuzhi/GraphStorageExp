@@ -17,3 +17,5 @@ add_executable(transfer data_proc/transfer.cpp)
 
 add_executable(test_memory memory_tst/test_memory.cpp)
 target_link_libraries(test_memory -ldl)
+
+
