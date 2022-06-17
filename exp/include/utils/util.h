@@ -86,11 +86,71 @@ struct trip_uint {
   uint32_t z;
 } ;
 
-namespace graphstore {
-	float cal_time_elapsed(struct timeval* start, struct timeval* end);
-	/* Print elapsed time using the start and end timeval */
-	void print_time_elapsed(std::string desc, struct timeval* start, struct
-													timeval* end);
-	std::vector<uint32_t> get_random_permutation(uint32_t num);
+
+void print_time_elapsed(std::string desc, struct timeval* start, struct
+        timeval* end)
+{
+    struct timeval elapsed;
+    if (start->tv_usec > end->tv_usec) {
+        end->tv_usec += 1000000;
+        end->tv_sec--;
+    }
+    elapsed.tv_usec = end->tv_usec - start->tv_usec;
+    elapsed.tv_sec = end->tv_sec - start->tv_sec;
+    float time_elapsed = (elapsed.tv_sec * 1000000 + elapsed.tv_usec)/1000000.f;
+    std::cout << desc << "Total Time Elapsed: " << std::to_string(time_elapsed) <<
+              "seconds" << std::endl;
 }
+
+float cal_time_elapsed(struct timeval* start, struct timeval* end)
+{
+    struct timeval elapsed;
+    if (start->tv_usec > end->tv_usec) {
+        end->tv_usec += 1000000;
+        end->tv_sec--;
+    }
+    elapsed.tv_usec = end->tv_usec - start->tv_usec;
+    elapsed.tv_sec = end->tv_sec - start->tv_sec;
+    return (elapsed.tv_sec * 1000000 + elapsed.tv_usec)/1000000.f;
+}
+
+std::vector<uint32_t> get_random_permutation(uint32_t num) {
+    std::vector<uint32_t> perm(num);
+    std::vector<uint32_t> vec(num);
+
+    for (uint32_t i = 0; i < num; i++)
+        vec[i] = i;
+
+    uint32_t cnt{0};
+    while (vec.size()) {
+        uint32_t n = vec.size();
+        srand(time(NULL));
+        uint32_t idx = rand() % n;
+        uint32_t val = vec[idx];
+        std::swap(vec[idx], vec[n-1]);
+        vec.pop_back();
+        perm[cnt++] = val;
+    }
+    return perm;
+}
+
+
+double cal_time(std::vector<double> timelist){
+    if(timelist.size() == 1) return timelist[0];
+    sort(timelist.begin(),timelist.end());
+    double st = 0.0;
+    for(uint32_t i = 1 ;i < timelist.size()-1;i++)
+        st += timelist[i];
+    return st/double(timelist.size()-2);
+}
+
+static std::string getCurrentTime0() {
+    std::time_t result = std::time(nullptr);
+    std::string ret;
+    ret.resize(64);
+    int wsize = sprintf((char *)&ret[0], "%s", std::ctime(&result));
+    ret.resize(wsize-1);
+    return ret;
+}
+
 #endif

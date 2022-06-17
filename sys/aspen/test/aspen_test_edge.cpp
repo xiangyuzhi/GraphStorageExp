@@ -51,8 +51,6 @@ void batch_ins_del_read(commandLine& P) {
     auto S = VG.acquire_version();
     const auto& GA = S.graph;
 
-    //GA.check_v(); have problem
-
     size_t n = GA.num_vertices();
     cout << "n = " << n << endl;
     VG.release_version(std::move(S));
@@ -105,9 +103,11 @@ void batch_ins_del_read(commandLine& P) {
 
             {
                 timer st; st.start();
+                auto S = VG.acquire_version();
                 for (uint32_t i =0 ; i< updates.size();i++){
                     find_e(S.graph,get<0>(updates[i]),get<1>(updates[i]));
                 }
+                VG.release_version(std::move(S));
                 double batch_time = st.stop();
                 avg_read += batch_time;
             }

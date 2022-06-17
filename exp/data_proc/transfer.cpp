@@ -12,6 +12,10 @@ using namespace std;
 #define newA(__E,__n) (__E*) malloc((__n)*sizeof(__E))
 
 
+
+
+
+
 void transfer_twitter(commandLine &P){
 
     char* iFile = P.getArgument(1);
@@ -31,7 +35,7 @@ void transfer_twitter(commandLine &P){
 
     vector<edge<uintT> > Ev;
     //auto *E = newA(edge<uintT>, NumEdge);
-    uintT src,dst;
+    uintT src = 0,dst = 0;
     NumEdge = 0;
     while(infile >> src){
         infile >> dst;
@@ -43,7 +47,7 @@ void transfer_twitter(commandLine &P){
     cout<<src<<' '<<dst<<endl;
     cout<<MaxSrc<<' '<<MaxDst<<' '<<NumEdge<<' '<<Ev.size()<<endl;
 
-    auto *E = newA(edge<uintT>, Ev.size());
+    auto *E = newA(edge<uintT>, NumEdge);
     for(uint i = 0;i<Ev.size();i++){
         E[i] = Ev[i];
     }
@@ -51,19 +55,54 @@ void transfer_twitter(commandLine &P){
     uintT maxrc = max(MaxSrc,MaxDst)+1;
     edgeArray<uintT> G = edgeArray<uintT>(E, maxrc, maxrc, NumEdge);
 
-    graph gg =  graphFromEdges(G,0);
+    graph gg =  graphFromEdges(G,sym);
+    free(E);
 
     writeGraphToFile<uintT>(gg, oFile);
 
 }
 
+//void transfer_uk(commandLine &P){
+//
+//    char* iFile = P.getArgument(1);
+//    char* oFile = P.getArgument(0);
+//    bool sym = P.getOption("-s");
+//
+//    ifstream infile;
+//    infile.open(iFile, ios::in);
+//    if (!infile.is_open()){
+//        cout << "Open File Failed." << endl;
+//    }
+//    string s,t;
+//    getline(infile,s);
+//    uintT NumEdge,MaxSrc,MaxDst;
+//
+//    cout<<s<<endl;
+//
+//    uintT src = 0,dst = 0;
+//    NumEdge = 3301876564;
+//    auto *E = newA(edge<uintT>, NumEdge);
+//    for(uint i = 0; i< NumEdge;i++){
+//        infile >> src>> dst;
+//        E[i] =edge<uintT>(src , dst);
+//        MaxSrc = max(MaxSrc,src);
+//        MaxDst = max(MaxDst,dst);
+//    }
+//
+//    cout<<src<<' '<<dst<<endl;
+//    cout<<MaxSrc<<' '<<MaxDst<<' '<<NumEdge<<endl;
+//
+//    uintT maxrc = max(MaxSrc,MaxDst)+1;
+//    edgeArray<uintT> G = edgeArray<uintT>(E, maxrc, maxrc, NumEdge);
+//    graph gg =  graphFromEdges(G,sym);
+//    writeGraphToFile<uintT>(gg, oFile);
+//}
 
 
-void transfer_other(commandLine &P){
+void transfer_tsv(commandLine &P){
     char* iFile = P.getArgument(1);
     char* oFile = P.getArgument(0);
     bool sym = P.getOption("-s");
-
 
     ifstream infile;
     infile.open(iFile, ios::in);
@@ -99,14 +138,61 @@ void transfer_other(commandLine &P){
 }
 
 
+void transfer_ldbc(commandLine &P){
+    char* iFile = P.getArgument(1);
+    char* oFile = P.getArgument(0);
+    bool sym = P.getOption("-s");
+
+
+    cout<<iFile<<' '<<oFile<<endl;
+    ifstream infile;
+    infile.open(iFile, ios::in);
+    if (!infile.is_open()){
+        cout << "Open File Failed." << endl;
+    }
+    uintT NumEdge,MaxSrc,MaxDst;
+
+    vector<edge<uintT> > Ev;
+    uintT src = 0,dst = 0;
+    NumEdge = 0;
+    while(infile >> src){
+        infile >> dst;
+        Ev.emplace_back(edge<uintT>(src , dst));
+        MaxSrc = max(MaxSrc,src);
+        MaxDst = max(MaxDst,dst);
+        NumEdge ++;
+    }
+    cout<<src<<' '<<dst<<endl;
+    cout<<MaxSrc<<' '<<MaxDst<<' '<<NumEdge<<' '<<Ev.size()<<endl;
+
+    auto *E = newA(edge<uintT>, Ev.size());
+    for(uint i = 0;i<Ev.size();i++){
+        E[i] = Ev[i];
+    }
+    Ev.clear();
+    uintT maxrc = max(MaxSrc,MaxDst)+1;
+    edgeArray<uintT> G = edgeArray<uintT>(E, maxrc, maxrc, NumEdge);
+
+    graph gg =  graphFromEdges(G,sym);
+    writeGraphToFile<uintT>(gg,oFile);
+
+    cout<<" Transfer Over."<<endl;
+}
+
 
 // ../../data/TSVgraph/out.soc-LiveJournal1 ../../data/ADJgraph/livejournal.adj
 // -s ../../data/TSVgraph/out.orkut-links ../../data/ADJgraph/orkut.adj
 // ../../data/TSVgraph/out.twitter ../../data/ADJgraph/twitter.adj
 // ../../data/TSVgraph/out.friendster ../../data/ADJgraph/friendster.adj
+// -s ../../data/LDBCgraph/graph500-24.e ../../data/ADJgraph/graph500-24.adj
+// -s ../../data/LDBCgraph/uniform-24.e ../../data/ADJgraph/uniform-24.adj
+// -s ../../data/TSVgraph/out.dimacs10-uk-2007-05 ../../data/ADJgraph/uk.adj
+
 int main(int argc, char* argv[])
 {
-    commandLine P(argc,argv,"[-s] <input SNAP file> <output Ligra file>");
-    transfer_twitter(P);
-
+    commandLine P(argc,argv);
+//    transfer_ldbc(P);
+//    transfer_tsv(P);
+//    transfer_twitter(P);
 }
+

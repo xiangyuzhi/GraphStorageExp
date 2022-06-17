@@ -1,28 +1,28 @@
 //
-// Created by zxy on 5/9/22.
+// Created by zxy on 5/10/22.
 //
 
 #ifndef EXP_LP_H
 #define EXP_LP_H
 
+
 #define newA(__E,__n) (__E*) malloc((__n)*sizeof(__E))
-#include "utils/parallel_util.h"
+#include "G-map.h"
 #include <map>
-#include <vector>
+
 #define LABEL 15
 
 using namespace std;
-
 
 struct LP_F {
     uint32_t **lb_cnt;
     uint32_t *label;
     LP_F(uint32_t **_lb_cnt, uint32_t *_label): lb_cnt(_lb_cnt),  label(_label){}
-    inline bool update (uint32_t s, uint32_t d) { //Update ShortestPathLen if found a shorter path
+    inline bool update (uint32_t s, uint32_t d, uint32_t w) { //Update ShortestPathLen if found a shorter path
         lb_cnt[label[d]][s]++;
         return 0;
     }
-    inline bool updateAtomic (uint32_t s, uint32_t d){ //atomic Update=
+    inline bool updateAtomic (uint32_t s, uint32_t d, uint32_t w){ //atomic Update=
         return 0;
     }
     inline bool cond (uint32_t d) { return 1; }
@@ -63,9 +63,10 @@ struct LP_Vertex_Reset {
     }
 };
 
+
 template<typename Graph>
 void LP(Graph &G, long itr) {
-    long n = G.num_vertices();
+    uint64_t n = G.num_vertices();
 
     auto **lb_cnt = newA(uint32_t*,LABEL+1);
     for (uint32_t i = 0; i <LABEL+1; i++) {
@@ -73,20 +74,17 @@ void LP(Graph &G, long itr) {
     }
 
     auto *lb = newA(uint32_t,n);
-    for(uint32_t i = 0; i <n; i++) {
+    cilk_for(uint32_t i = 0; i <n; i++) {
         lb[i] = (i%LABEL+LABEL)%LABEL + 1;
     }
-
-    bool* tt = pbbs::new_array_no_init<bool>(1);
-    vertex_subset frontier = vertex_subset(n, n, tt);
-    timer sparse_t, dense_t, fetch_t, other_t;
+    VertexSubset frontier = VertexSubset(0, n, true);
     while(itr--){
-        G.edge_map(frontier, LP_F(lb_cnt, lb), sparse_t, dense_t, fetch_t, other_t, stay_dense);
-
-        vertex_map(frontier,LP_Vertex(lb_cnt, lb));
-        vertex_map(frontier,LP_Vertex_Reset(lb_cnt));
+        edgeMap(G, frontier, LP_F(lb_cnt, lb), false, false );
+        vertexMap(frontier,LP_Vertex(lb_cnt, lb), false);
+        vertexMap(frontier,LP_Vertex_Reset(lb_cnt), false);
     }
-}
 
+    frontier.del();
+}
 
 #endif //EXP_LP_H
