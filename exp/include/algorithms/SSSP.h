@@ -5,7 +5,7 @@
 
 #define WEIGHTED 1
 #include "G-map.h"
-#include "parallel_util.h"
+#include "utils/parallel_util.h"
 
 
 struct BF_F {
@@ -42,8 +42,8 @@ struct BF_Vertex_F {
 };
 
 template <class Graph>
-void SSSP(Graph *G, long start) {
-    uint64_t n = G->num_vertices();
+void SSSP(Graph &G, long start) {
+    uint64_t n = G.num_vertices();
 
     auto* ShortestPathLen = newA(int32_t,n);
     parallel_for(long i=0;i<n;i++) {ShortestPathLen[i] = INT_MAX/2;} //initialize ShortestPathLen to "infinity"

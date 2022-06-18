@@ -6,7 +6,7 @@
 #include "aspen.h"
 #include "alg_sys.h"
 
-// -gname livejournal -core 1 -f ../../../data/ADJgraph/livejournal.adj -log ../../../log/aspen/edge.log
+// -gname livejournal -core 1 -f ../../../data/ADJgraph/livejournal.adj -log ../../../log/aspen/alg.log
 int main(int argc, char** argv) {
     srand(time(NULL));
     commandLine P(argc, argv);
@@ -14,8 +14,17 @@ int main(int argc, char** argv) {
     set_num_workers(thd_num);
     printf("Running Aspen using %ld threads.\n", thd_num);
     aspen G;
-    run_algorithm(P, G);
+    G.load_graph(P);
+    G.begin_read_graph();
 
+//    cout<<"deg 9: "<<G.get_deg(9)<<endl;
+//    auto itr = G.get_edge_iter(9);
+//    for(;!itr.end();itr.next()){
+//        cout<<itr.dst<<endl;
+//    }
+    run_algorithm(P, G);
+    G.end_read_graph();
+    G.del();
     printf("!!!!! TEST OVER !!!!!\n");
     return 0;
 }

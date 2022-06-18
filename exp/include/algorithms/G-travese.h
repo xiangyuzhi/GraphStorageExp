@@ -11,8 +11,8 @@ namespace graph_traversal {
     template <class F, class Graph, class VS>
     void map_sparse(Graph &G, F f,VS &output_vs, uint32_t self_index, bool output, bool weighted){
 
-        auto itr = G.edge_iter(self_index);
-        while (!itr.end()){
+        auto itr = G.get_edge_iter(self_index);
+        for (;!itr.end();itr.next()){
             uint64_t v = itr.dst;
             uint32_t w = 0;
             if (weighted) w = (uint32_t)itr.wgh;
@@ -29,7 +29,7 @@ namespace graph_traversal {
     void map_dense_vs_all(Graph &G, F f,VS &vs, VS &output_vs, int64_t self_index, bool output, bool weighted){
 
         auto itr = G.get_edge_iter(self_index);
-        while (!itr.end()){
+        for (;!itr.end();itr.next()){
             uint64_t v = itr.dst;
             uint32_t w = 0;
             if (weighted) w = (uint32_t)itr.wgh;
@@ -47,8 +47,8 @@ namespace graph_traversal {
     template <class F, class Graph, class VS>
     void map_dense_vs_not_all(Graph &G, F f, VS &vs, VS &output_vs, int64_t self_index, bool output, bool weighted){
 
-        auto itr = G.edge_iter(self_index);
-        while (!itr.end()){
+        auto itr = G.get_edge_iter(self_index);
+        for (;!itr.end();itr.next()){
             uint64_t v = itr.dst;
             uint32_t w = 0;
             if (weighted) w = (uint32_t)itr.wgh;

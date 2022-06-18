@@ -156,6 +156,9 @@ void run_algorithm(commandLine& P) {
 
     std::vector<std::string> test_ids;
     test_ids = {"BFS","PR","LP","CC","TC","1-HOP","2-HOP"};
+    auto S = VG.acquire_version();
+    cout<<"deg::"<<S.graph.find_vertex(9).value.degree()<<endl;
+
 
     for (auto test_id : test_ids) {
         std::vector<double> total_time;
@@ -174,7 +177,7 @@ void run_algorithm(commandLine& P) {
 }
 
 
-// -src 9 -gname LiveJournal -core 16 -f ../../../data/ADJgraph/LiveJournal.adj
+// -src 9 -gname LiveJournal -core 1 -f ../../../data/ADJgraph/livejournal.adj
 // -t BFS -src 1 -r 4 -s -f ../../../data/slashdot.adj
 int main(int argc, char** argv) {
 

@@ -14,7 +14,7 @@ include_directories(../../exp/include)
 # ./run_static_algorithm -t BFS -src 1 -r 4 -s -f ../../../data/ADJgraph/LiveJournal.adj
 #add_executable(aspen_tst test/aspen_test.cpp)
 #
-#add_executable(aspen_alg test/aspen_test_alg.cpp)
+add_executable(aspen_alg test/aspen_test_alg.cpp)
 #
 #add_executable(aspen_vertex test/aspen_test_vertex.cpp)
 #

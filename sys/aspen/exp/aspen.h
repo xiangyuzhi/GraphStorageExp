@@ -25,8 +25,36 @@
 #include "graph/versioned_graph.h"
 #include "common/compression.h"
 #include "graph/api.h"
+#include "trees/utils.h"
 
+struct Edge_iter { //for edgeMap
+public:
+    uint64_t dst;
+    uint32_t wgh;
 
+    template<class Graph>
+    Edge_iter(Graph &G, uint64_t vid){
+        deg = G.find_vertex(vid).value.degree();
+        ngh = G.find_vertex(vid).value.get_edges(vid);
+        itr = 0;
+        dst = ngh[itr];
+        wgh = 1;
+    }
+
+    void next(){
+        itr ++;
+        dst = ngh[itr];
+    }
+
+    bool end(){
+        return (itr >= deg);
+    }
+
+private:
+    uint32_t deg;
+    uintV *ngh;
+    uint32_t itr;
+};
 
 struct aspen{
     typedef unsigned long uintE;
@@ -34,19 +62,27 @@ struct aspen{
     using treeplus_graph = traversable_graph<sym_immutable_graph_tree_plus>;
 
     versioned_graph<treeplus_graph> *G ;
+    versioned_graph<treeplus_graph>::version *S;
+
+    void begin_read_graph(){
+        S = new versioned_graph<treeplus_graph>::version(G->acquire_version());
+    }
+
+    void end_read_graph(){
+        free(S); S = nullptr;
+    }
 
     uint32_t num_vertices(){
-        auto S = G->acquire_version();
-        uint32_t n = S.graph.num_vertices();
-        G->release_version(std::move(S));
-        return n;
+        const auto& GA = S->graph;
+        return GA.num_vertices();
     }
 
     void traverse_vertex(uint32_t vsize){
-        auto S = G->acquire_version();
+        begin_read_graph();
+        auto& GA = S->graph;
         for (uint32_t i = 0; i < vsize; i++)
-            auto a = S.graph.find_vertex(i);
-        G->release_version(std::move(S));
+            auto a = GA.find_vertex(i);
+        end_read_graph();
     }
 
     void load_graph(commandLine& P){
@@ -95,51 +131,31 @@ struct aspen{
         G->delete_edges_batch(updates_to_run, reinterpret_cast<tuple<uintV, uintV> *>(raw_edges), false, true, nn, false);
     }
 
-    struct Edge_iter { //for edgeMap
-    public:
-        uint64_t dst;
-        uint32_t wgh;
+    Edge_iter get_edge_iter(uint64_t vid){
+        auto& GA = S->graph;
+        return Edge_iter(GA, vid);
+    }
 
-        void next(){
-            if(!stinger_eb_is_blank(current_eb__, itr)) {
-                struct stinger_edge *current_edge__ = current_eb__->edges + itr;
-                if (STINGER_IS_OUT_EDGE) {
-                    dst = STINGER_EDGE_DEST;// do operation
-                }
-            }
-            itr ++;
-            if(itr>= stinger_eb_high(current_eb__)){
-                current_eb__ = ebpool_priv + (current_eb__->next);
-                itr = 0 ;
-            }
+    size_t get_deg(uint64_t vid){
+        auto& GA = S->graph;
+        return GA.find_vertex(vid).value.degree();
+    }
+
+    uint64_t countCommon(uint32_t a, uint32_t b) {
+        auto it_A = get_edge_iter(a);
+        auto it_B = get_edge_iter(b);
+        uint64_t ans=0;
+        while (!it_A.end() && !it_B.end() && it_A.dst < a && it_B.dst < b) { //count "directed" triangles
+            if (it_A.dst == it_B.dst) it_A.next(), it_B.next(), ans++;
+            else if (it_A.dst < it_B.dst) it_A.next();
+            else it_B.next();
         }
-
-        Edge_iter(uint64_t vid){
-            ebpool_priv = ebpool->ebpool;
-            current_eb__ = ebpool_priv + stinger_vertex_edges_get(vertices, vid);
-            itr = 0;
-            if(current_eb__ != ebpool_priv)
-                if(itr< stinger_eb_high(current_eb__))
-                    if(!stinger_eb_is_blank(current_eb__, itr)) {
-                        struct stinger_edge *current_edge__ = current_eb__->edges + itr;
-                        if (STINGER_IS_OUT_EDGE) {
-                            dst = STINGER_EDGE_DEST;// do operation
-                        }
-                    }
-        }
-
-        bool end(){
-            return (current_eb__ == ebpool_priv);
-        }
-
-    private:
-        MAP_STING(G);
-        struct stinger_eb * ebpool_priv;// = ebpool->ebpool;
-        struct stinger_eb *  current_eb__;// = ebpool_priv + stinger_vertex_edges_get(vertices, a);
-        uint64_t itr;
-    };
+        return ans;
+    }
 
 };
+
+
 
 
 

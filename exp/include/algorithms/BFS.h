@@ -31,36 +31,35 @@ void BFS(Graph &G, uint32_t bfs_src) {
 
     VertexSubset frontier = VertexSubset(bfs_src, n); //creates initial frontier
     while(frontier.not_empty()){ //loop until frontier is empty
-        VertexSubset next_frontier = edgeMap(G, frontier, BFS_F(Parents),false, true);
+        VertexSubset next_frontier = edgeMap(G, frontier, BFS_F(Parents), false, true);
         frontier.del();
         frontier = next_frontier;
     }
     frontier.del();
+
+//    std::vector<uint32_t> depths(n, UINT32_MAX);
+//    for (uint32_t j = 0; j < n; j++) {
+//        uint32_t current_depth = 0;
+//        int32_t current_parent = j;
+//        if (Parents[j] < 0) {
+//            continue;
+//        }
+//        while (current_parent != Parents[current_parent]) {
+//            current_depth += 1;
+//            current_parent = Parents[current_parent];
+//        }
+//        depths[j] = current_depth;
+//    }
+//    ofstream myfile;
+//    string path = "../../../log/aspen/bfs.out";
+//    myfile.open (path);
+//    for (int i = 0; i < n; i++) {
+//        myfile << depths[i] << "\n";
+//    }
+//    myfile.close();
+
     free(Parents);
 
-#if VERIFY
-    std::vector<uint32_t> depths(n, UINT32_MAX);
-  for (uint32_t j = 0; j < n; j++) {
-    uint32_t current_depth = 0;
-    int32_t current_parent = j;
-    if (Parents[j] < 0) {
-      continue;
-    }
-    while (current_parent != Parents[current_parent]) {
-      current_depth += 1;
-      current_parent = Parents[current_parent];
-    }
-    depths[j] = current_depth;
-  }
-
-  // write out to file
-  std::ofstream myfile;
-  myfile.open ("bfs.out");
-  for (int i = 0; i < n; i++) {
-    myfile << depths[i] << "\n";
-  }
-  myfile.close();
-#endif
 }
 
 

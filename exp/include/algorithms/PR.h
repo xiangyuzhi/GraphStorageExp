@@ -51,7 +51,7 @@ struct PR_Vertex {
     Graph &G;
     PR_Vertex(T* _p_curr, Graph& G_) : p_curr(_p_curr), G(G_) {}
     inline bool operator () (uint32_t i) {
-        p_curr[i] = p_curr[i] /G->get_deg(i); // damping*p_next[i] + addedConstant;
+        p_curr[i] = p_curr[i] /G.get_deg(i); // damping*p_next[i] + addedConstant;
         return true;
     }
 };
