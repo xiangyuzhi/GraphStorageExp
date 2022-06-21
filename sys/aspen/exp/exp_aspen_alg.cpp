@@ -16,12 +16,6 @@ int main(int argc, char** argv) {
     aspen G;
     G.load_graph(P);
     G.begin_read_graph();
-
-//    cout<<"deg 9: "<<G.get_deg(9)<<endl;
-//    auto itr = G.get_edge_iter(9);
-//    for(;!itr.end();itr.next()){
-//        cout<<itr.dst<<endl;
-//    }
     run_algorithm(P, G);
     G.end_read_graph();
     G.del();

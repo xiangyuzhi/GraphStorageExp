@@ -70,6 +70,7 @@ void CC(Graph &G) {
 
     Active.del();
     free(prevIDs);
+    free(IDs);
 }
 
 #endif //EXP_CC_H

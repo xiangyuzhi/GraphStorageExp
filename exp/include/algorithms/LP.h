@@ -86,6 +86,7 @@ void LP(Graph &G, long itr) {
 
     frontier.del();
     free(lb);
+    free(lb_cnt);
 }
 
 #endif //EXP_LP_H

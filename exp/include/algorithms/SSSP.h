@@ -68,6 +68,8 @@ void SSSP(Graph &G, long start) {
 
         round++;
     }
-    frontier.del(); free(Visited);
+    frontier.del();
+    free(Visited);
+    free(ShortestPathLen);
 }
 

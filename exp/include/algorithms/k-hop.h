@@ -30,11 +30,13 @@ struct HOP_Vertex_F {
 
 template <typename Graph>
 void K_HOP(Graph &G, long k) {
-
     uint64_t n = G.num_vertices();
-    cilk_for (uint64_t i = 0; i < n; i ++){
-        VertexSubset frontier = VertexSubset(i, n);
-        int tk = k;
+    auto r = pbbs::random();
+    int nsrc = n/10;
+    for(int i = 1; i<nsrc; i+=10) {
+        uintV src = r.ith_rand(n) % n;
+        uint32_t tk = k;
+        VertexSubset frontier = VertexSubset(src, n);
         while(tk--){
             VertexSubset next_frontier = edgeMap(G, frontier, HOP_F(), false, true, 1);
             frontier.del();
