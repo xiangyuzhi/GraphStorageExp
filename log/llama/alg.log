@@ -1,44 +1,8 @@
-GRAPH	LiveJournal	[Tue May 24 03:19:20 2022]
-Using threads :	1
-	[Tue May 24 03:19:26 2022]AVG	test=BFS	time=1.50073
-	[Tue May 24 03:21:22 2022]AVG	test=PR	time=28.8837
-	[Tue May 24 03:24:03 2022]AVG	test=SSSP	time=40.27
-	[Tue May 24 03:25:51 2022]AVG	test=CC	time=26.9006
-	[Tue May 24 03:28:31 2022]AVG	test=LP	time=40.4357
-	[Tue May 24 03:29:26 2022]AVG	test=TC	time=13.841
-	[Tue May 24 03:30:46 2022]AVG	test=1-HOP	time=8.27791
-	[Tue May 24 03:31:43 2022]AVG	test=2-HOP	time=14.2312
-GRAPH	LiveJournal	[Tue May 24 03:35:24 2022]
-Using threads :	16
-	[Tue May 24 03:35:26 2022]AVG	test=BFS	time=0.614095
-	[Tue May 24 03:35:50 2022]AVG	test=PR	time=5.92704
-	[Tue May 24 03:36:26 2022]AVG	test=SSSP	time=9.02777
-	[Tue May 24 03:37:02 2022]AVG	test=CC	time=9.07187
-	[Tue May 24 03:37:47 2022]AVG	test=LP	time=11.4064
-	[Tue May 24 03:38:03 2022]AVG	test=TC	time=4.0634
-GRAPH	LiveJournal	[Tue May 24 03:42:26 2022]
-Using threads :	16
-GRAPH	LiveJournal	[Tue May 24 03:55:44 2022]
-Using threads :	12
-	[Tue May 24 03:55:46 2022]AVG	test=BFS	time=0.650232
-	[Tue May 24 03:56:15 2022]AVG	test=PR	time=7.25342
-	[Tue May 24 03:57:01 2022]AVG	test=SSSP	time=11.4291
-	[Tue May 24 03:57:46 2022]AVG	test=CC	time=11.2684
-	[Tue May 24 03:58:40 2022]AVG	test=LP	time=13.6208
-	[Tue May 24 03:59:00 2022]AVG	test=TC	time=5.05234
-GRAPH	LiveJournal	[Tue May 24 04:01:51 2022]
-Using threads :	8
-	[Tue May 24 04:01:54 2022]AVG	test=BFS	time=0.680503
-	[Tue May 24 04:02:34 2022]AVG	test=PR	time=10.0093
-	[Tue May 24 04:03:36 2022]AVG	test=SSSP	time=15.4836
-	[Tue May 24 04:04:37 2022]AVG	test=CC	time=15.3359
-	[Tue May 24 04:05:46 2022]AVG	test=LP	time=17.4239
-	[Tue May 24 04:06:12 2022]AVG	test=TC	time=6.56842
-GRAPH	LiveJournal	[Tue May 24 04:10:50 2022]
-Using threads :	4
-	[Tue May 24 04:10:54 2022]AVG	test=BFS	time=0.893594
-	[Tue May 24 04:12:00 2022]AVG	test=PR	time=16.5481
-	[Tue May 24 04:13:39 2022]AVG	test=SSSP	time=24.729
-	[Tue May 24 04:15:15 2022]AVG	test=CC	time=24.0107
-	[Tue May 24 04:16:55 2022]AVG	test=LP	time=24.9692
-	[Tue May 24 04:17:35 2022]AVG	test=TC	time=9.98289
+livejournal,16,BFS,0.610766
+livejournal,16,PR,5.92064
+livejournal,16,SSSP,9.10488
+livejournal,16,CC,8.95455
+livejournal,16,LP,11.1995
+livejournal,16,TC,395.043
+livejournal,16,1-HOP,3.66364
+livejournal,16,2-HOP,5.30177

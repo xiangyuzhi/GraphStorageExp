@@ -8,12 +8,11 @@ void batch_ins_del_read(commandLine& P){
     PRINT("=============== Batch Read BEGIN ===============");
 
     auto gname = P.getOptionValue("-gname", "none");
-    std::ofstream alg_file("../../../log/ligra/edge.log",ios::app);
-    alg_file << "GRAPH" << "\t"+gname <<"\t["<<getCurrentTime0()<<']'<<std::endl;
     auto thd_num = P.getOptionLongValue("-core", 1);
-    alg_file << "Using threads :" << "\t"<<thd_num<<endl;
+    auto log = P.getOptionValue("-log","none");
+    std::ofstream log_file(log, ios::app);
 
-    std::vector<uint32_t> update_sizes = {10000000};//10, 100, 1000 ,10000,100000,1000000,
+    std::vector<uint32_t> update_sizes = {10, 100, 1000 ,10000,100000,1000000,10000000};//
     auto r = random_aspen();
     auto update_times = std::vector<double>();
     size_t n_trials = 1;
@@ -24,7 +23,7 @@ void batch_ins_del_read(commandLine& P){
         std::cout << "Running batch size: " << update_sizes[us] << std::endl;
 
         if (update_sizes[us] < 10000000)
-            n_trials = 20;
+            n_trials = 10;
         else n_trials = 5;
         size_t updates_to_run = update_sizes[us];
         auto perm = get_random_permutation(updates_to_run);
@@ -52,21 +51,19 @@ void batch_ins_del_read(commandLine& P){
             }
             gettimeofday(&t_end, &tzp);
             avg_read += cal_time_elapsed(&t_start, &t_end);
-
+            del_G();
         }
         double time_r = (double) avg_read / n_trials;
         double read_throughput = updates_to_run / time_r;
         printf("batch_size = %zu, average read: %f, throughput %e\n", updates_to_run, time_r, read_throughput);
-        alg_file <<"\t["<<getCurrentTime0()<<']' << "Read"<< "\tbatch_size=" << updates_to_run<< "\ttime=" << time_r<< "\tthroughput=" << read_throughput << std::endl;
+        log_file<< gname<<","<<thd_num<<",e,read,"<< update_sizes[us] <<","<<read_throughput << "\n";
 
-        del_G();
     }
     PRINT("=============== Batch Insert END ===============");
 }
 
 
-// -src 9 -maxiters 5 -f ../../../data/slashdot.adj
-// -gname LiveJournal -core 1 -f ../../../data/ADJgraph/LiveJournal.adj
+// -gname livejournal -core 16 -f ../../../data/ADJgraph/livejournal.adj -log ../../../log/ligra/edge.log
 int main(int argc, char** argv) {
     srand(time(NULL));
     commandLine P(argc, argv);

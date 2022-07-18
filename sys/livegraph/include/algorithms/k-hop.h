@@ -34,9 +34,11 @@ void K_HOP(Graph *G, long k) {
 
     auto tx = G->begin_read_only_transaction();
     uint64_t n = G->get_max_vertex_id();
-    parallel_for (uint64_t i = 0; i < n; i ++){
-        VertexSubset frontier = VertexSubset(i, n);
-        int tk = k;
+    int nsrc = n/10;
+    for(int i = 1; i<nsrc;i+=10){
+        uint32_t src = i;//r.ith_rand(n) % n;
+        uint32_t tk = k;
+        VertexSubset frontier = VertexSubset(src, n);
         while(tk--){
             VertexSubset next_frontier = edgeMap(n, tx, frontier, HOP_F(),false, true, 1);
             frontier.del();

@@ -1,7 +1,7 @@
 //
 // Created by zxy on 5/9/22.
 //
-#define OPENMP 1
+#define CILK 1
 #include "livegraph_test.h"
 #include "BFS.h"
 #include "PR.h"
@@ -12,11 +12,7 @@
 #include "TC.h"
 
 double test_bfs(commandLine& P) {
-    long bfs_src = P.getOptionLongValue("-src",-1);
-    if (bfs_src == -1) {
-        std::cout << "Please specify a source vertex to run the BFS from using -src" << std::endl;
-        exit(0);
-    }
+    long bfs_src = P.getOptionLongValue("-src",9);
     std::cout << "Running BFS from source = " << bfs_src << std::endl;
 
     gettimeofday(&t_start, &tzp);
@@ -35,11 +31,7 @@ double test_pr(commandLine& P) {
 }
 
 double test_sssp(commandLine& P){
-    long sssp_src = P.getOptionLongValue("-src",-1);
-    if (sssp_src == -1) {
-        std::cout << "Please specify a source vertex to run the SSSP from" << std::endl;
-        exit(0);
-    }
+    long sssp_src = P.getOptionLongValue("-src",9);
     gettimeofday(&t_start, &tzp);
     SSSP(G, sssp_src);
     gettimeofday(&t_end, &tzp);
@@ -105,17 +97,15 @@ double execute(commandLine& P, string testname) {
 void run_algorithm(commandLine& P) {
     PRINT("=============== Run Algorithm BEGIN ===============");
 
-    auto filename = P.getOptionValue("-f", "none");
-    size_t rounds = P.getOptionLongValue("-rounds", 4);
     std::vector<std::string> test_ids;
     // if testname is TC, include it, otherwise exclude it
-    test_ids = {"1-HOP","2-HOP"};//,"BFS","PR","SSSP","CC","LP","TC"
+    test_ids = {"BFS","PR","SSSP","CC","LP","TC"};//,"1-HOP","2-HOP"
 
+    size_t rounds = P.getOptionLongValue("-rounds", 5);
     auto gname = P.getOptionValue("-gname", "none");
-    std::ofstream alg_file("../../../log/livegraph/alg.log",ios::app);
-    alg_file << "GRAPH" << "\t"+gname <<"\t["<<getCurrentTime0()<<']'<<std::endl;
     auto thd_num = P.getOptionLongValue("-core", 1);
-    alg_file << "Using threads :" << "\t"<<thd_num<<endl;
+    auto log = P.getOptionValue("-log", "none");
+    std::ofstream alg_file(log, ios::app);
 
     for (auto test_id : test_ids) {
         std::vector<double> total_time;
@@ -126,20 +116,19 @@ void run_algorithm(commandLine& P) {
             total_time.emplace_back(tm);
         }
         double avg_time = cal_time(total_time);
-        std::cout <<"["<<getCurrentTime0()<<']'<< "AVG"<< "\ttest=" << test_id<< "\ttime=" << avg_time << "\tgraph=" << filename << std::endl;
-        alg_file <<"\t["<<getCurrentTime0()<<']' << "AVG"<< "\ttest=" << test_id<< "\ttime=" << avg_time << std::endl;
+        std::cout << "\ttest=" << test_id<< "\ttime=" << avg_time << "\tgraph=" << gname << std::endl;
+        alg_file << gname<<","<< thd_num<<","<<test_id<<","<< avg_time << std::endl;
     }
     alg_file.close();
     PRINT("=============== Run Algorithm END ===============");
 }
 
 
-// -src 9 -s -gname LiveJournal -core 1 -f ../../../data/ADJgraph/LiveJournal.adj
-// -t BFS -src 1 -r 4 -s -f ../../../data/slashdot.adj
+// -gname livejournal -core 16 -f ../../../data/ADJgraph/livejournal.adj -log ../../../log/livegraph/alg.log
 int main(int argc, char** argv) {
     commandLine P(argc, argv );
     auto thd_num = P.getOptionLongValue("-core", 1);
-    omp_set_num_threads(thd_num);
+    set_num_workers(thd_num);
     printf("Running LiveGraph using %ld threads.\n", thd_num );
 
     load_graph(P);

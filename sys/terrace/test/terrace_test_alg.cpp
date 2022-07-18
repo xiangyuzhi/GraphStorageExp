@@ -102,13 +102,9 @@ double test_bfs(G& GA, commandLine& P, int trial) {
     struct timeval start, end;
     struct timezone tzp;
 
-    long src = P.getOptionLongValue("-src",-1);
+    long src = P.getOptionLongValue("-src",9);
     auto gname = P.getOptionValue("-gname", "none");
 
-    if (src == -1) {
-        std::cout << "Please specify a source vertex to run the BFS from" << std::endl;
-        exit(0);
-    }
     std::cout << "Running BFS from source = " << src << std::endl;
 
     gettimeofday(&start, &tzp);
@@ -171,17 +167,15 @@ double execute(Graph& G, commandLine& P, std::string testname, int i) {
 void run_algorithm(commandLine& P) {
     PRINT("=============== Run Algorithm BEGIN ===============");
     Graph Ga = *G;
-    auto filename = P.getOptionValue("-f", "none");
-    size_t rounds = P.getOptionLongValue("-rounds", 4);
 
     std::vector<std::string> test_ids;
-    test_ids = {"BFS","PR","CC","TC","1-hop","2-hop","LP"};
+    test_ids = {"BFS","PR","CC","TC","1-HOP","2-HOP","LP"};
 
+    size_t rounds = P.getOptionLongValue("-rounds", 5);
     auto gname = P.getOptionValue("-gname", "none");
-    std::ofstream alg_file("../../../log/terrace/alg.log",ios::app);
-    alg_file << "GRAPH" << "\t"+gname <<"\t["<<getCurrentTime0()<<']'<<std::endl;
     auto thd_num = P.getOptionLongValue("-core", 1);
-    alg_file << "Using threads :" << "\t"<<thd_num<<endl;
+    auto log = P.getOptionValue("-log", "none");
+    std::ofstream alg_file(log, ios::app);
 
     for (auto test_id : test_ids) {
         std::vector<double> total_time;
@@ -192,27 +186,22 @@ void run_algorithm(commandLine& P) {
             total_time.emplace_back(tm);
         }
         double avg_time = cal_time(total_time);
-        std::cout <<"["<<getCurrentTime0()<<']'<< "AVG"<< "\ttest=" << test_id<< "\ttime=" << avg_time << "\tgraph=" << filename << std::endl;
-        alg_file <<"\t["<<getCurrentTime0()<<']' << "AVG"<< "\ttest=" << test_id<< "\ttime=" << avg_time << std::endl;
+        std::cout << "\ttest=" << test_id<< "\ttime=" << avg_time << "\tgraph=" << gname << std::endl;
+        alg_file << gname<<","<< thd_num<<","<<test_id<<","<< avg_time << std::endl;
     }
     alg_file.close();
     PRINT("=============== Run Algorithm END ===============");
 }
 
 
-// -src 9 -maxiters 10 -gname slashdot -core 1 -f ../../../data/slashdot.adj
-// -src 9 -maxiters 10 -gname LiveJournal -core 4 -f ../../../data/ADJgraph/LiveJournal.adj
+// -gname livejournal -core 16 -f ../../../data/ADJgraph/livejournal.adj -log ../../../log/terrace/alg.log
 int main(int argc, char** argv) {
     srand(time(NULL));
 
     commandLine P(argc, argv );
     auto thd_num = P.getOptionLongValue("-core", 1);
-//    omp_set_num_threads(thd_num);
     set_num_workers(thd_num);
     printf("Running Terrace using %ld threads.\n", thd_num );
-
-    auto gname = P.getOptionValue("-gname", "none");
-    mkdir(("../../../log/terrace/" + gname).c_str(),S_IRUSR | S_IWUSR | S_IXUSR | S_IRWXG | S_IRWXO);
 
     load_graph(P);
 

@@ -11,15 +11,27 @@
 template<typename Trans>
 uint64_t countCommon(Trans &tx, uint32_t a, uint32_t b) {
 
-    auto it_A = tx.get_edges(a, /* label */ 0);
-    auto it_B = tx.get_edges(b, /* label */ 0);
-    long ans=0;
-    while (it_A.valid() && it_B.valid() && (it_A.dst_id()) < a && (it_B.dst_id()) < b) { //count "directed" triangles
-        if ((it_A.dst_id()) == (it_B.dst_id())) it_A.next(), it_B.next(), ans++;
-        else if ((it_A.dst_id()) < (it_B.dst_id())) it_A.next();
-        else it_B.next();
-    }
+    vector<uint32_t> a_ngh;
+    vector<uint32_t> b_ngh;
 
+    for(auto it_A = tx.get_edges(a,0); it_A.valid() ;it_A.next())
+        a_ngh.push_back(it_A.dst_id());
+
+    for(auto it_B = tx.get_edges(b,0); it_B.valid() ;it_B.next())
+        b_ngh.push_back(it_B.dst_id());
+
+    std::sort(a_ngh.begin(),a_ngh.end());
+    std::sort(b_ngh.begin(),b_ngh.end());
+
+    uint64_t ans=0;
+    uint32_t it_A = 0, it_B = 0;
+    while (it_A<a_ngh.size() && it_B<b_ngh.size() && a_ngh[it_A] < a && b_ngh[it_B] < b) { //count "directed" triangles
+        if (a_ngh[it_A] == b_ngh[it_B]) ++it_A, ++it_B, ans++;
+        else if (a_ngh[it_A] < b_ngh[it_B]) ++it_A;
+        else ++it_B;
+    }
+    a_ngh.clear();
+    b_ngh.clear();
     return ans;
 }
 

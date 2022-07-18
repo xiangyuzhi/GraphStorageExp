@@ -12,13 +12,13 @@ include_directories(include/algorithms)
 add_library(csr SHARED src/csr.cpp)
 
 add_executable(ligra_tst test/csr_test.cpp)
-target_link_libraries(ligra_tst csr -lnuma)
+target_link_libraries(ligra_tst csr)
 
 add_executable(ligra_vertex test/csr_test_vertex.cpp)
-target_link_libraries(ligra_vertex csr -lnuma)
+target_link_libraries(ligra_vertex csr)
 
 add_executable(ligra_edge test/csr_test_edge.cpp)
-target_link_libraries(ligra_edge csr -lnuma)
+target_link_libraries(ligra_edge csr)
 
 add_executable(ligra_alg test/csr_test_alg.cpp)
-target_link_libraries(ligra_alg csr -lnuma)
+target_link_libraries(ligra_alg csr)

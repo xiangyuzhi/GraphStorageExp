@@ -1,7 +1,7 @@
 //
 // Created by zxy on 4/26/22.
 //
-#define OPENMP 1
+#define CILK 1
 #include "terrace_test.h"
 
 void load_graph(commandLine& P){
@@ -33,13 +33,12 @@ void batch_ins_del_read(commandLine& P){
     PRINT("=============== Batch Insert BEGIN ===============");
 
     auto gname = P.getOptionValue("-gname", "none");
-    std::ofstream alg_file("../../../log/terrace/edge.log",ios::app);
-    alg_file << "GRAPH" << "\t"+gname <<"\t["<<getCurrentTime0()<<']'<<std::endl;
     auto thd_num = P.getOptionLongValue("-core", 1);
-    alg_file << "Using threads :" << "\t"<<thd_num<<endl;
+    auto log = P.getOptionValue("-log","none");
+    std::ofstream log_file(log, ios::app);
 
     Graph Ga = *G;
-    std::vector<uint32_t> update_sizes = {10000000};//10, 100, 1000 ,10000,100000,1000000,
+    std::vector<uint32_t> update_sizes = {100000};//10, 100, 1000 ,10000,,1000000, 10000000
     auto r = random_aspen();
     auto update_times = std::vector<double>();
     size_t n_trials = 1;
@@ -50,7 +49,7 @@ void batch_ins_del_read(commandLine& P){
         std::cout << "Running batch size: " << update_sizes[us] << std::endl;
 
         if (update_sizes[us] < 10000000)
-            n_trials = 20;
+            n_trials = 10;
         else n_trials = 5;
         size_t updates_to_run = update_sizes[us];
         auto perm = get_random_permutation(updates_to_run);
@@ -108,31 +107,30 @@ void batch_ins_del_read(commandLine& P){
         double time_i = (double) avg_insert / n_trials;
         double insert_throughput = updates_to_run / time_i;
         printf("batch_size = %zu, average insert: %f, throughput %e\n", updates_to_run, time_i, insert_throughput);
-        alg_file <<"\t["<<getCurrentTime0()<<']' << "AVG"<< "\tbatch_size=" << updates_to_run<< "\ttime=" << time_i<< "\tthroughput=" << insert_throughput << std::endl;
+        log_file<< gname<<","<<thd_num<<",e,insert,"<< update_sizes[us] <<","<<insert_throughput << "\n";
 
         double time_r = (double) avg_read / n_trials;
         double read_throughput = updates_to_run / time_r;
         printf("batch_size = %zu, average read: %f, throughput %e\n", updates_to_run, time_r, read_throughput);
-        alg_file <<"\t["<<getCurrentTime0()<<']' << "AVG"<< "\tbatch_size=" << updates_to_run<< "\ttime=" << time_r<< "\tthroughput=" << read_throughput << std::endl;
+        log_file<< gname<<","<<thd_num<<",e,read,"<< update_sizes[us] <<","<<read_throughput << "\n";
 
         double time_d = (double) avg_delete / n_trials;
         double delete_throughput = updates_to_run / time_d;
         printf("batch_size = %zu, average delete: %f, throughput %e\n", updates_to_run, time_d, delete_throughput);
-        alg_file <<"\t["<<getCurrentTime0()<<']' << "AVG"<< "\tbatch_size=" << updates_to_run<< "\ttime=" << time_d<< "\tthroughput=" << delete_throughput << std::endl;
+        log_file<< gname<<"," <<thd_num<<",e,delete,"<< update_sizes[us] <<","<<delete_throughput << "\n";
     }
     PRINT("=============== Batch Insert END ===============");
 }
 
 
-// -src 9 -maxiters 5 -f ../../../data/slashdot.adj
-// -src 9 -maxiters 5 -f ../../../data/orkut.adj
+// -gname livejournal -core 16 -f ../../../data/ADJgraph/livejournal.adj -log ../../../log/terrace/edge.log
 
 int main(int argc, char** argv) {
     srand(time(NULL));
 
-    commandLine P(argc, argv, "./graph_bm [-t testname -r rounds -f file");
-    auto thd_num = P.getOptionLongValue("-core", 16);
-    omp_set_num_threads(thd_num);
+    commandLine P(argc, argv);
+    auto thd_num = P.getOptionLongValue("-core", 1);
+    set_num_workers(thd_num);
     printf("Running Terrace using %ld threads.\n", thd_num );
 
     load_graph(P);

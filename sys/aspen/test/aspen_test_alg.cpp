@@ -16,7 +16,6 @@
 #include "algorithms/LP.h"
 #include "trees/utils.h"
 
-#include "omp.h"
 
 #include <cstring>
 #include <chrono>
@@ -42,22 +41,12 @@ double cal_time(std::vector<double> timelist){
     return st/double(timelist.size()-2);
 }
 
+
 template <class G>
 double test_bfs(G& GA, commandLine& P) {
-    bool no_snapshot = P.getOptionValue("-noflatsnap");
-    bool print_stats = P.getOptionValue("-stats");
-    long src = P.getOptionLongValue("-src",-1);
-    if (src == -1) {
-        std::cout << "Please specify a source vertex to run the BFS from using -src" << std::endl;
-        exit(0);
-    }
-    std::cout << "Running BFS from source = " << src << std::endl;
+    long src = P.getOptionLongValue("-src",9);
     timer bfst; bfst.start();
-    if (no_snapshot) {
-        BFS(GA, src, print_stats);
-    } else {
-        BFS_Fetch(GA, src, print_stats);
-    }
+    BFS(GA, src);
     bfst.stop();
     return bfst.get_total();
 }
@@ -72,12 +61,9 @@ double test_k_hop(G& GA, commandLine& P, int k) {
 }
 
 
-
 template <class G>
 double test_pr(G& GA, commandLine& P) {
-
     long maxiters = P.getOptionLongValue("-maxiters",10);
-
     timer tmr; tmr.start();
     PR<double,G>(GA,maxiters);
     tmr.stop();
@@ -105,18 +91,13 @@ double test_lp(G& GA, commandLine& P) {
 }
 
 
-
 template <class G>
 double test_tc(G& GA, commandLine& P) {
-
     timer tmr; tmr.start();
     auto count = TC(GA);
     tmr.stop();
     return (tmr.get_total());
 }
-
-
-
 
 template <class Graph>
 double execute(Graph& G, commandLine& P, string testname) {
@@ -141,24 +122,18 @@ double execute(Graph& G, commandLine& P, string testname) {
 }
 
 void run_algorithm(commandLine& P) {
-    size_t threads = num_workers();
-
+    cout<<"=============== Run Algorithm BEGIN ==============="<<endl;
     auto VG = initialize_treeplus_graph(P);
-    cout<<"init over"<<endl;
     // Run the algorithm on it
-    size_t rounds = P.getOptionLongValue("-rounds", 4);
 
+    size_t rounds = P.getOptionLongValue("-rounds", 4);
     auto gname = P.getOptionValue("-gname", "none");
-    std::ofstream alg_file("../../../log/aspen/alg.log",ios::app);
-    alg_file << "GRAPH" << "\t"+gname <<"\t["<<getCurrentTime0()<<']'<<std::endl;
     auto thd_num = P.getOptionLongValue("-core", 1);
-    alg_file << "Using threads :" << "\t"<<thd_num<<endl;
+    auto log = P.getOptionValue("-log", "none");
+    std::ofstream alg_file(log, ios::app);
 
     std::vector<std::string> test_ids;
-    test_ids = {"BFS","PR","LP","CC","TC","1-HOP","2-HOP"};
-    auto S = VG.acquire_version();
-    cout<<"deg::"<<S.graph.find_vertex(9).value.degree()<<endl;
-
+    test_ids = {"BFS","PR","LP","CC","TC","1-HOP","2-HOP"};//
 
     for (auto test_id : test_ids) {
         std::vector<double> total_time;
@@ -166,19 +141,21 @@ void run_algorithm(commandLine& P) {
             auto S = VG.acquire_version();
             double tm = execute(S.graph, P, test_id);
 
-            std::cout << "RESULT" << fixed << setprecision(6)<< "\ttest=" << test_id<< "\ttime=" << tm<< "\titeration=" << i<< std::endl;
+            std::cout << "\ttest=" << test_id << "\ttime=" << tm << "\titeration=" << i << std::endl;
             total_time.emplace_back(tm);
             VG.release_version(std::move(S));
         }
         double avg_time = cal_time(total_time);
-        std::cout << "["<<getCurrentTime0()<<']' << fixed << setprecision(6)<< "\ttest=" << test_id<< "\ttime=" << avg_time<< std::endl;
-        alg_file <<"\t["<<getCurrentTime0()<<']' << "AVG"<< "\ttest=" << test_id<< "\ttime=" << avg_time << std::endl;
+        std::cout << "\ttest=" << test_id<< "\ttime=" << avg_time << "\tgraph=" << gname << std::endl;
+        alg_file << gname<<","<< thd_num<<","<<test_id<<","<< avg_time << std::endl;
     }
+    alg_file.close();
+    cout<<"=============== Run Algorithm END ==============="<<endl;
 }
 
 
-// -src 9 -gname LiveJournal -core 1 -f ../../../data/ADJgraph/livejournal.adj
-// -t BFS -src 1 -r 4 -s -f ../../../data/slashdot.adj
+// -gname livejournal -core 16 -f ../../../data/ADJgraph/livejournal.adj -log ../../../log/aspen/alg.log
+// -gname friendster -core 16 -f ../../../data/ADJgraph/friendster.adj -log ../../../log/aspen/alg.log
 int main(int argc, char** argv) {
 
     commandLine P(argc, argv );

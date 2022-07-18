@@ -11,15 +11,30 @@
 template<typename Graph>
 uint64_t countCommon(Graph *G, uint32_t a, uint32_t b) {
 
-    auto a_ngh = G->outgoing.get_adjlist(a);
-    auto b_ngh = G->outgoing.get_adjlist(b);
+    auto a_edges = G->outgoing.get_adjlist(a);
+    auto b_edges = G->outgoing.get_adjlist(b);
+    uint32_t deg_A = a_edges.size();
+    uint32_t deg_B = b_edges.size();
+
+    uint32_t *a_ngh = newA(uint32_t, deg_A);
+    uint32_t *b_ngh = newA(uint32_t, deg_B);
+
+    for(int i=0;i<deg_A;i++) a_ngh[i] = a_edges[i].nbr;
+    for(int i=0;i<deg_B;i++) b_ngh[i] = b_edges[i].nbr;
+
+
+    std::sort(a_ngh,a_ngh + deg_A);
+    std::sort(b_ngh,b_ngh + deg_B);
+
     uint64_t ans=0;
     uint32_t it_A = 0, it_B = 0;
-    while (it_A<a_ngh.size() && it_B<b_ngh.size() && a_ngh[it_A].nbr < a && b_ngh[it_B].nbr < b) { //count "directed" triangles
-        if (a_ngh[it_A].nbr == b_ngh[it_B].nbr) ++it_A, ++it_B, ans++;
-        else if (a_ngh[it_A].nbr < b_ngh[it_B].nbr) ++it_A;
+    while (it_A!=deg_A && it_B!=deg_B && a_ngh[it_A] < a && b_ngh[it_B] < b) { //count "directed" triangles
+        if (a_ngh[it_A] == b_ngh[it_B]) ++it_A, ++it_B, ans++;
+        else if (a_ngh[it_A] < b_ngh[it_B]) ++it_A;
         else ++it_B;
     }
+    free(a_ngh); a_ngh = nullptr;
+    free(b_ngh); b_ngh = nullptr;
     return ans;
 }
 

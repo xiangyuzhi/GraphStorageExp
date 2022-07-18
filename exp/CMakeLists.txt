@@ -3,7 +3,7 @@ include_directories(data_proc/include)
 
 set(CMAKE_CXX_STANDARD 17)
 if(CMAKE_COMPILER_IS_GNUCXX)
-    SET (CMAKE_CXX_FLAGS "-std=c++17 ${CXX_FLAGS_Common} -O3  -lpthread -march=native -mtune=native -lnuma -fopenmp") # -levent
+    SET (CMAKE_CXX_FLAGS "-std=c++17 ${CXX_FLAGS_Common} -O3  -lpthread -march=native -mtune=native -fopenmp") # -levent
     message(STATUS "optional:-std=c++17")
 endif(CMAKE_COMPILER_IS_GNUCXX)
 
@@ -18,7 +18,6 @@ add_executable(test_memory memory_tst/test_memory.cpp)
 target_link_libraries(test_memory -ldl)
 
 add_executable(read_ldbc data_proc/read_ldbc.cpp)
-
 
 #add_executable(generate_rmat data_proc/generate_rmat_graph.cpp)
 #aux_source_directory(teseo_graph/reader DIR_LIB_SRCS)

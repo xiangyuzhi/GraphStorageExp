@@ -65,7 +65,6 @@ void memory_footprint(commandLine& P) {
     uint src = 3;
     size_t deg = S.graph.find_vertex(src).value.degree();
     auto *edge = S.graph.find_vertex(src).value.get_edges(src);
-    S.graph.edge_map()
     cout<<"deg: "<<deg<<endl;
     for(int i=0;i<deg;i++){
         cout<<edge[i]<<"==="<<endl;

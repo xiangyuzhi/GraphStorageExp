@@ -18,6 +18,16 @@
 #define parallel_for_1 _Pragma("cilk grainsize = 1") parallel_for
 #define parallel_for_256 _Pragma("cilk grainsize = 256") parallel_for
 
+inline void set_num_workers(int n) {
+  __cilkrts_end_cilk();
+  std::stringstream ss; ss << n;
+  if (0 != __cilkrts_set_param("nworkers", ss.str().c_str())) {
+    std::cerr << "failed to set worker count!" << std::endl;
+    std::abort();
+  }
+}
+
+
 [[maybe_unused]] static int getWorkers() {
   return __cilkrts_get_nworkers();
 }

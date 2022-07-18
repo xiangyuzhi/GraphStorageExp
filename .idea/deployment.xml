@@ -5,19 +5,17 @@
       <paths name="dbg16 (4608f393-49c8-4b2c-92a2-ba4ae3cdfec5)">
         <serverdata>
           <mappings>
-            <mapping deploy="/tmp/tmp.kJD1GTwxnW" local="$PROJECT_DIR$" />
+            <mapping local="$PROJECT_DIR$" web="/" />
           </mappings>
-          <excludedPaths>
-            <excludedPath local="true" path="$PROJECT_DIR$/cmake-build-debug" />
-          </excludedPaths>
         </serverdata>
       </paths>
       <paths name="dbg18 (a7ee15a5-4c76-4134-9092-5023366aae27)">
         <serverdata>
           <mappings>
-            <mapping deploy="/tmp/tmp.0weRNNR6L7" local="$PROJECT_DIR$" />
+            <mapping deploy="/home/xiangyu/graph_exp" local="$PROJECT_DIR$" />
           </mappings>
           <excludedPaths>
+            <excludedPath local="true" path="$PROJECT_DIR$/cmake-build-debug" />
             <excludedPath local="true" path="$PROJECT_DIR$/cmake-build-debug" />
           </excludedPaths>
         </serverdata>
@@ -25,11 +23,8 @@
       <paths name="my_ubuntu (ed76176c-0cdd-48e6-a312-8f68720a005a)">
         <serverdata>
           <mappings>
-            <mapping deploy="/tmp/tmp.PzErzW7ObZ" local="$PROJECT_DIR$" />
+            <mapping local="$PROJECT_DIR$" web="/" />
           </mappings>
-          <excludedPaths>
-            <excludedPath local="true" path="$PROJECT_DIR$/cmake-build-debug" />
-          </excludedPaths>
         </serverdata>
       </paths>
     </serverData>

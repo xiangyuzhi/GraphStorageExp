@@ -23,7 +23,7 @@
 #include <iostream>
 #include <limits>
 #include <mutex>
-#include <numa.h>
+//#include <numa.h>
 
 #include <omp.h>
 #include <random>
@@ -58,31 +58,14 @@ CSR::~CSR(){
 
 template<typename T>
 T* CSR::alloca_array(uint64_t array_sz){
-    if(m_numa_interleaved){
-        uint64_t required_bytes = /* header */ sizeof(uint64_t) + /* data */ sizeof(T) * array_sz;
-        void* ptr = numa_alloc_interleaved(required_bytes);
-        if(ptr == nullptr){ cout<<"[CSR] Cannot allocate an interleaved array of " << array_sz * sizeof(T) << " bytes"; }
-        memset(ptr, '\0', required_bytes);
-        uint64_t* header = reinterpret_cast<uint64_t*>(ptr);
-        header[0] = required_bytes;
-        return reinterpret_cast<T*>(header + 1);
-    } else {
-        return new T[array_sz]();
-    }
+    return new T[array_sz]();
 }
 
 template<typename T>
 void CSR::free_array(T* array){
     if(array == nullptr) return; // nop
 
-    if(m_numa_interleaved){
-        uint64_t* start = reinterpret_cast<uint64_t*>(array) -1;
-        uint64_t allocation_size = start[0];
-        numa_free(start, allocation_size);
-
-    } else {
-        delete[] array;
-    }
+    delete[] array;
 }
 
 uint64_t CSR::num_edges() const {

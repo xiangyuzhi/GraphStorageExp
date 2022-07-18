@@ -27,11 +27,11 @@ long get_memory_usage()
     return (long)(free_mem);
 }
 
-int main()
-{
-    get_memory_usage();
-    return 0;
-}
+//int main()
+//{
+//    get_memory_usage();
+//    return 0;
+//}
 
 
 

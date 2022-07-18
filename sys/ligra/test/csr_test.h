@@ -39,7 +39,7 @@ struct timezone tzp;
 
 void del_G(){
     if (G!=NULL)
-        free(G);
+        delete(G),G= nullptr;
 }
 
 double cal_time(std::vector<double> timelist){
