@@ -14,8 +14,7 @@ include_directories(../../lib/openssl/include)
 add_subdirectory(src)
 
 
-add_executable(terrace_vertex test/terrace_test_vertex.cpp)
-target_link_libraries(terrace_vertex terrc)
+
 
 add_executable(terrace_edge test/terrace_test_edge.cpp)
 target_link_libraries(terrace_edge terrc)
@@ -25,6 +24,9 @@ target_link_libraries(terrace_alg terrc)
 
 add_executable(terrace_sssp test/terrace_test_sssp.cpp)
 target_link_libraries(terrace_sssp terrc)
+
+add_executable(terrace_mem test/terrace_test_memory.cpp)
+target_link_libraries(terrace_mem terrc)
 #  -src 9 -maxiters 5 -gname slashdot -f ../../../data/slashdot.adj
 
 

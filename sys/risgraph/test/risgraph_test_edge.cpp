@@ -7,7 +7,7 @@
 #include "type.hpp"
 #include "io.hpp"
 #include "storage.hpp"
-
+#include <omp.h>
 //using adjedge_type = AdjEdge<EdgeData>;
 //using Storage = IndexedEdgeStorage<adjedge_type, storage::data::Vector, storage::index::DenseHashMap>;
 //using adjlist_type = typename Storage::adjlist_type;
@@ -61,7 +61,7 @@ void batch_ins_del_read(commandLine& P){
     auto log = P.getOptionValue("-log","none");
     std::ofstream log_file(log, ios::app);
 
-    std::vector<uint32_t> update_sizes = {100000};//10, 100, 1000 ,10000,,1000000, 10000000
+    std::vector<uint32_t> update_sizes = {10, 100, 1000, 10000, 100000, 1000000, 10000000};//
     auto r = random_aspen();
     auto update_times = std::vector<double>();
     size_t n_trials = 1;
@@ -73,8 +73,8 @@ void batch_ins_del_read(commandLine& P){
         std::cout << "Running batch size: " << update_sizes[us] << std::endl;
 
         if (update_sizes[us] < 10000000)
-            n_trials = 10;
-        else n_trials = 3;
+            n_trials = 20;
+        else n_trials = 5;
         size_t updates_to_run = update_sizes[us];
         auto perm = get_random_permutation(updates_to_run);
         for (size_t ts=0; ts<n_trials; ts++) {
@@ -97,6 +97,7 @@ void batch_ins_del_read(commandLine& P){
             }
             gettimeofday(&t_start, &tzp);
 
+#pragma omp parallel for
             for(uint32_t i=0; i< updates_to_run; i++){
                 const auto &e = raw_edges[i];
                 G->add_edge({e.first, e.second}, true);
@@ -106,20 +107,21 @@ void batch_ins_del_read(commandLine& P){
             avg_insert += cal_time_elapsed(&t_start, &t_end);
 
 
-            gettimeofday(&t_start, &tzp);
-            for(uint32_t i = 0; i < updates_to_run; i++) {
-//                auto adjl = G->get_outgoing_adjlist(i);
-                auto adjitr = G->get_outgoing_adjlist_range(raw_edges[i].first);
-                for(auto iter = adjitr.first ; iter != adjitr.second;iter++){
-                    auto edge = *iter;
-                    uint64_t dst = edge.nbr;
-                    if(dst == raw_edges[i].second) break;
-                }
-            }
-            gettimeofday(&t_end, &tzp);
-            avg_read += cal_time_elapsed(&t_start, &t_end);
+//            gettimeofday(&t_start, &tzp);
+//            for(uint32_t i = 0; i < updates_to_run; i++) {
+////                auto adjl = G->get_outgoing_adjlist(i);
+//                auto adjitr = G->get_outgoing_adjlist_range(raw_edges[i].first);
+//                for(auto iter = adjitr.first ; iter != adjitr.second;iter++){
+//                    auto edge = *iter;
+//                    uint64_t dst = edge.nbr;
+//                    if(dst == raw_edges[i].second) break;
+//                }
+//            }
+//            gettimeofday(&t_end, &tzp);
+//            avg_read += cal_time_elapsed(&t_start, &t_end);
 
             gettimeofday(&t_start, &tzp);
+#pragma omp parallel for
             for(uint32_t i = 0; i < updates_to_run; i++) {
                 const auto &e = raw_edges[i];
                 G->del_edge({e.first, e.second}, true);
@@ -135,10 +137,10 @@ void batch_ins_del_read(commandLine& P){
         printf("batch_size = %zu, average insert: %f, throughput %e\n", updates_to_run, time_i, insert_throughput);
         log_file<< gname<<","<<thd_num<<",e,insert,"<< update_sizes[us] <<","<<insert_throughput << "\n";
 
-        double time_r = (double) avg_read / n_trials;
-        double read_throughput = updates_to_run / time_r;
-        printf("batch_size = %zu, average read: %f, throughput %e\n", updates_to_run, time_r, read_throughput);
-        log_file<< gname<<","<<thd_num<<",e,read,"<< update_sizes[us] <<","<<read_throughput << "\n";
+//        double time_r = (double) avg_read / n_trials;
+//        double read_throughput = updates_to_run / time_r;
+//        printf("batch_size = %zu, average read: %f, throughput %e\n", updates_to_run, time_r, read_throughput);
+//        log_file<< gname<<","<<thd_num<<",e,read,"<< update_sizes[us] <<","<<read_throughput << "\n";
 
         double time_d = (double) avg_delete / n_trials;
         double delete_throughput = updates_to_run / time_d;
@@ -156,6 +158,7 @@ int main(int argc, char** argv) {
 //    printf("Num workers: %ld\n", getWorkers());
     commandLine P(argc, argv);
     auto thd_num = P.getOptionLongValue("-core", 1);
+    omp_set_num_threads(thd_num);
     printf("Running RisGraph using %ld threads.\n", thd_num );
     load_graph(P);
 

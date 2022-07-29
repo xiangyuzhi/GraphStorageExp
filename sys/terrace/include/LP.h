@@ -66,7 +66,7 @@ struct LP_Vertex_Reset {
     }
 };
 
-void LP(Graph &G, long itr, string gname) {
+void LP(Graph &G, long itr) {
     long n = G.get_num_vertices();
 
     auto **lb_cnt = newA(uint32_t*,LABEL+1);
@@ -85,14 +85,15 @@ void LP(Graph &G, long itr, string gname) {
         vertexMap(frontier,LP_Vertex(lb_cnt, lb), false);
         vertexMap(frontier, LP_Vertex_Reset(lb_cnt), false);
     }
+    free(lb);
     // write out to file
-    std::ofstream myfile;
-    string path = "../../../log/terrace/" + gname + "/lp.out";
-    myfile.open (path);
-    for (int i = 0; i < n; i++) {
-        myfile << lb[i] << "\n";
-    }
-    myfile.close();
+//    std::ofstream myfile;
+//    string path = "../../../log/terrace/" + gname + "/lp.out";
+//    myfile.open (path);
+//    for (int i = 0; i < n; i++) {
+//        myfile << lb[i] << "\n";
+//    }
+//    myfile.close();
 
 }
 

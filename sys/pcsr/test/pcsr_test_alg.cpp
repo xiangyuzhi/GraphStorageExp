@@ -8,7 +8,7 @@
 #include "k-hop.h"
 #include "LP.h"
 #include "TC.h"
-
+#include "parallel.h"
 
 double test_bfs(commandLine& P) {
     long bfs_src = P.getOptionLongValue("-src",-1);
@@ -77,6 +77,34 @@ double test_tc(commandLine& P) {
     return cal_time_elapsed(&t_start, &t_end);
 }
 
+
+double test_read(commandLine& P) {
+    auto r = random_aspen();
+    uint64_t n = G->get_n();
+    double a = 0.5;
+    double b = 0.1;
+    double c = 0.1;
+    size_t nn = 1 << (log2_up(n) - 1);
+    auto rmat = rMat<uint32_t>(nn, r.ith_rand(100), a, b, c);
+    new_srcs.clear();new_dests.clear();
+    uint32_t updates = num_edges/20;
+    for( uint32_t i = 0; i < updates; i++) {
+        std::pair<uint32_t, uint32_t> edge = rmat(i);
+        new_srcs.push_back(edge.first);
+        new_dests.push_back(edge.second);
+    }
+    gettimeofday(&t_start, &tzp);
+    parallel_for(uint32_t i = 0; i < updates; i++) {
+        G->find_value(new_srcs[i], new_dests[i]);
+    }
+    gettimeofday(&t_end, &tzp);
+    return cal_time_elapsed(&t_start, &t_end);
+}
+
+
+
+
+
 double execute(commandLine& P, string testname) {
     if (testname == "BFS") {
         return test_bfs(P);
@@ -94,6 +122,8 @@ double execute(commandLine& P, string testname) {
         return test_lp(P);
     } else if (testname == "TC") {
         return test_tc(P);
+    } else if (testname == "Read") {
+        return test_read(P);
     } else {
         std::cout << "Unknown test: " << testname << ". Quitting." << std::endl;
         exit(0);
@@ -103,16 +133,15 @@ double execute(commandLine& P, string testname) {
 void run_algorithm(commandLine& P) {
     PRINT("=============== Run Algorithm BEGIN ===============");
 
-    auto filename = P.getOptionValue("-f", "none");
-    size_t rounds = P.getOptionLongValue("-rounds", 4);
     std::vector<std::string> test_ids;
-    test_ids = {"BFS","PR","SSSP","CC","LP","TC"};//,"1-HOP","2-HOP"
+    //    test_ids = {"1-HOP","2-HOP","BFS","SSSP","PR","CC","LP","Read","TC"};
+    test_ids = {"1-HOP","2-HOP","Read"};
 
+    size_t rounds = P.getOptionLongValue("-rounds", 5);
     auto gname = P.getOptionValue("-gname", "none");
-    std::ofstream alg_file("../../../log/pcsr/alg.log",ios::app);
-    alg_file << "GRAPH" << "\t"+gname <<"\t["<<getCurrentTime0()<<']'<<std::endl;
     auto thd_num = P.getOptionLongValue("-core", 1);
-    alg_file << "Using threads :" << "\t"<<thd_num<<endl;
+    auto log = P.getOptionValue("-log", "none");
+    std::ofstream alg_file(log, ios::app);
 
     for (auto test_id : test_ids) {
         std::vector<double> total_time;
@@ -123,8 +152,8 @@ void run_algorithm(commandLine& P) {
             total_time.emplace_back(tm);
         }
         double avg_time = cal_time(total_time);
-        std::cout <<"["<<getCurrentTime0()<<']'<< "AVG"<< "\ttest=" << test_id<< "\ttime=" << avg_time << "\tgraph=" << filename << std::endl;
-        alg_file <<"\t["<<getCurrentTime0()<<']' << "AVG"<< "\ttest=" << test_id<< "\ttime=" << avg_time << std::endl;
+        std::cout << "\ttest=" << test_id<< "\ttime=" << avg_time << "\tgraph=" << gname << std::endl;
+        alg_file << gname<<","<< thd_num<<","<<test_id<<","<< avg_time << std::endl;
     }
     alg_file.close();
     PRINT("=============== Run Algorithm END ===============");

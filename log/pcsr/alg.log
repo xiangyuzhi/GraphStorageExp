@@ -1,0 +1,42 @@
+GRAPH	LiveJournal	[Wed May 25 08:17:09 2022]
+Using threads :	1
+	[Wed May 25 08:17:10 2022]AVG	test=BFS	time=0.284652
+	[Wed May 25 08:17:29 2022]AVG	test=PR	time=4.72473
+	[Wed May 25 08:17:35 2022]AVG	test=SSSP	time=1.60714
+	[Wed May 25 08:17:41 2022]AVG	test=CC	time=1.35319
+	[Wed May 25 08:18:03 2022]AVG	test=1-HOP	time=5.64755
+	[Wed May 25 08:18:47 2022]AVG	test=2-HOP	time=11
+	[Wed May 25 08:19:21 2022]AVG	test=LP	time=8.27701
+	[Wed May 25 08:20:14 2022]AVG	test=TC	time=13.3009
+GRAPH	LiveJournal	[Wed May 25 08:24:19 2022]
+Using threads :	16
+	[Wed May 25 08:24:20 2022]AVG	test=BFS	time=0.0573035
+	[Wed May 25 08:24:24 2022]AVG	test=PR	time=1.1406
+	[Wed May 25 08:24:26 2022]AVG	test=SSSP	time=0.36
+	[Wed May 25 08:24:27 2022]AVG	test=CC	time=0.250085
+	[Wed May 25 08:24:44 2022]AVG	test=LP	time=4.21995
+	[Wed May 25 08:25:01 2022]AVG	test=TC	time=4.3563
+GRAPH	LiveJournal	[Wed May 25 08:30:00 2022]
+Using threads :	4
+	[Wed May 25 08:30:00 2022]AVG	test=BFS	time=0.12158
+	[Wed May 25 08:30:12 2022]AVG	test=PR	time=2.91227
+	[Wed May 25 08:30:16 2022]AVG	test=SSSP	time=0.958901
+	[Wed May 25 08:30:19 2022]AVG	test=CC	time=0.65331
+	[Wed May 25 08:30:46 2022]AVG	test=LP	time=6.76339
+	[Wed May 25 08:31:28 2022]AVG	test=TC	time=10.5184
+GRAPH	LiveJournal	[Wed May 25 08:35:15 2022]
+Using threads :	8
+	[Wed May 25 08:35:15 2022]AVG	test=BFS	time=0.074614
+	[Wed May 25 08:35:22 2022]AVG	test=PR	time=1.69326
+	[Wed May 25 08:35:24 2022]AVG	test=SSSP	time=0.566552
+	[Wed May 25 08:35:26 2022]AVG	test=CC	time=0.39548
+	[Wed May 25 08:35:47 2022]AVG	test=LP	time=5.29901
+	[Wed May 25 08:36:16 2022]AVG	test=TC	time=7.20504
+GRAPH	LiveJournal	[Wed May 25 08:38:24 2022]
+Using threads :	12
+	[Wed May 25 08:38:24 2022]AVG	test=BFS	time=0.0667555
+	[Wed May 25 08:38:29 2022]AVG	test=PR	time=1.21394
+	[Wed May 25 08:38:31 2022]AVG	test=SSSP	time=0.412153
+	[Wed May 25 08:38:32 2022]AVG	test=CC	time=0.268476
+	[Wed May 25 08:38:50 2022]AVG	test=LP	time=4.49301
+	[Wed May 25 08:39:11 2022]AVG	test=TC	time=5.45129

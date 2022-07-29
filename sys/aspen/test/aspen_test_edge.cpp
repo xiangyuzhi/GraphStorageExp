@@ -40,7 +40,7 @@ void batch_ins_del_read(commandLine& P) {
 
     // 2. Generate the sequence of insertions and deletions
     auto update_sizes = pbbs::sequence<size_t>(7);
-    update_sizes = {100000};//10,100,1000,10000,,1000000,10000000
+    update_sizes = {10,100,1000,10000,100000,1000000,10000000};//
     auto update_times = std::vector<double>();
     size_t n_trials = 3;
 
@@ -52,8 +52,8 @@ void batch_ins_del_read(commandLine& P) {
         cout << "Running batch size: " << update_sizes[us] << endl;
 
         if (update_sizes[us] < 10000000)
-            n_trials = 10;
-        else n_trials = 3;
+            n_trials = 20;
+        else n_trials = 5;
         size_t updates_to_run = update_sizes[us];
         for (size_t ts=0; ts<n_trials; ts++) {
             auto updates = pbbs::sequence<pair_vertex>(updates_to_run);
@@ -73,16 +73,30 @@ void batch_ins_del_read(commandLine& P) {
                 double batch_time = st.stop();
                 avg_insert += batch_time;
             }
-            {
-                timer st; st.start();
-                auto tmpG = VG.acquire_version();
-                for (uint32_t i =0 ; i< updates.size();i++){
-                    find_e(tmpG.graph,get<0>(updates[i]),get<1>(updates[i]));
-                }
-                VG.release_version(std::move(tmpG));
-                double batch_time = st.stop();
-                avg_read += batch_time;
-            }
+
+
+//            {
+//                auto read_edges = pbbs::sequence<pair_vertex>(GA.num_edges()/20);
+//                parallel_for(0, read_edges.size(), [&] (size_t i) {
+//                    updates[i] = rmat(i);
+//                });
+//                timer st; st.start();
+//                for (uint32_t i =0 ; i< updates.size();i++){
+//                    find_e(GA,get<0>(updates[i]),get<1>(updates[i]));
+//                }
+//                double batch_time = st.stop();
+//                avg_read += batch_time;
+//            }
+//            {
+//                timer st; st.start();
+//                auto tmpG = VG.acquire_version();
+//                for (uint32_t i =0 ; i< updates.size();i++){
+//                    find_e(tmpG.graph,get<0>(updates[i]),get<1>(updates[i]));
+//                }
+//                VG.release_version(std::move(tmpG));
+//                double batch_time = st.stop();
+//                avg_read += batch_time;
+//            }
 
             {
                 timer st; st.start();
@@ -100,7 +114,7 @@ void batch_ins_del_read(commandLine& P) {
         double time_r = (double) avg_read / n_trials;
         double read_throughput = updates_to_run / time_r;
         printf("batch_size = %zu, average read: %f, throughput %e\n", updates_to_run, time_r, read_throughput);
-        log_file<< gname<<","<<thd_num<<",e,read,"<< update_sizes[us] <<","<<read_throughput << "\n";
+        log_file<< gname<<","<<thd_num<<",e,read,"<< update_sizes[us] <<","<<time_r << "\n";
 
         double time_d = (double) avg_delete / n_trials;
         double delete_throughput = updates_to_run / time_d;

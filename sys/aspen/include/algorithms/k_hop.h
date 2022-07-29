@@ -34,9 +34,10 @@ void K_HOP(Graph &G, uint32_t k) {
     uint64_t n = G.num_vertices();
     auto r = pbbs::random();
     timer sparse_t, dense_t, fetch_t, other_t;
-    int nsrc = n/10;
-    for(int i = 1; i<nsrc;i+=10){
-        uintV src = i;//r.ith_rand(n) % n;
+    int nsrc = n/20;
+    srand(n);
+    for(int i = 0; i<nsrc;i++){
+        uintV src = rand()%n;//r.ith_rand(n) % n;
         uint32_t tk = k;
         auto frontier = vertex_subset(n, src);
         while(tk--){

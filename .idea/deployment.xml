@@ -5,8 +5,11 @@
       <paths name="dbg16 (4608f393-49c8-4b2c-92a2-ba4ae3cdfec5)">
         <serverdata>
           <mappings>
-            <mapping local="$PROJECT_DIR$" web="/" />
+            <mapping deploy="/graph_exp" local="$PROJECT_DIR$" web="/" />
           </mappings>
+          <excludedPaths>
+            <excludedPath local="true" path="$PROJECT_DIR$/cmake-build-debug" />
+          </excludedPaths>
         </serverdata>
       </paths>
       <paths name="dbg18 (a7ee15a5-4c76-4134-9092-5023366aae27)">

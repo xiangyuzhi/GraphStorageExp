@@ -33,11 +33,13 @@ template <typename Graph>
 void K_HOP(Graph *G, long k) {
 
     uint64_t n = G->get_n();
-    long _tk = k;
-    for(uint64_t i = 0; i < n; i ++){
-        VertexSubset frontier = VertexSubset(i, n);
-        k = _tk;
-        while(k--){
+    int nsrc = n/20;
+    srand(n);
+    for(int i = 0; i<nsrc;i++){
+        uint32_t src = rand()%n;
+        VertexSubset frontier = VertexSubset(src, n);
+        uint32_t tk = k;
+        while(tk--){
             VertexSubset next_frontier = edgeMap(G, frontier, HOP_F(), false, true, 1);
             frontier.del();
             frontier = next_frontier;

@@ -33,9 +33,10 @@ template <typename Graph>
 void K_HOP(Graph *G, long k) {
     auto* g = get_snapshot(G);
     uint64_t n = g->max_nodes();
-    int nsrc = n/10;
-    for(int i = 1; i<nsrc;i+=10){
-        uint32_t src = i;//r.ith_rand(n) % n;
+    int nsrc = n/20;
+    srand(n);
+    for(int i = 0; i<nsrc;i++){
+        uint32_t src = rand()%n;
         uint32_t tk = k;
         VertexSubset frontier = VertexSubset(src, n);
         while(tk--){

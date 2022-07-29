@@ -18,16 +18,14 @@ include_directories(include)
 add_library(lg ${SRC_DIR})
 include_directories(include/algorithms)
 
-add_executable(livegraph_vertex test/livegraph_test_vertex.cpp)
-target_link_libraries(livegraph_vertex lg)
-target_link_libraries(livegraph_vertex tbb)
 
 add_executable(livegraph_edge test/livegraph_test_edge.cpp)
-target_link_libraries(livegraph_edge lg)
-target_link_libraries(livegraph_edge tbb)
+target_link_libraries(livegraph_edge lg tbb)
 
 add_executable(livegraph_alg test/livegraph_test_alg.cpp)
-target_link_libraries(livegraph_alg lg)
-target_link_libraries(livegraph_alg tbb)
+target_link_libraries(livegraph_alg lg tbb)
+
+add_executable(livegraph_mem test/livegraph_test_memory.cpp)
+target_link_libraries(livegraph_mem lg tbb)
 
 #  -src 9 -maxiters 5 -f ../../../data/slashdot.adj

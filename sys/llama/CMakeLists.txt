@@ -16,7 +16,7 @@ include_directories(tests/benchmark)
 include_directories(include/utils)
 include_directories(include/algorithms)
 
-add_executable(llama_vertex tests/llama_test_vertex.cpp)
 add_executable(llama_edge tests/llama_test_edge.cpp)
 add_executable(llama_alg tests/llama_test_alg.cpp)
+add_executable(llama_mem tests/llama_test_memory.cpp)
 #add_executable(llama_test tests/llama_test.cpp)

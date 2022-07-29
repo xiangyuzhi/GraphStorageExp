@@ -6,3 +6,17 @@ livejournal,16,1-HOP,4.50381
 livejournal,16,2-HOP,7.69675
 livejournal,16,LP,6.95718
 livejournal,16,TC,126.781
+orkut,16,1-HOP,2.18425
+orkut,16,2-HOP,4.39679
+orkut,16,BFS,1.86907
+orkut,16,SSSP,2.03403
+orkut,16,PR,7.91605
+orkut,16,CC,2.31098
+uniform-24,16,1-HOP,11.8554
+uniform-24,16,2-HOP,22.7788
+uniform-24,16,BFS,6.42598
+uniform-24,16,SSSP,6.50157
+uniform-24,16,PR,28.9609
+uniform-24,16,CC,8.19283
+uniform-24,16,TC,168.441
+uniform-24,16,LP,34.4954

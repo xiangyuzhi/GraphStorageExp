@@ -18,8 +18,8 @@ target_link_libraries(stinger_alg stinger)
 add_executable(stinger_edge tests/stinger_test_edge.cpp)
 target_link_libraries(stinger_edge stinger)
 
-add_executable(stinger_vertex tests/stinger_test_vertex.cpp)
-target_link_libraries(stinger_vertex stinger)
+add_executable(stinger_mem tests/stinger_test_memory.cpp)
+target_link_libraries(stinger_mem stinger)
 
 #add_executable(stinger_tst tests/stinger_tst.cpp)
 

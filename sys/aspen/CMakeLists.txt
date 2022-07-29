@@ -14,8 +14,6 @@ add_executable(aspen_tst test/aspen_test.cpp)
 
 add_executable(aspen_alg test/aspen_test_alg.cpp)
 
-add_executable(aspen_vertex test/aspen_test_vertex.cpp)
-
 add_executable(aspen_edge test/aspen_test_edge.cpp)
 
 add_executable(aspen_mem test/aspen_test_memory.cpp)

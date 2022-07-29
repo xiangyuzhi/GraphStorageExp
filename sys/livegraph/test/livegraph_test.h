@@ -22,6 +22,8 @@
 #include "rmat_util.h"
 #include "livegraph.hpp"
 #include "tbb/concurrent_hash_map.h"
+#include "parallel.h"
+#include "omp.h"
 namespace impl = livegraph;
 using namespace std;
 

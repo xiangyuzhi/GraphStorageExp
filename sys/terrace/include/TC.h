@@ -70,7 +70,7 @@ struct countF { //for edgeMap
 };
 
 
-uint64_t TC(Graph& G, string gname) {
+uint64_t TC(Graph& G) {
     uint32_t n = G.get_num_vertices();
     std::vector<uint64_t> counts(getWorkers()*8, 0);
     VertexSubset Frontier(0,n,true); //frontier contains all vertices
@@ -82,11 +82,11 @@ uint64_t TC(Graph& G, string gname) {
     }
 
     // write out to file
-    std::ofstream myfile;
-    string path = "../../../log/terrace/" + gname + "/tc.out";
-    myfile.open (path);
-    myfile << count << "\n";
-    myfile.close();
+//    std::ofstream myfile;
+//    string path = "../../../log/terrace/" + gname + "/tc.out";
+//    myfile.open (path);
+//    myfile << count << "\n";
+//    myfile.close();
 
     return count;
 

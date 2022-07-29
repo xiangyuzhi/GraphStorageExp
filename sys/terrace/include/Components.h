@@ -89,7 +89,7 @@ uint32_t *CC_shortcut(Graph &G) {
   return IDs;
 }
 */
-uint32_t *CC(Graph &G, string gname) {
+uint32_t *CC(Graph &G) {
     long n = G.get_num_vertices();
     uint32_t* IDs = newA( uint32_t,n), *prevIDs = newA( uint32_t,n);
     //initialize unique IDs
@@ -108,14 +108,14 @@ uint32_t *CC(Graph &G, string gname) {
     Active.del();
     free(prevIDs);
 
-    std::ofstream myfile;
-    string path = "../../../log/terrace/" + gname + "/cc.out";
-    myfile.open (path);
-    std::set<uint32_t> components_set;
-    for (uint32_t i = 0; i < n; i++) {
-        components_set.insert(IDs[i]);
-    }
-    myfile << "number of components is "<< components_set.size()<<"\n";
+//    std::ofstream myfile;
+//    string path = "../../../log/terrace/" + gname + "/cc.out";
+//    myfile.open (path);
+//    std::set<uint32_t> components_set;
+//    for (uint32_t i = 0; i < n; i++) {
+//        components_set.insert(IDs[i]);
+//    }
+//    myfile << "number of components is "<< components_set.size()<<"\n";
 
     return IDs;
 }

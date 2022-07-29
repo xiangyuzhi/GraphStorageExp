@@ -3,7 +3,7 @@ project(risgraph)
 
 
 if(CMAKE_COMPILER_IS_GNUCXX)
-    SET (CMAKE_CXX_FLAGS "-std=c++14 ${CXX_FLAGS_Common} -O3 -DEDGELONG -mcx16 -march=native -fcilkplus -pthread")
+    SET (CMAKE_CXX_FLAGS "-std=c++14 ${CXX_FLAGS_Common} -O3 -DEDGELONG -mcx16 -march=native -fcilkplus -pthread -fopenmp")
     message(STATUS "optional:-std=c++14")
 endif(CMAKE_COMPILER_IS_GNUCXX)
 
@@ -32,9 +32,9 @@ target_link_libraries(risgraph_edge tbb)
 set_target_properties(risgraph_edge PROPERTIES  COMPILE_FLAGS ${COMPILE_FLAGS64}
         LINK_FLAGS ${LINK_FLAGS_COMMON})
 
-add_executable(risgraph_vertex test/risgraph_test_vertex.cpp)
-target_link_libraries(risgraph_vertex tbb)
-set_target_properties(risgraph_vertex PROPERTIES  COMPILE_FLAGS ${COMPILE_FLAGS64}
+add_executable(risgraph_mem test/risgraph_test_memory.cpp)
+target_link_libraries(risgraph_mem tbb)
+set_target_properties(risgraph_mem PROPERTIES  COMPILE_FLAGS ${COMPILE_FLAGS64}
         LINK_FLAGS ${LINK_FLAGS_COMMON})
 
 

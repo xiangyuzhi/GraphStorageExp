@@ -8,7 +8,7 @@
 #include "k-hop.h"
 #include "LP.h"
 #include "TC.h"
-
+#include "parallel.h"
 
 double test_bfs(commandLine& P) {
     long bfs_src = P.getOptionLongValue("-src",9);
@@ -69,6 +69,33 @@ double test_tc(commandLine& P) {
     return cal_time_elapsed(&t_start, &t_end);
 }
 
+double test_read(commandLine& P) {
+    auto r = random_aspen();
+    auto* g = get_snapshot(G);
+    uint64_t n = g->max_nodes();
+    double a = 0.5;
+    double b = 0.1;
+    double c = 0.1;
+    size_t nn = 1 << (log2_up(n) - 1);
+    auto rmat = rMat<uint32_t>(nn, r.ith_rand(100), a, b, c);
+    new_srcs.clear();new_dests.clear();
+    uint32_t updates = num_edges/20;
+    for( uint32_t i = 0; i < updates; i++) {
+        std::pair<uint32_t, uint32_t> edge = rmat(i);
+        new_srcs.push_back(edge.first);
+        new_dests.push_back(edge.second);
+    }
+    gettimeofday(&t_start, &tzp);
+    parallel_for(uint32_t i = 0; i < updates; i++) {
+        g->find(new_srcs[i], new_dests[i]);
+    }
+    gettimeofday(&t_end, &tzp);
+    return cal_time_elapsed(&t_start, &t_end);
+}
+
+
+
+
 double execute(commandLine& P, string testname) {
     if (testname == "BFS") {
         return test_bfs(P);
@@ -86,6 +113,8 @@ double execute(commandLine& P, string testname) {
         return test_lp(P);
     } else if (testname == "TC") {
         return test_tc(P);
+    } else if (testname == "Read") {
+        return test_read(P);
     } else {
         std::cout << "Unknown test: " << testname << ". Quitting." << std::endl;
         exit(0);
@@ -102,7 +131,8 @@ void run_algorithm(commandLine& P) {
     std::ofstream alg_file(log, ios::app);
 
     std::vector<std::string> test_ids;
-    test_ids = {"BFS","PR","SSSP","CC","LP","TC","1-HOP","2-HOP"};//
+    //    test_ids = {"1-HOP","2-HOP","BFS","SSSP","PR","CC","LP","Read","TC"};
+    test_ids = {"1-HOP","2-HOP","Read"};
 
     for (auto test_id : test_ids) {
         std::vector<double> total_time;

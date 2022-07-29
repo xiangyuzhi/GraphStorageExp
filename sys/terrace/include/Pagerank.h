@@ -103,7 +103,7 @@ OT plusReduce(OT* A, intT n) {
 }
 */
 template<typename T>
-T* PR_S(Graph& G, long maxIters, string gname) {
+T* PR_S(Graph& G, long maxIters) {
     size_t n = G.get_num_vertices();
     //const double damping = 0.85, epsilon = 0.0000001;
 
@@ -144,13 +144,13 @@ T* PR_S(Graph& G, long maxIters, string gname) {
     }
 
 
-    std::ofstream ofile;
-    string path = "../../../log/terrace/" + gname + "/pr.out";
-    ofile.open (path);
-    for(uint32_t i = 0; i < n; i++) {
-        ofile << p_curr[i] << "\n";
-    }
-    ofile.close();
+//    std::ofstream ofile;
+//    string path = "../../../log/terrace/" + gname + "/pr.out";
+//    ofile.open (path);
+//    for(uint32_t i = 0; i < n; i++) {
+//        ofile << p_curr[i] << "\n";
+//    }
+//    ofile.close();
 
     free(p_next);
 

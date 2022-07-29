@@ -232,15 +232,15 @@ void load_graph(commandLine& P){
     struct stinger_config_t * stinger_config;
     stinger_config = (struct stinger_config_t *)xcalloc(1,sizeof(struct stinger_config_t));
     stinger_config->nv = num_nodes;
-    stinger_config->nebs = 0;
+    stinger_config->nebs = num_nodes*10;
     stinger_config->netypes = 1;
     stinger_config->nvtypes = 1;
-    stinger_config->memory_size = 1<<33;
+    stinger_config->memory_size = 1L<<38;
     G = stinger_new_full(stinger_config);
     int64_t consistency = stinger_consistency_check(G,G->max_nv);
 
 
-    G = stinger_new_full(stinger_config);
+    //G = stinger_new_full(stinger_config);
     xfree(stinger_config);
 
     for (uint32_t i = 0; i < num_edges; i++) {
@@ -264,7 +264,7 @@ void load_graph(commandLine& P){
         };
         updates.push_back(u);
     }
-    stinger_batch_incr_edges<update>(G, updates.begin(), updates.end());
+    stinger_batch_insert_edges<update>(G, updates.begin(), updates.end());
 
     gettimeofday(&t_end, &tzp);
     free(edges);

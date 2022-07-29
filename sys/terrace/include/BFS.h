@@ -38,7 +38,7 @@ struct BFS_F {
     inline bool cond (uint32_t d) { return (Parents[d] == -1); }
 };
 
-int32_t* BFS_with_edge_map(Graph &G, uint32_t src,string gname) {
+int32_t* BFS_with_edge_map(Graph &G, uint32_t src) {
     long start = src;
     long n = G.get_num_vertices();
     //creates Parents array, initialized to all -1, except for start
@@ -72,12 +72,12 @@ int32_t* BFS_with_edge_map(Graph &G, uint32_t src,string gname) {
     }
 
     // write out to file
-    ofstream myfile;
-    string path = "../../../log/terrace/" + gname + "/bfs.out";
-    myfile.open (path);
-    for (int i = 0; i < n; i++) {
-        myfile << depths[i] << "\n";
-    }
-    myfile.close();
+//    ofstream myfile;
+//    string path = "../../../log/terrace/" + gname + "/bfs.out";
+//    myfile.open (path);
+//    for (int i = 0; i < n; i++) {
+//        myfile << depths[i] << "\n";
+//    }
+//    myfile.close();
     return Parents;
 }

@@ -778,7 +778,8 @@ struct stinger *stinger_new_full (struct stinger_config_t * config)
 
   size_t max_memsize_env = stinger_max_memsize();
 
-  const size_t memory_size = (config->memory_size == 0) ? max_memsize_env : config->memory_size;
+  const int64_t memory_size = (config->memory_size == 0) ? max_memsize_env : config->memory_size;
+  printf("stinger max memory_size : %ld\n",memory_size);
 
   size_t i;
   int resized   = 0;
@@ -786,7 +787,7 @@ struct stinger *stinger_new_full (struct stinger_config_t * config)
 
   while (1) {
     sizes = calculate_stinger_size(nv, nebs, netypes, nvtypes);
-
+      printf("stinger calculated size: %ld\n",sizes);
     if(sizes.size > (((uint64_t)memory_size * 3) / 4)) {
       if (config->no_resize) {
         LOG_E("STINGER does not fit in memory.  no_resize set, so exiting.");

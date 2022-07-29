@@ -15,7 +15,7 @@
 #include "algorithms/CC.h"
 #include "algorithms/LP.h"
 #include "trees/utils.h"
-
+#include "utils/rmat_util.h"
 
 #include <cstring>
 #include <chrono>
@@ -56,6 +56,42 @@ template <class G>
 double test_k_hop(G& GA, commandLine& P, int k) {
     timer tmr; tmr.start();
     K_HOP(GA, k);
+//    if(k==1){
+//        uint32_t n = GA.num_vertices();
+//        uint32_t nsrc = n/20;
+//        srand(n);
+//        for (int i=0;i<nsrc;i++){
+//            auto src = rand()%n;
+//            const auto& v = GA.find_vertex(src).value;
+//            auto map_f = [&] (uintV ngh_id, size_t ind) {
+//                GA.find_vertex(ngh_id).value.degree();
+//            };
+//            v.map_elms(src, map_f);
+//        }
+//        tmr.stop();
+//    }
+//    else {
+//        uint32_t n = GA.num_vertices();
+//        uint32_t nsrc = n/20;
+//        srand(n);
+//        for (int i=0;i<nsrc;i++){
+//            auto src = rand()%n;
+//            const auto& v = GA.find_vertex(src).value;
+//            vector<uintV> ngh;
+//            auto map_f = [&] (uintV ngh_id, size_t ind) {
+//                GA.find_vertex(ngh_id).value.degree();
+//                ngh.push_back(ngh_id);
+//            };
+//            v.map_elms(src, map_f);
+//            for(auto ng : ngh){
+//                auto map_f2 = [&] (uintV ngh_id, size_t ind) {
+//                    GA.find_vertex(ngh_id).value.degree();
+//                };
+//                const auto& v2 = GA.find_vertex(ng).value;
+//                v2.map_elms(ng, map_f2);
+//            }
+//        }
+//    }
     tmr.stop();
     return (tmr.get_total());
 }
@@ -99,6 +135,44 @@ double test_tc(G& GA, commandLine& P) {
     return (tmr.get_total());
 }
 
+
+template <class Graph>
+bool find_e(Graph& G, uintV src, uintV dst) {
+    const auto& v = G.find_vertex(src).value;
+    bool found = false;
+    auto map_f = [&] (uintV ngh_id, size_t ind) {
+        if (dst == ngh_id) {
+            found = true;
+        }
+    };
+    v.map_elms(src, map_f);
+    return found;
+}
+
+template <class G>
+double test_read(G& GA, commandLine& P) {
+    auto r = pbbs::random();
+    uint64_t n = GA.num_vertices();
+    using pair_vertex = tuple<uintV, uintV>;
+    auto updates = pbbs::sequence<pair_vertex>(GA.num_edges()/20);
+    double a = 0.5;
+    double b = 0.1;
+    double c = 0.1;
+    size_t nn = 1 << (pbbs::log2_up(n) - 1);
+    auto rmat = rMat<uintV>(nn, r.ith_rand(100), a, b, c);
+    parallel_for(0, updates.size(), [&] (size_t i) {
+        updates[i] = rmat(i);
+    });
+    timer tmr; tmr.start();
+    parallel_for(0, updates.size(), [&] (size_t i){
+        find_e(GA,get<0>(updates[i]),get<1>(updates[i]));
+    });
+    tmr.stop();
+    return (tmr.get_total());
+}
+
+
+
 template <class Graph>
 double execute(Graph& G, commandLine& P, string testname) {
     if (testname == "BFS") {
@@ -115,6 +189,8 @@ double execute(Graph& G, commandLine& P, string testname) {
         return test_tc(G, P);
     } else if (testname == "LP") {
         return test_lp(G, P);
+    } else if (testname == "Read") {
+        return test_read(G, P);
     } else {
         std::cout << "Unknown test: " << testname << ". Quitting." << std::endl;
         exit(0);
@@ -133,7 +209,8 @@ void run_algorithm(commandLine& P) {
     std::ofstream alg_file(log, ios::app);
 
     std::vector<std::string> test_ids;
-    test_ids = {"BFS","PR","LP","CC","TC","1-HOP","2-HOP"};//
+//    test_ids = {"1-HOP","2-HOP","BFS","SSSP","PR","CC","LP","Read","TC"};
+    test_ids = {"1-HOP","2-HOP","Read"};
 
     for (auto test_id : test_ids) {
         std::vector<double> total_time;

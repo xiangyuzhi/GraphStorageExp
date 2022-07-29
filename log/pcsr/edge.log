@@ -1,0 +1,30 @@
+GRAPH	LiveJournal	[Wed May 25 08:03:36 2022]
+Using threads :	1
+	[Wed May 25 08:03:36 2022]Insert	batch_size=10	time=5.6e-06	throughput=1.78571e+06
+	[Wed May 25 08:03:36 2022]Read	batch_size=10	time=2e-07	throughput=5e+07
+	[Wed May 25 08:03:36 2022]Insert	batch_size=100	time=4.685e-05	throughput=2.13447e+06
+	[Wed May 25 08:03:36 2022]Read	batch_size=100	time=3.2e-06	throughput=3.125e+07
+	[Wed May 25 08:03:36 2022]Insert	batch_size=1000	time=0.0004464	throughput=2.24014e+06
+	[Wed May 25 08:03:36 2022]Read	batch_size=1000	time=3.905e-05	throughput=2.56082e+07
+	[Wed May 25 08:03:36 2022]Insert	batch_size=10000	time=0.0040695	throughput=2.4573e+06
+	[Wed May 25 08:03:36 2022]Read	batch_size=10000	time=0.00068905	throughput=1.45127e+07
+	[Wed May 25 08:03:38 2022]Insert	batch_size=100000	time=0.0446239	throughput=2.24095e+06
+	[Wed May 25 08:03:39 2022]Read	batch_size=100000	time=0.00900915	throughput=1.10998e+07
+	[Wed May 25 08:03:57 2022]Insert	batch_size=1000000	time=0.509783	throughput=1.96162e+06
+	[Wed May 25 08:03:59 2022]Read	batch_size=1000000	time=0.139978	throughput=7.14396e+06
+	[Wed May 25 08:07:29 2022]Insert	batch_size=10000000	time=5.4059	throughput=1.84983e+06
+	[Wed May 25 08:07:30 2022]Read	batch_size=10000000	time=2.62591	throughput=3.8082e+06
+orkut,1,e,insert,10,1.22699e+06
+orkut,1,e,insert,100,1.66806e+06
+orkut,1,e,insert,1000,1.7322e+06
+orkut,1,e,insert,10000,1.98722e+06
+orkut,1,e,insert,100000,2.04121e+06
+orkut,1,e,insert,1000000,1.90819e+06
+orkut,1,e,insert,10000000,1.82201e+06
+uniform-24,1,e,insert,10,1.26582e+06
+uniform-24,1,e,insert,100,1.66528e+06
+uniform-24,1,e,insert,1000,1.80995e+06
+uniform-24,1,e,insert,10000,1.96736e+06
+uniform-24,1,e,insert,100000,1.91176e+06
+uniform-24,1,e,insert,1000000,1.76875e+06
+uniform-24,1,e,insert,10000000,1.62516e+06

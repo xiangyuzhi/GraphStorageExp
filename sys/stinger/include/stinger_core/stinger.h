@@ -28,7 +28,7 @@ struct stinger_config_t {
 	int64_t nebs;
 	int64_t netypes;
 	int64_t nvtypes;
-	size_t memory_size;
+    int64_t memory_size;
 	uint8_t no_map_none_etype;
 	uint8_t no_map_none_vtype;
 	uint8_t no_resize;

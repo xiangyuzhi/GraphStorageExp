@@ -22,7 +22,6 @@
 #include <sys/types.h>
 
 
-
 void load_graph(commandLine& P){
     PRINT("=============== Load Graph BEGIN ===============");
     auto filename = P.getOptionValue("-f", "none");
@@ -59,7 +58,7 @@ double test_pr(G& GA, commandLine& P) {
     std::cout << "Running PR" << std::endl;
 
     gettimeofday(&start, &tzp);
-    auto pr_edge_map = PR_S<double>(GA, maxiters, gname);
+    auto pr_edge_map = PR_S<double>(GA, maxiters);
     gettimeofday(&end, &tzp);
     free(pr_edge_map);
     return cal_time_elapsed(&start, &end);
@@ -74,7 +73,7 @@ double test_cc(G& GA, commandLine& P) {
     auto gname = P.getOptionValue("-gname", "none");
     // with edge map
     gettimeofday(&start, &tzp);
-    auto cc_result = CC(GA,gname);
+    auto cc_result = CC(GA);
     gettimeofday(&end, &tzp);
 
     free(cc_result);
@@ -90,7 +89,7 @@ double test_tc(G& GA, commandLine& P) {
     auto gname = P.getOptionValue("-gname", "none");
 
     gettimeofday(&start, &tzp);
-    auto count = TC(GA, gname);
+    auto count = TC(GA);
     gettimeofday(&end, &tzp);
     return cal_time_elapsed(&start, &end);
 }
@@ -108,7 +107,7 @@ double test_bfs(G& GA, commandLine& P, int trial) {
     std::cout << "Running BFS from source = " << src << std::endl;
 
     gettimeofday(&start, &tzp);
-    auto bfs_edge_map = BFS_with_edge_map(GA, src, gname);
+    auto bfs_edge_map = BFS_with_edge_map(GA, src);
     gettimeofday(&end, &tzp);
     free(bfs_edge_map);
 
@@ -136,10 +135,39 @@ double test_lp(G& GA, commandLine& P) {
     long maxiters = P.getOptionLongValue("-maxiters",10);
     auto gname = P.getOptionValue("-gname", "none");
     gettimeofday(&start, &tzp);
-    LP(GA,maxiters,gname);
+    LP(GA,maxiters);
     gettimeofday(&end, &tzp);
     return cal_time_elapsed(&start, &end);
 }
+
+template <class G>
+double test_read(G& GA, commandLine& P) {
+    struct timeval start, end;
+    struct timezone tzp;
+    auto r = random_aspen();
+    long n = GA.get_num_vertices();
+    double a = 0.5;
+    double b = 0.1;
+    double c = 0.1;
+    size_t nn = 1 << (log2_up(n) - 1);
+    auto rmat = rMat<uint32_t>(nn, r.ith_rand(100), a, b, c);
+    new_srcs.clear();new_dests.clear();
+    uint32_t updates = num_edges/20;
+    for( uint32_t i = 0; i < updates; i++) {
+        std::pair<uint32_t, uint32_t> edge = rmat(i);
+        new_srcs.push_back(edge.first);
+        new_dests.push_back(edge.second);
+    }
+    gettimeofday(&start, &tzp);
+    parallel_for(uint32_t i = 0; i < updates; i++) {
+        GA.is_edge(new_srcs[i], new_dests[i]);
+    }
+    gettimeofday(&end, &tzp);
+    return cal_time_elapsed(&start, &end);
+}
+
+
+
 
 template <class Graph>
 double execute(Graph& G, commandLine& P, std::string testname, int i) {
@@ -151,12 +179,14 @@ double execute(Graph& G, commandLine& P, std::string testname, int i) {
         return test_cc(G, P);
     } else if (testname == "TC") {
         return test_tc(G, P);
-    } else if (testname == "1-hop") {
+    } else if (testname == "1-HOP") {
         return test_k_hop(G, P , 1);
-    } else if (testname == "2-hop"){
+    } else if (testname == "2-HOP"){
         return test_k_hop(G, P, 2);
     } else if(testname == "LP"){
         return test_lp(G, P);
+    } else if (testname == "Read") {
+        return test_read(G, P);
     } else {
         std::cout << "Unknown test: " << testname << ". Quitting." << std::endl;
         exit(0);
@@ -169,7 +199,8 @@ void run_algorithm(commandLine& P) {
     Graph Ga = *G;
 
     std::vector<std::string> test_ids;
-    test_ids = {"BFS","PR","CC","TC","1-HOP","2-HOP","LP"};
+    //    test_ids = {"1-HOP","2-HOP","BFS","SSSP","PR","CC","LP","Read","TC"};
+    test_ids = {"1-HOP","2-HOP","Read"};
 
     size_t rounds = P.getOptionLongValue("-rounds", 5);
     auto gname = P.getOptionValue("-gname", "none");
