@@ -23,3 +23,6 @@ Using threads :	1
 	[Sat May 21 03:43:50 2022]Delete	Batch size=10000	Latency=5.344e-07	Throughput=1.87126e+06
 orkut,23.8306
 uniform-24,52.3175
+livejournal,8.79083
+graph500-24,53.6222
+twitter,152.565

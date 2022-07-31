@@ -49,7 +49,22 @@ double test_cc(commandLine& P) {
 
 double test_k_hop(commandLine& P, int k) {
     gettimeofday(&t_start, &tzp);
-    K_HOP(G, k);
+    //K_HOP(G, k);
+    auto tx = G->begin_read_only_transaction();
+    uint64_t n = G->get_max_vertex_id();
+    uint32_t nsrc = n/20;
+    srand(n);
+    parallel_for(int i=0;i<nsrc;i++){
+        auto src = rand()%n;
+        for(auto iterator = tx.get_edges(src,0);iterator.valid();iterator.next()){
+            uint64_t v = iterator.dst_id();
+            uint32_t w = *reinterpret_cast<const uint32_t*>(iterator.edge_data().data());
+            if(k==2)
+            for(auto it2 = tx.get_edges(src,0);it2.valid();it2.next()){
+                uint64_t v2 = it2.dst_id();
+            }
+        }
+    }
     gettimeofday(&t_end, &tzp);
     return cal_time_elapsed(&t_start, &t_end);
 }

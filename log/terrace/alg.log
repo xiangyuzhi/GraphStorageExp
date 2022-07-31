@@ -52,3 +52,6 @@ orkut,16,PR,1.9446
 orkut,16,CC,0.373497
 orkut,16,TC,15.5466
 orkut,16,LP,3.66384
+uniform-24,16,1-HOP,8.8111
+uniform-24,16,2-HOP,16.9272
+uniform-24,16,Read,3.0655

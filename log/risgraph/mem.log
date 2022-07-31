@@ -30,3 +30,6 @@ Using threads :	1
 	[Tue May 24 13:13:35 2022]Read	Batch size=10000000	Latency=0	Throughput=inf
 orkut,16.1503
 uniform-24,28.3504
+livejournal,4.39352
+graph500-24,71.5978
+twitter,169.065

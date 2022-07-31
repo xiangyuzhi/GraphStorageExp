@@ -5,7 +5,6 @@
 #include "algorithms/BFS.h"
 #include "algorithms/BC.h"
 #include "algorithms/LDD.h"
-//#include "algorithms/k-Hop.h"
 #include "algorithms/k_hop.h"
 #include "algorithms/TC.h"
 #include "algorithms/mutual_friends.h"
@@ -23,14 +22,6 @@
 #include <cmath>
 #include <random>
 
-static std::string getCurrentTime0() {
-    std::time_t result = std::time(nullptr);
-    std::string ret;
-    ret.resize(64);
-    int wsize = sprintf((char *)&ret[0], "%s", std::ctime(&result));
-    ret.resize(wsize-1);
-    return ret;
-}
 
 double cal_time(std::vector<double> timelist){
     if(timelist.size() == 1) return timelist[0];
@@ -55,43 +46,35 @@ double test_bfs(G& GA, commandLine& P) {
 template <class G>
 double test_k_hop(G& GA, commandLine& P, int k) {
     timer tmr; tmr.start();
-    K_HOP(GA, k);
-//    if(k==1){
-//        uint32_t n = GA.num_vertices();
-//        uint32_t nsrc = n/20;
-//        srand(n);
-//        for (int i=0;i<nsrc;i++){
-//            auto src = rand()%n;
-//            const auto& v = GA.find_vertex(src).value;
-//            auto map_f = [&] (uintV ngh_id, size_t ind) {
-//                GA.find_vertex(ngh_id).value.degree();
-//            };
-//            v.map_elms(src, map_f);
-//        }
-//        tmr.stop();
-//    }
-//    else {
-//        uint32_t n = GA.num_vertices();
-//        uint32_t nsrc = n/20;
-//        srand(n);
-//        for (int i=0;i<nsrc;i++){
-//            auto src = rand()%n;
-//            const auto& v = GA.find_vertex(src).value;
-//            vector<uintV> ngh;
-//            auto map_f = [&] (uintV ngh_id, size_t ind) {
-//                GA.find_vertex(ngh_id).value.degree();
-//                ngh.push_back(ngh_id);
-//            };
-//            v.map_elms(src, map_f);
-//            for(auto ng : ngh){
-//                auto map_f2 = [&] (uintV ngh_id, size_t ind) {
-//                    GA.find_vertex(ngh_id).value.degree();
-//                };
-//                const auto& v2 = GA.find_vertex(ng).value;
-//                v2.map_elms(ng, map_f2);
-//            }
-//        }
-//    }
+//    K_HOP(GA, k);
+    if(k==1){
+        uint32_t n = GA.num_vertices();
+        uint32_t nsrc = n/20;
+        srand(n);
+        parallel_for(0, nsrc, [&] (size_t i) {
+            auto src = rand()%n;
+            const auto& v = GA.find_vertex(src).value;
+            auto map_f = [&] (uintV ngh_id, size_t ind) {
+                GA.find_vertex(ngh_id).value.degree();
+            };
+            v.map_elms(src, map_f);
+        });
+    }
+    else {
+        uint32_t n = GA.num_vertices();
+        uint32_t nsrc = n/20;
+        srand(n);
+        parallel_for(0, nsrc, [&] (size_t _) {
+            auto src = rand()%n;
+            const auto& v = GA.find_vertex(src).value;
+            auto map_f = [&] (uintV ngh_id, size_t ind) {
+                auto map_f2 = [&] (uintV nnid, size_t ind) {};
+                const auto& v2 = GA.find_vertex(ngh_id).value;
+                v2.map_elms(ngh_id, map_f2);
+            };
+            v.map_elms(src, map_f);
+        });
+    }
     tmr.stop();
     return (tmr.get_total());
 }

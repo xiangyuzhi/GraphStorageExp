@@ -45,13 +45,6 @@ double test_cc(commandLine& P) {
     return cal_time_elapsed(&t_start, &t_end);
 }
 
-double test_k_hop(commandLine& P, int k) {
-    gettimeofday(&t_start, &tzp);
-    K_HOP(G, k);
-    gettimeofday(&t_end, &tzp);
-    return cal_time_elapsed(&t_start, &t_end);
-}
-
 double test_lp(commandLine& P) {
 
     long maxiters = P.getOptionLongValue("-maxiters",10);
@@ -69,6 +62,32 @@ double test_tc(commandLine& P) {
     return cal_time_elapsed(&t_start, &t_end);
 }
 
+double test_k_hop(commandLine& P, int k) {
+    gettimeofday(&t_start, &tzp);
+    //K_HOP(G, k);
+    uint64_t n = G->num_vertices();
+    uint32_t nsrc = n/20;
+    srand(n);
+    parallel_for(int i=0;i<nsrc;i++){
+        auto rdsrc = rand()%n;
+        const auto u_interval = G->traverse(rdsrc);
+        auto *out_e = G->out_e();
+        auto *out_w = G->out_w();
+        for(uint64_t i = u_interval.first; i < u_interval.second; i++){
+            uint64_t v = out_e[i];
+            auto w = (uint32_t)out_w[i];
+            if(k==2){
+                const auto u2 = G->traverse(v);
+                for(uint64_t j = u2.first; j < u2.second; j++) {
+                    uint64_t v2 = out_e[i];
+                }
+            }
+        }
+    }
+
+    gettimeofday(&t_end, &tzp);
+    return cal_time_elapsed(&t_start, &t_end);
+}
 
 double test_read(commandLine& P) {
     auto r = random_aspen();

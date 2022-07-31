@@ -73,9 +73,9 @@ void LP(Graph &G, long itr) {
     }
 
     auto *lb = newA(uint32_t,n);
-    for(uint32_t i = 0; i <n; i++) {
+    parallel_for(0, n, [&] (size_t i) {
         lb[i] = (i%LABEL+LABEL)%LABEL + 1;
-    }
+    });
 
     bool* tt = pbbs::new_array_no_init<bool>(1);
     vertex_subset frontier = vertex_subset(n, n, tt);

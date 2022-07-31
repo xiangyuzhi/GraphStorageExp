@@ -51,7 +51,7 @@ struct PR_Vertex_Reset {
 };
 
 template<typename T,typename Graph>
-T* PR(Graph& G, long maxIters) {
+void PR(Graph& G, long maxIters) {
     size_t n = G.num_vertices();
 
     T one_over_n = 1/(double)n;
@@ -60,7 +60,7 @@ T* PR(Graph& G, long maxIters) {
     for(uint64_t i = 0; i < n; i++) {
         p_curr[i] = one_over_n;
     }
-    bool* tt = pbbs::new_array_no_init<bool>(1);
+    auto* tt = pbbs::new_array_no_init<bool>(1);
     vertex_subset Frontier = vertex_subset(n,n,tt);
     Frontier.to_dense();
     timer sparse_t, dense_t, fetch_t, other_t;
@@ -78,32 +78,8 @@ T* PR(Graph& G, long maxIters) {
 
         swap(p_curr,p_next);
     }
-
-#if VERIFY
-    std::ofstream ofile;
-  ofile.open("p_curr_s.out");
-  for(uint32_t i = 0; i < n; i++) {
-    ofile << p_curr[i] << "\n";
-  }
-  ofile.close();
-
-	std::ofstream ofile2;
-  ofile2.open("p_next_s.out");
-  for(uint32_t i = 0; i < n; i++) {
-    ofile2 << p_next[i] << "\n";
-  }
-  ofile2.close();
-#endif
     free(p_next);
-
-//    double sum = 0;
-//    for(uint32_t i =0 ;i< 7;i++){
-//        sum += p_curr[i];
-//        printf("%.9f ",p_curr[i]);
-//    }
-//    cout<<"final : "<< sum <<endl;
-    // printf("p curr %p, p next %p\n", p_curr, p_next);
-    return p_curr;
+    free(p_curr);
 }
 
 #endif //EXP_PR_H

@@ -48,13 +48,6 @@ double test_cc(commandLine& P) {
     return cal_time_elapsed(&t_start, &t_end);
 }
 
-double test_k_hop(commandLine& P, int k) {
-    gettimeofday(&t_start, &tzp);
-    K_HOP(G, k);
-    gettimeofday(&t_end, &tzp);
-    return cal_time_elapsed(&t_start, &t_end);
-}
-
 double test_lp(commandLine& P) {
 
     long maxiters = P.getOptionLongValue("-maxiters",10);
@@ -72,7 +65,29 @@ double test_tc(commandLine& P) {
     return cal_time_elapsed(&t_start, &t_end);
 }
 
-
+double test_k_hop(commandLine& P, int k) {
+    gettimeofday(&t_start, &tzp);
+//    K_HOP(G, k);
+    uint64_t n = G->max_nv;
+    uint32_t nsrc = n/20;
+    srand(n);
+    parallel_for(int i=0;i<nsrc;i++){
+        auto rdsrc = rand()%n;
+        STINGER_FORALL_OUT_EDGES_OF_VTX_BEGIN(G, rdsrc) {
+            uint64_t v = STINGER_EDGE_DEST;
+            uint32_t w = *(reinterpret_cast<uint32_t *>(&(STINGER_EDGE_WEIGHT)));
+            if(k==2){
+                STINGER_FORALL_OUT_EDGES_OF_VTX_BEGIN(G, v) {
+                    uint64_t v = STINGER_EDGE_DEST;
+                }
+                STINGER_FORALL_OUT_EDGES_OF_VTX_END();
+            }
+        }
+        STINGER_FORALL_OUT_EDGES_OF_VTX_END();
+    }
+    gettimeofday(&t_end, &tzp);
+    return cal_time_elapsed(&t_start, &t_end);
+}
 
 double test_read(commandLine& P) {
     auto r = random_aspen();

@@ -17,6 +17,7 @@ add_executable(aspen_alg test/aspen_test_alg.cpp)
 add_executable(aspen_edge test/aspen_test_edge.cpp)
 
 add_executable(aspen_mem test/aspen_test_memory.cpp)
-target_link_libraries(aspen_mem -ldl)
+
+add_executable(aspen_scala test/aspen_test_scala.cpp)
 # -s -f ../../../data/LiveJournal.adj
 #add_executable(aspen test/test_mem.cpp)

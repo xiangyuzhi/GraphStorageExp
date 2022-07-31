@@ -40,3 +40,21 @@ Using threads :	12
 	[Wed May 25 08:38:32 2022]AVG	test=CC	time=0.268476
 	[Wed May 25 08:38:50 2022]AVG	test=LP	time=4.49301
 	[Wed May 25 08:39:11 2022]AVG	test=TC	time=5.45129
+orkut,16,1-HOP,0.026206
+orkut,16,2-HOP,0.025854
+orkut,16,BFS,0.0917187
+orkut,16,SSSP,0.763818
+orkut,16,PR,4.10607
+orkut,16,CC,0.830169
+orkut,16,LP,13.682
+orkut,16,Read,0.452911
+orkut,16,TC,47.8906
+uniform-24,16,1-HOP,0.115563
+uniform-24,16,2-HOP,0.115314
+uniform-24,16,BFS,0.218725
+uniform-24,16,SSSP,2.76366
+uniform-24,16,PR,12.1182
+uniform-24,16,CC,2.58555
+uniform-24,16,LP,35.3739
+uniform-24,16,Read,0.783183
+uniform-24,16,TC,18.249

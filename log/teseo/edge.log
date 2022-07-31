@@ -81,3 +81,17 @@ orkut,1,e,insert,1000000,22153.1
 orkut,1,e,delete,1000000,42351.9
 orkut,1,e,insert,10000000,7144.03
 orkut,1,e,delete,10000000,11012.1
+uniform-24,1,e,insert,10,1.342282e+05
+uniform-24,1,e,delete,10,3.521127e+05
+uniform-24,1,e,insert,100,1.486657e+05
+uniform-24,1,e,delete,100,3.671746e+05
+uniform-24,1,e,insert,1000,1.589257e+05
+uniform-24,1,e,delete,1000,2.904106e+05
+uniform-24,1,e,insert,10000,1.476280e+05
+uniform-24,1,e,delete,10000,2.598395e+05
+uniform-24,1,e,insert,100000,1.189889e+05
+uniform-24,1,e,delete,100000,2.203229e+05
+uniform-24,1,e,insert,1000000,2.967122e+04
+uniform-24,1,e,delete,1000000,5.546665e+04
+uniform-24,1,e,insert,10000000,1.823e+03
+uniform-24,1,e,delete,10000000,1.5665e+04

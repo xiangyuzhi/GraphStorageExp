@@ -37,5 +37,8 @@ target_link_libraries(risgraph_mem tbb)
 set_target_properties(risgraph_mem PROPERTIES  COMPILE_FLAGS ${COMPILE_FLAGS64}
         LINK_FLAGS ${LINK_FLAGS_COMMON})
 
-
+add_executable(risgraph_scala test/risgraph_test_scala.cpp)
+target_link_libraries(risgraph_scala tbb)
+set_target_properties(risgraph_scala PROPERTIES  COMPILE_FLAGS ${COMPILE_FLAGS64}
+        LINK_FLAGS ${LINK_FLAGS_COMMON})
 #  -src 9 -maxiters 5 -f ../../../data/slashdot.adj

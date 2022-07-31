@@ -27,6 +27,9 @@ target_link_libraries(terrace_sssp terrc)
 
 add_executable(terrace_mem test/terrace_test_memory.cpp)
 target_link_libraries(terrace_mem terrc)
+
+add_executable(terrace_scala test/terrace_test_scala.cpp)
+target_link_libraries(terrace_scala terrc)
 #  -src 9 -maxiters 5 -gname slashdot -f ../../../data/slashdot.adj
 
 

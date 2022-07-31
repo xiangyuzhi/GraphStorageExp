@@ -22,3 +22,7 @@ target_link_libraries(ligra_alg csr)
 
 add_executable(ligra_mem test/csr_test_memory.cpp)
 target_link_libraries(ligra_mem csr)
+
+add_executable(ligra_scala test/csr_test_scala.cpp)
+target_link_libraries(ligra_scala csr)
+

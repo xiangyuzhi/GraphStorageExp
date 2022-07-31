@@ -111,10 +111,10 @@ void batch_ins_del_read(commandLine& P) {
         printf("batch_size = %zu, average insert: %f, throughput %e\n", updates_to_run, time_i, insert_throughput);
         log_file<< gname<<","<<thd_num<<",e,insert,"<< update_sizes[us] <<","<<insert_throughput << "\n";
 
-        double time_r = (double) avg_read / n_trials;
-        double read_throughput = updates_to_run / time_r;
-        printf("batch_size = %zu, average read: %f, throughput %e\n", updates_to_run, time_r, read_throughput);
-        log_file<< gname<<","<<thd_num<<",e,read,"<< update_sizes[us] <<","<<time_r << "\n";
+//        double time_r = (double) avg_read / n_trials;
+//        double read_throughput = updates_to_run / time_r;
+//        printf("batch_size = %zu, average read: %f, throughput %e\n", updates_to_run, time_r, read_throughput);
+//        log_file<< gname<<","<<thd_num<<",e,read,"<< update_sizes[us] <<","<<time_r << "\n";
 
         double time_d = (double) avg_delete / n_trials;
         double delete_throughput = updates_to_run / time_d;

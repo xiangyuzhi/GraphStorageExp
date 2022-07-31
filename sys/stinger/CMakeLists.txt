@@ -21,6 +21,10 @@ target_link_libraries(stinger_edge stinger)
 add_executable(stinger_mem tests/stinger_test_memory.cpp)
 target_link_libraries(stinger_mem stinger)
 
+add_executable(stinger_scala tests/stinger_test_scala.cpp)
+target_link_libraries(stinger_scala stinger)
+
+
 #add_executable(stinger_tst tests/stinger_tst.cpp)
 
 

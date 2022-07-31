@@ -28,4 +28,8 @@ target_link_libraries(livegraph_alg lg tbb)
 add_executable(livegraph_mem test/livegraph_test_memory.cpp)
 target_link_libraries(livegraph_mem lg tbb)
 
+add_executable(livegraph_scala test/livegraph_test_scala.cpp)
+target_link_libraries(livegraph_scala lg tbb)
+
+
 #  -src 9 -maxiters 5 -f ../../../data/slashdot.adj

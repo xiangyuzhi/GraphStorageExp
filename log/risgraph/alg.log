@@ -34,3 +34,6 @@ twitter,16,BFS,4.30491
 twitter,16,SSSP,31.8793
 twitter,16,PR,157.851
 twitter,16,CC,39.7681
+uniform-24,16,1-HOP,42.8792
+uniform-24,16,2-HOP,82.1381
+uniform-24,16,Read,1.17416

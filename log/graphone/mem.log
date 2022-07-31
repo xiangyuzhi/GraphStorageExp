@@ -15,3 +15,5 @@ Using threads :	1
 	[Sun May 22 03:41:14 2022]Read	Batch size=10000000	Latency=1.71176e-06	Throughput=584194
 orkut,15.7997
 uniform-24,31.8672
+livejournal,6.16885
+graph500-24,32.662

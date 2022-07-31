@@ -120,9 +120,20 @@ double test_k_hop(G& GA, commandLine& P, int k = 2) {
     struct timeval start, end;
     struct timezone tzp;
 
-    //long src = P.getOptionLongValue("-src",-1);
     gettimeofday(&start, &tzp);
-    K_HOP(GA, k);
+//    K_HOP(GA, k);
+    long n = GA.get_num_vertices();
+    uint32_t nsrc = n/20;
+    srand(n);
+    parallel_for(int i=0;i<nsrc;i++){
+        auto rdsrc = rand()%n;
+        for(Graph::NeighborIterator it_A(&GA, rdsrc);!it_A.done();++it_A) {
+            uint32_t v = (*it_A);
+            if(k==2)
+                for(Graph::NeighborIterator it_B(&GA, v);!it_B.done();++it_B)
+                    auto v2 = (*it_B);
+        }
+    }
     gettimeofday(&end, &tzp);
     return cal_time_elapsed(&start, &end);
 }

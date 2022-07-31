@@ -45,13 +45,6 @@ double test_cc(commandLine& P) {
     return cal_time_elapsed(&t_start, &t_end);
 }
 
-double test_k_hop(commandLine& P, int k) {
-    gettimeofday(&t_start, &tzp);
-    K_HOP(G, k);
-    gettimeofday(&t_end, &tzp);
-    return cal_time_elapsed(&t_start, &t_end);
-}
-
 double test_lp(commandLine& P) {
 
     long maxiters = P.getOptionLongValue("-maxiters",10);
@@ -65,6 +58,33 @@ double test_tc(commandLine& P) {
 
     gettimeofday(&t_start, &tzp);
     auto count = TC(G);
+    gettimeofday(&t_end, &tzp);
+    return cal_time_elapsed(&t_start, &t_end);
+}
+
+double test_k_hop(commandLine& P, int k) {
+    gettimeofday(&t_start, &tzp);
+//    K_HOP(G, k);
+    auto* g = get_snapshot(G);
+    uint64_t n = g->max_nodes();
+    uint32_t nsrc = n/20;
+    srand(n);
+    parallel_for(int i=0;i<nsrc;i++){
+        auto rdsrc = rand()%n;
+        ll_edge_iterator iter;
+        g->out_iter_begin(iter, rdsrc);
+        for (edge_t s_idx = g->out_iter_next(iter); s_idx != LL_NIL_EDGE; s_idx = g->out_iter_next(iter)) {
+            node_t v = LL_ITER_OUT_NEXT_NODE(graph, iter, s_idx);
+            uint32_t w = (uint32_t)get_out_edge_weight(g, s_idx);
+            if(k==2){
+                ll_edge_iterator iter2;
+                g->out_iter_begin(iter2, v);
+                for (edge_t j = g->out_iter_next(iter2); j != LL_NIL_EDGE; j = g->out_iter_next(iter2)) {
+                    node_t v2 = LL_ITER_OUT_NEXT_NODE(graph, iter2, j);
+                }
+            }
+        }
+    }
     gettimeofday(&t_end, &tzp);
     return cal_time_elapsed(&t_start, &t_end);
 }
@@ -92,8 +112,6 @@ double test_read(commandLine& P) {
     gettimeofday(&t_end, &tzp);
     return cal_time_elapsed(&t_start, &t_end);
 }
-
-
 
 
 double execute(commandLine& P, string testname) {
