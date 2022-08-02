@@ -68,11 +68,11 @@ double test_k_hop(commandLine& P, int k) {
     uint64_t n = G->num_vertices();
     uint32_t nsrc = n/20;
     srand(n);
+    auto *out_e = G->out_e();
+    auto *out_w = G->out_w();
     parallel_for(int i=0;i<nsrc;i++){
         auto rdsrc = rand()%n;
         const auto u_interval = G->traverse(rdsrc);
-        auto *out_e = G->out_e();
-        auto *out_w = G->out_w();
         for(uint64_t i = u_interval.first; i < u_interval.second; i++){
             uint64_t v = out_e[i];
             auto w = (uint32_t)out_w[i];

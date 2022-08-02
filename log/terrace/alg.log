@@ -55,3 +55,9 @@ orkut,16,LP,3.66384
 uniform-24,16,1-HOP,8.8111
 uniform-24,16,2-HOP,16.9272
 uniform-24,16,Read,3.0655
+uniform-24,16,1-HOP,0.457074
+uniform-24,16,2-HOP,1.98125
+uniform-24,16,Read,3.08504
+orkut,16,1-HOP,0.107928
+orkut,16,2-HOP,2.60653
+orkut,16,Read,2.0008

@@ -97,8 +97,7 @@ void batch_ins_del_read(commandLine& P){
             }
             gettimeofday(&t_start, &tzp);
 
-#pragma omp parallel for
-            for(uint32_t i=0; i< updates_to_run; i++){
+            cilk_for(uint32_t i=0; i< updates_to_run; i++){
                 const auto &e = raw_edges[i];
                 G->add_edge({e.first, e.second}, true);
             }
@@ -121,8 +120,7 @@ void batch_ins_del_read(commandLine& P){
 //            avg_read += cal_time_elapsed(&t_start, &t_end);
 
             gettimeofday(&t_start, &tzp);
-#pragma omp parallel for
-            for(uint32_t i = 0; i < updates_to_run; i++) {
+            cilk_for(uint32_t i = 0; i < updates_to_run; i++) {
                 const auto &e = raw_edges[i];
                 G->del_edge({e.first, e.second}, true);
             }

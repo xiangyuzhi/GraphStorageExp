@@ -3,6 +3,81 @@
 //
 
 #include "livegraph_test.h"
+#include <thread>
+
+template<typename graph>
+void add_edges(graph *GA, vector<uint32_t> &new_srcs, vector<uint32_t> &new_dests, int num_threads){
+    auto routine_insert_edges = [GA, &new_srcs, &new_dests](int thread_id, uint64_t start, uint64_t length){
+        for(int64_t pos = start, end = start + length; pos < end; pos++){
+            while(1){
+                try{
+                    auto tx1 = GA->begin_transaction();
+                    vertex_dictionary_t::const_accessor accessor1, accessor2;
+                    VertexDictionary->find(accessor1, new_srcs[pos]);
+                    VertexDictionary->find(accessor2, new_dests[pos]);
+                    lg::vertex_t internal_source_id = accessor1->second;
+                    lg::vertex_t internal_destination_id = accessor2->second;
+                    int w = 1;string_view weight { (char*) &w, sizeof(w) };
+                    tx1.put_edge(internal_source_id, /* label */ 0, internal_destination_id, weight);
+                    tx1.commit();
+                    break;
+                }
+                catch (exception e){
+                    continue;
+                }
+            }
+        }
+    };
+    int64_t edges_per_thread = new_srcs.size() / num_threads;
+    int64_t odd_threads = new_srcs.size() % num_threads;
+    vector<thread> threads;
+    int64_t start = 0;
+    for(int thread_id = 0; thread_id < num_threads; thread_id ++){
+        int64_t length = edges_per_thread + (thread_id < odd_threads);
+        threads.emplace_back(routine_insert_edges, thread_id, start, length);
+        start += length;
+    }
+    for(auto& t : threads) t.join();
+    threads.clear();
+}
+
+template<typename graph>
+void delete_edges(graph *GA, vector<uint32_t> &new_srcs, vector<uint32_t> &new_dests, int num_threads){
+    auto routine_insert_edges = [GA, &new_srcs, &new_dests](int thread_id, uint64_t start, uint64_t length){
+        for(int64_t pos = start, end = start + length; pos < end; pos++){
+            while(1){
+                try{
+                    vertex_dictionary_t::const_accessor accessor1, accessor2;
+                    auto tx3 = G->begin_transaction();
+                    VertexDictionary->find(accessor1, new_srcs[pos]);
+                    VertexDictionary->find(accessor2, new_dests[pos]);
+                    lg::vertex_t internal_source_id = accessor1->second;
+                    lg::vertex_t internal_destination_id = accessor2->second;
+                    tx3.del_edge(internal_source_id, /* label */ 0, internal_destination_id);
+                    tx3.commit();
+                    break;
+                }
+                catch (exception e){
+                    continue;
+                }
+            }
+        }
+    };
+    int64_t edges_per_thread = new_srcs.size() / num_threads;
+    int64_t odd_threads = new_srcs.size() % num_threads;
+    vector<thread> threads;
+    int64_t start = 0;
+    for(int thread_id = 0; thread_id < num_threads; thread_id ++){
+        int64_t length = edges_per_thread + (thread_id < odd_threads);
+        threads.emplace_back(routine_insert_edges, thread_id, start, length);
+        start += length;
+    }
+    for(auto& t : threads) t.join();
+    threads.clear();
+}
+
+
+
 
 void batch_ins_del_read(commandLine& P){
     PRINT("=============== Batch Insert BEGIN ===============");
@@ -44,54 +119,15 @@ void batch_ins_del_read(commandLine& P){
                 new_dests.push_back(edge.second);
             }
 
-            vertex_dictionary_t::const_accessor accessor1, accessor2;  // shared lock on the dictionary
-
             // insert edge
             gettimeofday(&t_start, &tzp);
-
-
-            parallel_for (uint32_t i =0 ; i< updates_to_run;i++){
-                auto tx1 = G->begin_transaction();
-                VertexDictionary->find(accessor1, new_srcs[i]);
-                VertexDictionary->find(accessor2, new_dests[i]);
-                lg::vertex_t internal_source_id = accessor1->second;
-                lg::vertex_t internal_destination_id = accessor2->second;
-                int w = 1;string_view weight { (char*) &w, sizeof(w) };
-                tx1.put_edge(internal_source_id, /* label */ 0, internal_destination_id, weight);
-                tx1.commit();
-            }
+            add_edges(G, new_srcs, new_dests, thd_num);
             gettimeofday(&t_end, &tzp);
             avg_insert += cal_time_elapsed(&t_start, &t_end);
 
-            // read edge
-//            gettimeofday(&t_start, &tzp);
-//            auto tx2 = G->begin_read_only_transaction();
-//            for (uint32_t i =0 ; i< updates_to_run;i++){
-//                VertexDictionary->find(accessor1, new_srcs[i]);
-//                VertexDictionary->find(accessor2, new_dests[i]);
-//                lg::vertex_t internal_source_id = accessor1->second;
-//                lg::vertex_t internal_destination_id = accessor2->second;
-//
-//                string_view lg_weight = tx2.get_edge(internal_source_id, /* label */ 0, internal_destination_id);
-//            }
-//            tx2.abort();
-//            gettimeofday(&t_end, &tzp);
-//            avg_read += cal_time_elapsed(&t_start, &t_end);
-
             // del edge
             gettimeofday(&t_start, &tzp);
-
-
-            parallel_for (uint32_t i =0 ; i< updates_to_run;i++){
-                auto tx3 = G->begin_transaction();
-                VertexDictionary->find(accessor1, new_srcs[i]);
-                VertexDictionary->find(accessor2, new_dests[i]);
-                lg::vertex_t internal_source_id = accessor1->second;
-                lg::vertex_t internal_destination_id = accessor2->second;
-                tx3.del_edge(internal_source_id, /* label */ 0, internal_destination_id);
-                tx3.commit();
-            }
-
+            delete_edges(G, new_srcs, new_dests, thd_num);
             gettimeofday(&t_end, &tzp);
             avg_delete +=  cal_time_elapsed(&t_start, &t_end);
         }
@@ -99,11 +135,6 @@ void batch_ins_del_read(commandLine& P){
         double insert_throughput = updates_to_run / time_i;
         printf("batch_size = %zu, average insert: %f, throughput %e\n", updates_to_run, time_i, insert_throughput);
         log_file<< gname<<","<<thd_num<<",e,insert,"<< update_sizes[us] <<","<<insert_throughput << "\n";
-
-//        double time_r = (double) avg_read / n_trials;
-//        double read_throughput = updates_to_run / time_r;
-//        printf("batch_size = %zu, average read: %f, throughput %e\n", updates_to_run, time_r, read_throughput);
-//        log_file<< gname<<","<<thd_num<<",e,read,"<< update_sizes[us] <<","<<read_throughput << "\n";
 
         double time_d = (double) avg_delete / n_trials;
         double delete_throughput = updates_to_run / time_d;

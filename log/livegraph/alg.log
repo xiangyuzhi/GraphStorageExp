@@ -38,3 +38,9 @@ graph500-24,16,TC,23018.9
 graph500-24,16,LP,29.2813
 uniform-24,16,1-HOP,8.7757
 uniform-24,16,2-HOP,15.6168
+uniform-24,16,1-HOP,0.44355
+uniform-24,16,2-HOP,3.35368
+uniform-24,16,Read,2.79834
+orkut,16,1-HOP,0.111268
+orkut,16,2-HOP,4.51799
+orkut,16,Read,3.1245

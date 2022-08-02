@@ -54,3 +54,10 @@ livejournal,16,TC,66.3648
 livejournal,16,LP,14.5603
 uniform-24,16,1-HOP,0.48852
 uniform-24,16,2-HOP,0.489076
+uniform-24,16,Read,1.9384
+orkut,16,1-HOP,0.151023
+orkut,16,2-HOP,13.7249
+orkut,16,Read,1.0555
+orkut,16,1-HOP,0.144101
+orkut,16,2-HOP,13.3347
+orkut,16,Read,1.0664

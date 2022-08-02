@@ -9,7 +9,22 @@
 #include "parallel.h"
 
 double test_bfs(commandLine& P) {
-    long bfs_src = P.getOptionLongValue("-src",9);
+    uint32_t bfs_src = 9;
+    bool thread = P.getOption("-thread");
+    if(!thread) {
+        auto* g = get_snapshot(G);
+        uint64_t n = g->max_nodes();
+        size_t maxdeg = 0;
+        size_t maxid = 9;
+        for(uint32_t i=1;i<n;i++){
+            size_t src_degree = g->out_degree(i);
+            if(src_degree > maxdeg) {
+                maxdeg = src_degree;
+                maxid = i;
+            }
+        }
+        bfs_src = maxid;
+    }
     std::cout << "Running BFS from source = " << bfs_src << std::endl;
 
     gettimeofday(&t_start, &tzp);

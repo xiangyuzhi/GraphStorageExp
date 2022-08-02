@@ -11,6 +11,7 @@
 #include "LP.h"
 #include "TC.h"
 #include "parallel.h"
+#include <thread>
 
 double test_bfs(commandLine& P) {
     long bfs_src = P.getOptionLongValue("-src",9);
@@ -60,7 +61,7 @@ double test_k_hop(commandLine& P, int k) {
             uint64_t v = iterator.dst_id();
             uint32_t w = *reinterpret_cast<const uint32_t*>(iterator.edge_data().data());
             if(k==2)
-            for(auto it2 = tx.get_edges(src,0);it2.valid();it2.next()){
+            for(auto it2 = tx.get_edges(v,0);it2.valid();it2.next()){
                 uint64_t v2 = it2.dst_id();
             }
         }
@@ -87,7 +88,44 @@ double test_tc(commandLine& P) {
     return cal_time_elapsed(&t_start, &t_end);
 }
 
+
+template<typename graph>
+void read_edges(graph *GA, vector<uint32_t> &new_srcs, vector<uint32_t> &new_dests, int num_threads){
+    auto routine_insert_edges = [GA, &new_srcs, &new_dests](int thread_id, uint64_t start, uint64_t length){
+        for(int64_t pos = start, end = start + length; pos < end; pos++){
+            while(1){
+                try{
+                    auto tx2 = G->begin_read_only_transaction();
+                    vertex_dictionary_t::const_accessor accessor1, accessor2;
+                    if(VertexDictionary->find(accessor1, new_srcs[pos]) && VertexDictionary->find(accessor2, new_dests[pos])){
+                        lg::vertex_t internal_source_id = accessor1->second;
+                        lg::vertex_t internal_destination_id = accessor2->second;
+                        string_view lg_weight = tx2.get_edge(internal_source_id, /* label */ 0, internal_destination_id);
+                    }
+                    break;
+                }
+                catch (exception e){
+                    continue;
+                }
+            }
+        }
+    };
+    int64_t edges_per_thread = new_srcs.size() / num_threads;
+    int64_t odd_threads = new_srcs.size() % num_threads;
+    vector<thread> threads;
+    int64_t start = 0;
+    for(int thread_id = 0; thread_id < num_threads; thread_id ++){
+        int64_t length = edges_per_thread + (thread_id < odd_threads);
+        threads.emplace_back(routine_insert_edges, thread_id, start, length);
+        start += length;
+    }
+    for(auto& t : threads) t.join();
+    threads.clear();
+}
+
+
 double test_read(commandLine& P) {
+    auto thd_num = P.getOptionLongValue("-core", 1);
     auto r = random_aspen();
     uint64_t n = G->get_max_vertex_id();
     double a = 0.5;
@@ -103,17 +141,9 @@ double test_read(commandLine& P) {
         new_dests.push_back(edge.second);
     }
     gettimeofday(&t_start, &tzp);
-    vertex_dictionary_t::const_accessor accessor1, accessor2;
-    auto tx2 = G->begin_read_only_transaction();
-    parallel_for (uint32_t i =0 ; i< updates;i++){
-        VertexDictionary->find(accessor1, new_srcs[i]);
-        VertexDictionary->find(accessor2, new_dests[i]);
-        lg::vertex_t internal_source_id = accessor1->second;
-        lg::vertex_t internal_destination_id = accessor2->second;
-        string_view lg_weight = tx2.get_edge(internal_source_id, /* label */ 0, internal_destination_id);
-    }
-    tx2.abort();
+    read_edges(G, new_srcs, new_dests, thd_num);
     gettimeofday(&t_end, &tzp);
+    new_srcs.clear();new_dests.clear();
     return cal_time_elapsed(&t_start, &t_end);
 }
 

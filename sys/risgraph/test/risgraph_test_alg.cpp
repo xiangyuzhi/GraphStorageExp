@@ -55,7 +55,21 @@ void load_graph(commandLine& P){
 
 
 double test_bfs(commandLine& P) {
-    long bfs_src = P.getOptionLongValue("-src",9);
+    uint32_t bfs_src = 9;
+    bool thread = P.getOption("-thread");
+    if(!thread) {
+        int64_t n = G->get_vertex_num();
+        size_t maxdeg = 0;
+        size_t maxid = 9;
+        for(uint32_t i=1;i<n;i++){
+            size_t src_degree = G->get_outgoing_degree(i);
+            if(src_degree > maxdeg) {
+                maxdeg = src_degree;
+                maxid = i;
+            }
+        }
+        bfs_src = maxid;
+    }
     std::cout << "Running BFS from source = " << bfs_src << std::endl;
 
     gettimeofday(&t_start, &tzp);
@@ -112,16 +126,28 @@ double test_k_hop(commandLine& P, int k) {
     uint64_t n = G->get_vertex_num();
     uint32_t nsrc = n/20;
     srand(n);
-    parallel_for(int i=0;i<nsrc;i++){
+    cilk_for(int i=0;i<nsrc;i++){
         auto rdsrc = rand()%n;
-        for (auto e : G->outgoing.get_adjlist(rdsrc)) {
-            uint64_t v = e.nbr;
-            uint64_t w  = (uint64_t) e.data;
-            if(k==2)
-            for (auto e2 : G->outgoing.get_adjlist(v)) {
-                uint64_t v2 = e2.nbr;
+        auto tra = G->outgoing.get_adjlist_iter(rdsrc);
+        for(auto iter=tra.first;iter!=tra.second;iter++) {
+            auto edge = *iter;
+            const uint64_t v = edge.nbr;
+            if(k==2){
+                auto tra2 = G->outgoing.get_adjlist_iter(v);
+                for(auto iter2=tra2.first;iter2!=tra2.second;iter2++) {
+                    auto edge2 = *iter2;
+                    const uint64_t v2 = edge2.nbr;
+                }
             }
         }
+//        for (auto e : G->outgoing.get_adjlist(rdsrc)) {
+//            uint64_t v = e.nbr;
+//            uint64_t w  = (uint64_t) e.data;
+//            if(k==2){
+//                for (auto e2 : G->outgoing.get_adjlist(v))
+//                    uint64_t v2 = e2.nbr;
+//            }
+//        }
     }
     gettimeofday(&t_end, &tzp);
     return cal_time_elapsed(&t_start, &t_end);

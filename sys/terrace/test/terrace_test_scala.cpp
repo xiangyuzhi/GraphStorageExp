@@ -67,16 +67,29 @@ double test_pr(G& GA, commandLine& P) {
 // return time elapsed
 template <class G>
 double test_bfs(G& GA, commandLine& P, int trial) {
-    struct timeval start, end;
-    struct timezone tzp;
-
-    long src = P.getOptionLongValue("-src",9);
+    uint32_t bfs_src = 9;
+    bool thread = P.getOption("-thread");
+    if(!thread) {
+        size_t n = GA.get_num_vertices();
+        size_t maxdeg = 0;
+        size_t maxid = 9;
+        for(uint32_t i=1;i<n;i++){
+            size_t src_degree = GA.degree(i);
+            if(src_degree > maxdeg) {
+                maxdeg = src_degree;
+                maxid = i;
+            }
+        }
+        bfs_src = maxid;
+    }
     auto gname = P.getOptionValue("-gname", "none");
 
-    std::cout << "Running BFS from source = " << src << std::endl;
+    std::cout << "Running BFS from source = " << bfs_src << std::endl;
 
+    struct timeval start, end;
+    struct timezone tzp;
     gettimeofday(&start, &tzp);
-    auto bfs_edge_map = BFS_with_edge_map(GA, src);
+    auto bfs_edge_map = BFS_with_edge_map(GA, bfs_src);
     gettimeofday(&end, &tzp);
     free(bfs_edge_map);
 
@@ -154,7 +167,7 @@ double execute(Graph& G, commandLine& P, std::string testname, int i) {
 
 void run_algorithm(commandLine& P, int thd_num, string gname) {
     PRINT("=============== Run Algorithm BEGIN ===============");
-    Graph Ga = *G;
+    Graph &Ga = *G;
 
     std::vector<std::string> test_ids;
     test_ids = {"BFS","PR","1-HOP","2-HOP","Read"};
@@ -185,7 +198,7 @@ void batch_ins_del_read(commandLine& P, int thd_num, string gname){
     auto log = P.getOptionValue("-log","none");
     std::ofstream log_file(log, ios::app);
 
-    Graph Ga = *G;
+    Graph &Ga = *G;
     std::vector<uint32_t> update_sizes = {100000};
     auto r = random_aspen();
     auto update_times = std::vector<double>();
@@ -268,13 +281,13 @@ int main(int argc, char** argv) {
             std::vector<uint32_t> threads = {1,4,8,12};
             for(auto thd_num : threads){
                 set_num_workers(thd_num);
-                cout << "Running Aspen using " << thd_num << " threads." << endl;
+                cout << "Running Terrace using " << thd_num << " threads." << endl;
                 run_algorithm(P, thd_num, gname);
             }
 
             for(auto thd_num: threads){
                 set_num_workers(thd_num);
-                cout << "Running Aspen using " << thd_num << " threads." << endl;
+                cout << "Running Terrace using " << thd_num << " threads." << endl;
                 batch_ins_del_read(P, thd_num, gname);
             }
             del_graph();

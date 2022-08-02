@@ -10,10 +10,20 @@
 #include "parallel.h"
 
 double test_bfs(commandLine& P) {
-    long bfs_src = P.getOptionLongValue("-src",-1);
-    if (bfs_src == -1) {
-        std::cout << "Please specify a source vertex to run the BFS from using -src" << std::endl;
-        exit(0);
+    uint32_t bfs_src = 9;
+    bool thread = P.getOption("-thread");
+    if(!thread) {
+        uint64_t n = G->get_n();
+        size_t maxdeg = 0;
+        size_t maxid = 9;
+        for(uint32_t i=1;i<n;i++){
+            size_t src_degree = get_deg(G, i);
+            if(src_degree > maxdeg) {
+                maxdeg = src_degree;
+                maxid = i;
+            }
+        }
+        bfs_src = maxid;
     }
     std::cout << "Running BFS from source = " << bfs_src << std::endl;
 

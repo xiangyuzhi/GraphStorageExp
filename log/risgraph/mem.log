@@ -1,33 +1,3 @@
-Using threads :	1
-	[Tue May 24 13:11:21 2022]Insert	Batch size=10	Latency=4.43e-05	Throughput=22573.4
-	[Tue May 24 13:11:21 2022]Read	Batch size=10	Latency=0	Throughput=inf
-	[Tue May 24 13:11:21 2022]Insert	Batch size=100	Latency=1.57e-06	Throughput=636943
-	[Tue May 24 13:11:21 2022]Read	Batch size=100	Latency=0	Throughput=inf
-	[Tue May 24 13:11:21 2022]Insert	Batch size=1000	Latency=2.37e-07	Throughput=4.21941e+06
-	[Tue May 24 13:11:21 2022]Read	Batch size=1000	Latency=0	Throughput=inf
-	[Tue May 24 13:11:21 2022]Insert	Batch size=10000	Latency=1.088e-07	Throughput=9.19118e+06
-	[Tue May 24 13:11:21 2022]Read	Batch size=10000	Latency=0	Throughput=inf
-	[Tue May 24 13:11:21 2022]Insert	Batch size=100000	Latency=9.749e-08	Throughput=1.02575e+07
-	[Tue May 24 13:11:21 2022]Read	Batch size=100000	Latency=0	Throughput=inf
-	[Tue May 24 13:11:21 2022]Insert	Batch size=1000000	Latency=6.7753e-08	Throughput=1.47595e+07
-	[Tue May 24 13:11:21 2022]Read	Batch size=1000000	Latency=0	Throughput=inf
-	[Tue May 24 13:11:22 2022]Insert	Batch size=10000000	Latency=5.9935e-08	Throughput=1.66847e+07
-	[Tue May 24 13:11:22 2022]Read	Batch size=10000000	Latency=0	Throughput=inf
-Using threads :	1
-	[Tue May 24 13:13:35 2022]Insert	Batch size=10	Latency=4.74e-05	Throughput=21097
-	[Tue May 24 13:13:35 2022]Read	Batch size=10	Latency=0	Throughput=inf
-	[Tue May 24 13:13:35 2022]Insert	Batch size=100	Latency=2.51e-06	Throughput=398406
-	[Tue May 24 13:13:35 2022]Read	Batch size=100	Latency=0	Throughput=inf
-	[Tue May 24 13:13:35 2022]Insert	Batch size=1000	Latency=3.51e-07	Throughput=2.849e+06
-	[Tue May 24 13:13:35 2022]Read	Batch size=1000	Latency=0	Throughput=inf
-	[Tue May 24 13:13:35 2022]Insert	Batch size=10000	Latency=1.424e-07	Throughput=7.02247e+06
-	[Tue May 24 13:13:35 2022]Read	Batch size=10000	Latency=0	Throughput=inf
-	[Tue May 24 13:13:35 2022]Insert	Batch size=100000	Latency=9.876e-08	Throughput=1.01256e+07
-	[Tue May 24 13:13:35 2022]Read	Batch size=100000	Latency=0	Throughput=inf
-	[Tue May 24 13:13:35 2022]Insert	Batch size=1000000	Latency=6.6083e-08	Throughput=1.51325e+07
-	[Tue May 24 13:13:35 2022]Read	Batch size=1000000	Latency=0	Throughput=inf
-	[Tue May 24 13:13:35 2022]Insert	Batch size=10000000	Latency=5.84493e-08	Throughput=1.71088e+07
-	[Tue May 24 13:13:35 2022]Read	Batch size=10000000	Latency=0	Throughput=inf
 orkut,16.1503
 uniform-24,28.3504
 livejournal,4.39352

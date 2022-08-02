@@ -80,15 +80,15 @@ double test_k_hop(commandLine& P, int k) {
     uint64_t n = G->get_vertex_num();
     uint32_t nsrc = n/20;
     srand(n);
-    parallel_for(int i=0;i<nsrc;i++){
+    cilk_for(int i=0;i<nsrc;i++){
         auto rdsrc = rand()%n;
         for (auto e : G->outgoing.get_adjlist(rdsrc)) {
             uint64_t v = e.nbr;
             uint64_t w  = (uint64_t) e.data;
-            if(k==2)
-                for (auto e2 : G->outgoing.get_adjlist(v)) {
+            if(k==2){
+                for (auto e2 : G->outgoing.get_adjlist(v))
                     uint64_t v2 = e2.nbr;
-                }
+            }
         }
     }
     gettimeofday(&t_end, &tzp);
@@ -212,8 +212,7 @@ void batch_ins_del_read(commandLine& P, int thd_num, string gname){
             }
             gettimeofday(&t_start, &tzp);
 
-#pragma omp parallel for
-            for(uint32_t i=0; i< updates_to_run; i++){
+            cilk_for(uint32_t i=0; i< updates_to_run; i++){
                 const auto &e = raw_edges[i];
                 G->add_edge({e.first, e.second}, true);
             }
@@ -222,8 +221,7 @@ void batch_ins_del_read(commandLine& P, int thd_num, string gname){
             avg_insert += cal_time_elapsed(&t_start, &t_end);
 
             gettimeofday(&t_start, &tzp);
-#pragma omp parallel for
-            for(uint32_t i = 0; i < updates_to_run; i++) {
+            cilk_for(uint32_t i = 0; i < updates_to_run; i++) {
                 const auto &e = raw_edges[i];
                 G->del_edge({e.first, e.second}, true);
             }

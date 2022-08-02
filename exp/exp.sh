@@ -2,47 +2,56 @@
 
 #../build/sys/teseo/teseo_edge -gname uniform-24 -core 12 -f ../data/ADJgraph/uniform-24.adj -log ../log/teseo/edge.log
 
+# ---- mem ----
 
-e=(10 20 30 40 50 60 70)
-v=(20 21 22 23 24 25 26)
-sys="graphone"
-for((vi=0;vi<7;vi++))
-do
-  s="../build/sys/${sys}/${sys}_scala -v ${v[vi]} -e 30 -log ../log/${sys}/scala.log"
-  echo ${s}
-  $s
-done
-for((ei=0;ei<7;ei++))
-do
-  s="../build/sys/${sys}/${sys}_scala -v 23 -e ${e[ei]} -log ../log/${sys}/scala.log"
-  echo ${s}
-  $s
-done
-
-
+#../build/sys/teseo/teseo_mem -gname graph500-24 -core 16 -f ../data/ADJgraph/graph500-24.adj -log ../log/teseo/mem.log
+#../build/sys/teseo/teseo_mem -gname livejournal -core 16 -f ../data/ADJgraph/livejournal.adj -log ../log/teseo/mem.log
+#../build/sys/stinger/stinger_mem -gname twitter -core 16 -f ../data/ADJgraph/twitter.adj -log ../log/stinger/mem.log
+#
+## ---- scala ----
 #data=("uniform-24" "orkut")
-## "livejournal" "graph500-24"
-#sys=("graphone" "ligra" "livegraph")
-##  "teseo" "aspen"
+#sys=("stinger" "teseo" "livegraph")
 #
-#
-#for ((j=0;j<1;j++))
+#for ((j=0;j<7;j++))
 #do
-##  for ((i=0;i<2;i++))
-##  do
-##    echo ${data[i]} ${sys[j]}
-##    #s="../build/sys/${sys[j]}/${sys[j]}_alg  -gname ${data[i]} -core 16 -f ../data/ADJgraph/${data[i]}.adj -log ../log/${sys[j]}/alg.log"
-##    s="../build/sys/${sys[j]}/${sys[j]}_scala -thread -gname ${data[i]} -f ../data/ADJgraph/${data[i]}.adj -log ../log/${sys[j]}/scala.log"
-##    echo ${s}
-##    $s
-##  done
-#  s="../build/sys/${sys[j]}/${sys[j]}_scala -log ../log/${sys[j]}/scala.log"
+#  for ((i=0;i<2;i++))
+#  do
+#    echo ${data[i]} ${sys[j]}
+#    s="../build/sys/${sys[j]}/${sys[j]}_scala -thread -gname ${data[i]} -f ../data/ADJgraph/${data[i]}.adj -log ../log/${sys[j]}/scala.log"
+#    echo ${s}
+#    $s
+#  done
+#done
+
+sys=("risgraph" "stinger" "teseo" "livegraph")
+# "terrace" "llama" "pcsr"
+for ((j=0;j<4;j++))
+  do
+    s="../build/sys/${sys[j]}/${sys[j]}_scala -log ../log/${sys[j]}/scala.log"
+    echo ${s}
+    $s
+  done
+
+
+../build/sys/teseo/teseo_mem -gname twitter -core 16 -f ../data/ADJgraph/twitter.adj -log ../log/teseo/mem.log
+
+
+# ---- for graphone ----
+#e=(10 20 30 40 50 60 70)
+#v=(20 21 22 23 24 25 26)
+#sys="graphone"
+#for((vi=0;vi<7;vi++))
+#do
+#  s="../build/sys/${sys}/${sys}_scala -v ${v[vi]} -e 30 -log ../log/${sys}/scala.log"
 #  echo ${s}
 #  $s
 #done
-
-
-
+#for((ei=0;ei<7;ei++))
+#do
+#  s="../build/sys/${sys}/${sys}_scala -v 23 -e ${e[ei]} -log ../log/${sys}/scala.log"
+#  echo ${s}
+#  $s
+#done
 
 
 #data=("uniform-24" "orkut")
