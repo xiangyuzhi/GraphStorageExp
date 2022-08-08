@@ -274,6 +274,7 @@ int main(int argc, char** argv) {
         auto insert_f = [&](uint32_t deg, uint32_t logv){
             uint32_t e = (1L<<logv)*deg;
             num_edges = e;
+            num_nodes =  (1L<<logv);
             cout<<"v: "<<logv<<" e: "<<deg<<endl;
 
             G = new Graph<uint64_t> ((1L<<logv), e, false, true);

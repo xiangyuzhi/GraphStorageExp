@@ -176,7 +176,6 @@ void batch_ins_del_read(commandLine& P, int thd_num, string gname){
                 new_dests.push_back(edge.second);
             }
 
-            // insert edge
             gettimeofday(&t_start, &tzp);
             graph.tx_begin();
             for (uint32_t i =0 ; i< updates_to_run;i++){
@@ -188,7 +187,6 @@ void batch_ins_del_read(commandLine& P, int thd_num, string gname){
             gettimeofday(&t_end, &tzp);
             avg_insert += cal_time_elapsed(&t_start, &t_end);
 
-            // doesnpt implment del
             gettimeofday(&t_start, &tzp);
             graph.tx_begin();
             for(uint32_t i = 0; i < updates_to_run; i++) {
@@ -242,7 +240,8 @@ int main(int argc, char** argv) {
         auto insert_f = [&](uint32_t deg, uint32_t logv){
             uint32_t e = (1L<<logv)*deg;
             cout<<"v: "<<logv<<" e: "<<deg<<endl;
-
+            num_nodes = (1L<<logv);
+            num_edges = e;
             char* database_directory = (char*) alloca(16);
             strcpy(database_directory, "db");
 

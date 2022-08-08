@@ -354,6 +354,9 @@ int main(int argc, char** argv) {
     }
 
     else {
+
+
+
         auto insert_f = [&](uint32_t deg, uint32_t logv){
             G = new lg::Graph();
             m_pHashMap = new tbb::concurrent_hash_map<uint64_t, /* vertex_t */ uint64_t>();
@@ -386,7 +389,7 @@ int main(int argc, char** argv) {
             }
             auto tx2 = G->begin_transaction();
             vertex_dictionary_t::const_accessor accessor1, accessor2;  // shared lock on the dictionary
-            parallel_for (uint32_t i =0 ; i< e;i++){
+            for (uint32_t i =0 ; i< e;i++){
                 VertexDictionary->find(accessor1, new_srcs[i]);
                 VertexDictionary->find(accessor2, new_dests[i]);
                 lg::vertex_t internal_source_id = accessor1->second;
@@ -399,22 +402,26 @@ int main(int argc, char** argv) {
             string gname = "graph_"+to_string(logv)+"_"+to_string(deg);
             run_algorithm(P, 16, gname);
             batch_ins_del_read(P, 16, gname);
-            del_G();
+            //del_G();
         };
 
         {
-            std::vector<uint32_t> vertices = {20,21,22,23,24,25,26};
-            for(auto v : vertices){
-                insert_f(30,v);
-            }
+
+            auto v = P.getOptionIntValue("-v", -1);
+            auto e = P.getOptionIntValue("-e", -1);
+            insert_f(e, v);
+//            std::vector<uint32_t> vertices = {20,21,22,23,24,25,26};
+//            for(auto v : vertices){
+//                insert_f(30,v);
+//            }
         }
 
-        {
-            std::vector<uint32_t> edges = {10,20,30,40,50,60,70};
-            for(auto e : edges){
-                insert_f(e, 23);
-            }
-        }
+//        {
+//            std::vector<uint32_t> edges = {10,20,30,40,50,60,70};
+//            for(auto e : edges){
+//                insert_f(e, 23);
+//            }
+//        }
     }
     printf("!!!!! TEST OVER !!!!!\n");
     return 0;

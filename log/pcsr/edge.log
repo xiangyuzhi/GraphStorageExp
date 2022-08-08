@@ -12,3 +12,17 @@ uniform-24,1,e,insert,10000,1.96736e+06
 uniform-24,1,e,insert,100000,1.91176e+06
 uniform-24,1,e,insert,1000000,1.76875e+06
 uniform-24,1,e,insert,10000000,1.62516e+06
+orkut,16,e,insert,10,1.3986e+06
+orkut,16,e,insert,100,1.71674e+06
+orkut,16,e,insert,1000,1.76678e+06
+orkut,16,e,insert,10000,1.97646e+06
+orkut,16,e,insert,100000,1.96966e+06
+orkut,16,e,insert,1000000,1.87084e+06
+orkut,16,e,insert,10000000,1.77151e+06
+uniform-24,16,e,insert,10,1.30719e+06
+uniform-24,16,e,insert,100,1.76367e+06
+uniform-24,16,e,insert,1000,1.74749e+06
+uniform-24,16,e,insert,10000,1.85692e+06
+uniform-24,16,e,insert,100000,1.73309e+06
+uniform-24,16,e,insert,1000000,1.72849e+06
+uniform-24,16,e,insert,10000000,1.62397e+06

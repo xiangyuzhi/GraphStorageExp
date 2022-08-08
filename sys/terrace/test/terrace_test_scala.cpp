@@ -168,7 +168,6 @@ double execute(Graph& G, commandLine& P, std::string testname, int i) {
 void run_algorithm(commandLine& P, int thd_num, string gname) {
     PRINT("=============== Run Algorithm BEGIN ===============");
     Graph &Ga = *G;
-
     std::vector<std::string> test_ids;
     test_ids = {"BFS","PR","1-HOP","2-HOP","Read"};
     size_t rounds = P.getOptionLongValue("-rounds", 5);
@@ -198,7 +197,6 @@ void batch_ins_del_read(commandLine& P, int thd_num, string gname){
     auto log = P.getOptionValue("-log","none");
     std::ofstream log_file(log, ios::app);
 
-    Graph &Ga = *G;
     std::vector<uint32_t> update_sizes = {100000};
     auto r = random_aspen();
     auto update_times = std::vector<double>();
@@ -215,7 +213,7 @@ void batch_ins_del_read(commandLine& P, int thd_num, string gname){
         size_t updates_to_run = update_sizes[us];
         auto perm = get_random_permutation(updates_to_run);
         for (size_t ts=0; ts<n_trials; ts++) {
-            uint32_t num_nodes = Ga.get_num_vertices();
+            uint32_t num_nodes = G->get_num_vertices();
 
             double a = 0.5;
             double b = 0.1;
@@ -240,15 +238,15 @@ void batch_ins_del_read(commandLine& P, int thd_num, string gname){
                 new_srcs.push_back(edges[i].x);
                 new_dests.push_back(edges[i].y);
             }
-
+            free(edges);
             gettimeofday(&t_start, &tzp);
-            Ga.add_edge_batch(new_srcs.data(), new_dests.data(), updates_to_run, perm);
+            G->add_edge_batch(new_srcs.data(), new_dests.data(), updates_to_run, perm);
             gettimeofday(&t_end, &tzp);
             avg_insert += cal_time_elapsed(&t_start, &t_end);
 
             gettimeofday(&t_start, &tzp);
             for(uint32_t i = 0; i < updates_to_run; i++) {
-                Ga.remove_edge(new_srcs[i], new_dests[i]);
+                G->remove_edge(new_srcs[i], new_dests[i]);
             }
             gettimeofday(&t_end, &tzp);
             avg_delete +=  cal_time_elapsed(&t_start, &t_end);
@@ -295,9 +293,11 @@ int main(int argc, char** argv) {
     }
 
     else {
+        set_num_workers(16);
         auto insert_f = [&](uint32_t deg, uint32_t logv){
             uint32_t e = (1L<<logv)*deg;
             num_edges = e;
+            num_nodes = (1L<<logv);
             cout<<"v: "<<logv<<" e: "<<deg<<endl;
 
             double a = 0.5;
@@ -314,8 +314,21 @@ int main(int argc, char** argv) {
                 new_srcs.push_back(edge.first);
                 new_dests.push_back(edge.second);
             }
+            pair_uint *edges = (pair_uint*)calloc(e, sizeof(pair_uint));
+            for (uint32_t i = 0; i < e; i++) {
+                edges[i].x = new_srcs[i];
+                edges[i].y = new_dests[i];
+            }
+            integerSort_y((pair_els*)edges, e, num_nodes);
+            integerSort_x((pair_els*)edges, e, num_nodes);
+            new_srcs.clear();new_srcs.clear();
+            for (uint32_t i = 0; i < e; i++) {
+                new_srcs.push_back(edges[i].x);
+                new_dests.push_back(edges[i].y);
+            }
             G->add_edge_batch(new_srcs.data(), new_dests.data(), e, perm);
             new_srcs.clear();new_dests.clear();
+            free(edges);
 
             string gname = "graph_"+to_string(logv)+"_"+to_string(deg);
             run_algorithm(P, 16, gname);

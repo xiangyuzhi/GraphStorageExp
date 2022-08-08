@@ -209,8 +209,6 @@ int main(int argc, char** argv) {
                 cout << "Running Aspen using " << thd_num << " threads." << endl;
                 run_algorithm(P, thd_num, gname);
             }
-
-            del_G();
         }
     }
 
@@ -238,12 +236,12 @@ int main(int argc, char** argv) {
             del_G();
         };
 
-        {
-            std::vector<uint32_t> vertices = {20,21,22,23,24,25,26};
-            for(auto v : vertices){
-                insert_f(30,v);
-            }
-        }
+//        {
+//            std::vector<uint32_t> vertices = {20,21,22,23,24,25,26};
+//            for(auto v : vertices){
+//                insert_f(30,v);
+//            }
+//        }
 
         {
             std::vector<uint32_t> edges = {10,20,30,40,50,60,70};

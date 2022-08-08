@@ -42,7 +42,7 @@ void batch_ins_del_read(commandLine& P) {
     auto update_sizes = pbbs::sequence<size_t>(7);
     update_sizes = {10,100,1000,10000,100000,1000000,10000000};//
     auto update_times = std::vector<double>();
-    size_t n_trials = 3;
+    size_t n_trials = 1;
 
     size_t start = 0;
     for (size_t us=start; us<update_sizes.size(); us++) {
@@ -51,9 +51,6 @@ void batch_ins_del_read(commandLine& P) {
         double avg_read = 0.0;
         cout << "Running batch size: " << update_sizes[us] << endl;
 
-        if (update_sizes[us] < 10000000)
-            n_trials = 20;
-        else n_trials = 5;
         size_t updates_to_run = update_sizes[us];
         for (size_t ts=0; ts<n_trials; ts++) {
             auto updates = pbbs::sequence<pair_vertex>(updates_to_run);

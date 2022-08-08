@@ -158,6 +158,7 @@ int main(int argc, char** argv) {
         auto insert_f = [&](uint32_t deg, uint32_t logv){
             uint32_t e = (1L<<logv)*deg;
             num_edges = e;
+            num_nodes = (1L<<logv);
             cout<<"v: "<<logv<<" e: "<<deg<<endl;
             double a = 0.5;
             double b = 0.1;

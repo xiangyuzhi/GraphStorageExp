@@ -6,13 +6,100 @@
 
 #../build/sys/teseo/teseo_mem -gname graph500-24 -core 16 -f ../data/ADJgraph/graph500-24.adj -log ../log/teseo/mem.log
 #../build/sys/teseo/teseo_mem -gname livejournal -core 16 -f ../data/ADJgraph/livejournal.adj -log ../log/teseo/mem.log
-#../build/sys/stinger/stinger_mem -gname twitter -core 16 -f ../data/ADJgraph/twitter.adj -log ../log/stinger/mem.log
-#
+
+## ---- for graphone and livegraph and teseo----
+
+
 ## ---- scala ----
-#data=("uniform-24" "orkut")
-#sys=("stinger" "teseo" "livegraph")
+
+for sys in "llama";
+  do
+    s="../build/sys/${sys}/${sys}_scala -log ../log/${sys}/scala.log"
+    echo ${s}
+    $s
+  done
+
+#for thd in 1 4 8 12 16;
+#  do
+#      s="../build/sys/graphone/graphone_scala -gname ${data} -thread -core ${thd} -f ../data/ADJgraph/${data}.adj -log ../log/graphone/scala.log"
+#      echo ${s}
+#      $s
+#  done
+
+for sys in "livegraph" "graphone" "stinger" "risgraph" "llama" "terrace" "aspen" ;
+do
+  for data in "orkut" "uniform-24";
+  do
+    for ((i=0;i<3;i++))
+    do
+      s="../build/sys/${sys}/${sys}_edge -gname ${data} -core 16 -f ../data/ADJgraph/${data}.adj -log ../log/${sys}/edge.log"
+      echo ${s}
+      $s
+    done
+  done
+done
+
+
+for data in "uniform-24" "orkut";
+  do
+    for ((i=0;i<1;i++))
+    do
+      s="../build/sys/teseo/teseo_edge -gname ${data} -core 12 -f ../data/ADJgraph/${data}.adj -log ../log/teseo/edge.log"
+      echo ${s}
+      $s
+    done
+  done
+
+
+for sys in "teseo" "graphone";
+do
+  for ((i=0;i<2;i++))
+  do
+    for v in 20 21 22 23 24 25 26;
+    do
+      s="../build/sys/${sys}/${sys}_scala -v ${v} -e 30 -log ../log/${sys}/scala.log"
+      echo ${s}
+      $s
+    done
+    for e in 10 20 30 40 50 60 70;
+    do
+      s="../build/sys/${sys}/${sys}_scala -v 23 -e ${e} -log ../log/${sys}/scala.log"
+      echo ${s}
+      $s
+    done
+  done
+done
+
+
+
+#for thd in 1 4 8 12 16;
+#  do
+#    for data in "orkut" "uniform-24";
+#    do
+#      s="../build/sys/pcsr/pcsr_edge -gname ${data} -core ${thd} -f ../data/ADJgraph/${data}.adj -log ../log/pcsr/scala.log"
+#      echo ${s}
+#      $s
+#    done
+#  done
 #
-#for ((j=0;j<7;j++))
+#for thd in 4 8 12;
+#  do
+#    for data in "orkut";
+#    do
+#      for sys in "llama" "teseo";
+#      do
+#        s="../build/sys/${sys}/${sys}_edge -gname ${data} -core ${thd} -f ../data/ADJgraph/${data}.adj -log ../log/${sys}/scala.log"
+#        echo ${s}
+#        $s
+#      done
+#    done
+#  done
+
+
+#data=("uniform-24" "orkut")
+#sys=("pcsr" "risgraph" "teseo")
+#
+#for ((j=0;j<3;j++))
 #do
 #  for ((i=0;i<2;i++))
 #  do
@@ -22,36 +109,29 @@
 #    $s
 #  done
 #done
+#
+#thd=(4 8 12)
+#data=("uniform-24" "graph500-24")
+#for ((j=0;j<3;j++))
+#  do
+#    for ((i=0;i<2;i++))
+#    do
+#      s="../build/sys/llama/llama_edge -gname ${data[i]} -core ${thd[j]} -f ../data/ADJgraph/${data[i]}.adj -log ../log/llama/scala.log"
+#      s="../build/sys/teseo/teseo_edge -gname ${data[i]} -core ${thd[j]} -f ../data/ADJgraph/${data[i]}.adj -log ../log/teseo/scala.log"
+#      echo ${s}
+#      $s
+#    done
+#  done
 
-sys=("risgraph" "stinger" "teseo" "livegraph")
-# "terrace" "llama" "pcsr"
-for ((j=0;j<4;j++))
-  do
-    s="../build/sys/${sys[j]}/${sys[j]}_scala -log ../log/${sys[j]}/scala.log"
-    echo ${s}
-    $s
-  done
 
 
-../build/sys/teseo/teseo_mem -gname twitter -core 16 -f ../data/ADJgraph/twitter.adj -log ../log/teseo/mem.log
 
 
-# ---- for graphone ----
-#e=(10 20 30 40 50 60 70)
-#v=(20 21 22 23 24 25 26)
-#sys="graphone"
-#for((vi=0;vi<7;vi++))
-#do
-#  s="../build/sys/${sys}/${sys}_scala -v ${v[vi]} -e 30 -log ../log/${sys}/scala.log"
-#  echo ${s}
-#  $s
-#done
-#for((ei=0;ei<7;ei++))
-#do
-#  s="../build/sys/${sys}/${sys}_scala -v 23 -e ${e[ei]} -log ../log/${sys}/scala.log"
-#  echo ${s}
-#  $s
-#done
+
+#../build/sys/teseo/teseo_mem -gname twitter -core 16 -f ../data/ADJgraph/twitter.adj -log ../log/teseo/mem.log
+
+
+
 
 
 #data=("uniform-24" "orkut")

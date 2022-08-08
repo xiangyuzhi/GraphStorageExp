@@ -14,7 +14,7 @@ void batch_ins_del_read(commandLine& P){
     std::ofstream log_file(log, ios::app);
 
     PCSR &Ga = *G;
-    std::vector<uint32_t> update_sizes = {10, 100, 1000 ,10000,100000,1000000, 10000000};//
+    std::vector<uint32_t> update_sizes = {100000};//10, 100, 1000 ,10000,100000,1000000, 10000000
     auto r = random_aspen();
     auto update_times = std::vector<double>();
     size_t n_trials = 1;
