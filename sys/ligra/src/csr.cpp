@@ -99,6 +99,19 @@ double CSR::get_weight(uint64_t source, uint64_t destination) const {
             return m_out_w[i];
         }
     }
+//    if(offset.second - offset.first <= 4){
+//        for(uint64_t i = offset.first, end = offset.second; i < end && m_out_e[i] <= logical_destination_id; i++){
+//            if(m_out_e[i] == logical_destination_id){
+//                return m_out_w[i];
+//            }
+//        }
+//    }
+//    else {
+//        uint32_t loc = lower_bound(m_out_e + offset.first, m_out_e + offset.second, logical_destination_id) - m_out_e;
+//        if(m_out_e[loc] == logical_destination_id) {
+//            return m_out_w[loc];
+//        }
+//    }
 
     return numeric_limits<double>::signaling_NaN();
 }

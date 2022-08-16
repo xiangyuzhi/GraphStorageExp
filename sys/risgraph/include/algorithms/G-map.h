@@ -40,7 +40,7 @@ VertexSubset EdgeMapDense(Graph *G, VertexSubset &vs, F f, bool output, bool wei
     uint64_t n = G->get_vertex_num();
     VertexSubset output_vs = VertexSubset(vs, false);
     if (vs.all) {
-        for(uint64_t i_ = 0; i_ < n; i_+=512) {
+        parallel_for(uint64_t i_ = 0; i_ < n; i_+=512) {
             uint64_t end = std::min(i_+512, (uint64_t)n );
             for (uint64_t i = i_; i < end; i++) {
                 if (f.cond(i) == 1) { //printf("processing row %lu\n", i);
@@ -49,7 +49,7 @@ VertexSubset EdgeMapDense(Graph *G, VertexSubset &vs, F f, bool output, bool wei
             }
         }
     } else {
-        for(uint64_t i_ = 0; i_ < n; i_+=512) {
+        parallel_for(uint64_t i_ = 0; i_ < n; i_+=512) {
             uint64_t end = std::min(i_+512, (uint64_t) n);
             for (uint64_t i = i_; i < end; i++) {
                 if (f.cond(i) == 1) {//printf("processing row %lu\n", i);

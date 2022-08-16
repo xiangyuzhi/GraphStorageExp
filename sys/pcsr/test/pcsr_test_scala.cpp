@@ -176,11 +176,11 @@ void batch_ins_del_read(commandLine& P, int thd_num, string gname){
                 new_dests.push_back(edge.second);
             }
 
-            gettimeofday(&t_start, &tzp);
-            for (uint32_t i =0 ; i< updates_to_run;i++){
-                Ga.add_edge_update(new_srcs[i],new_dests[i],1);
-            }
-            gettimeofday(&t_end, &tzp);
+//            gettimeofday(&t_start, &tzp);
+//            for (uint32_t i =0 ; i< updates_to_run;i++){
+//                Ga.add_edge_update(new_srcs[i],new_dests[i],1);
+//            }
+//            gettimeofday(&t_end, &tzp);
             avg_insert += cal_time_elapsed(&t_start, &t_end);
 
         }

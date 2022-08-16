@@ -3,6 +3,69 @@
 //
 
 #include "llama_test.h"
+#include "thread"
+
+template<typename Graph>
+void add_edges(Graph &graph, vector<uint32_t> &new_srcs, vector<uint32_t> &new_dests, int num_threads){
+    auto routine_insert_edges = [&graph, &new_srcs, &new_dests](int thread_id, uint64_t start, uint64_t length){
+        for(int64_t pos = start, end = start + length; pos < end; pos++){
+            while(1){
+                try{
+                    graph.tx_begin();
+                    edge_t edge_id = graph.add_edge(new_srcs[pos], new_dests[pos]);
+                    uint64_t w = 1;
+                    graph.get_edge_property_64(g_llama_property_weights)->set(edge_id, *reinterpret_cast<uint64_t*>(&(w)));
+                    graph.tx_commit();
+                    break;
+                }
+                catch (exception e){
+                    continue;
+                }
+            }
+        }
+    };
+    int64_t edges_per_thread = new_srcs.size() / num_threads;
+    int64_t odd_threads = new_srcs.size() % num_threads;
+    vector<thread> threads;
+    int64_t start = 0;
+    for(int thread_id = 0; thread_id < num_threads; thread_id ++){
+        int64_t length = edges_per_thread + (thread_id < odd_threads);
+        threads.emplace_back(routine_insert_edges, thread_id, start, length);
+        start += length;
+    }
+    for(auto& t : threads) t.join();
+    threads.clear();
+}
+
+template<typename Graph>
+void delete_edges(Graph &graph, vector<uint32_t> &new_srcs, vector<uint32_t> &new_dests, int num_threads){
+    auto routine_insert_edges = [&graph, &new_srcs, &new_dests](int thread_id, uint64_t start, uint64_t length){
+        for(int64_t pos = start, end = start + length; pos < end; pos++){
+            while(1){
+                try{
+                    graph.tx_begin();
+                    graph.delete_edge(new_srcs[pos], graph.find(new_srcs[pos], new_dests[pos]));
+                    graph.tx_commit();
+                    break;
+                }
+                catch (exception e){
+                    continue;
+                }
+            }
+        }
+    };
+    int64_t edges_per_thread = new_srcs.size() / num_threads;
+    int64_t odd_threads = new_srcs.size() % num_threads;
+    vector<thread> threads;
+    int64_t start = 0;
+    for(int thread_id = 0; thread_id < num_threads; thread_id ++){
+        int64_t length = edges_per_thread + (thread_id < odd_threads);
+        threads.emplace_back(routine_insert_edges, thread_id, start, length);
+        start += length;
+    }
+    for(auto& t : threads) t.join();
+    threads.clear();
+}
 
 
 void batch_ins_del_read(commandLine& P){
@@ -49,33 +112,29 @@ void batch_ins_del_read(commandLine& P){
 
             // insert edge
             gettimeofday(&t_start, &tzp);
-            graph.tx_begin();
-            for (uint32_t i =0 ; i< updates_to_run;i++){
-                edge_t edge_id = graph.add_edge(new_srcs[i], new_dests[i]);
-                uint64_t w = 1;
-                graph.get_edge_property_64(g_llama_property_weights)->set(edge_id, *reinterpret_cast<uint64_t*>(&(w)));
-            }
-            graph.tx_commit();
+            add_edges(graph, new_srcs, new_dests, thd_num);
+//            graph.checkpoint();
+//            graph.tx_begin();
+//            for (uint32_t i =0 ; i< updates_to_run;i++){
+//                edge_t edge_id = graph.add_edge(new_srcs[i], new_dests[i]);
+//                uint64_t w = 1;
+//                graph.get_edge_property_64(g_llama_property_weights)->set(edge_id, *reinterpret_cast<uint64_t*>(&(w)));
+//            }
+//            graph.checkpoint();
+//            graph.tx_commit();
             gettimeofday(&t_end, &tzp);
             avg_insert += cal_time_elapsed(&t_start, &t_end);
 
-
-//            gettimeofday(&t_start, &tzp);
-//            graph.tx_begin();
-//            for(uint32_t i = 0; i < updates_to_run; i++) {
-//                graph.find(new_srcs[i], new_dests[i]);
-//            }
-//            graph.tx_commit();
-//            gettimeofday(&t_end, &tzp);
-//            avg_read += cal_time_elapsed(&t_start, &t_end);
-
             // doesnpt implment del
             gettimeofday(&t_start, &tzp);
-            graph.tx_begin();
-            for(uint32_t i = 0; i < updates_to_run; i++) {
-                graph.delete_edge(new_srcs[i], graph.find(new_srcs[i], new_dests[i]));
-            }
-            graph.tx_commit();
+            delete_edges(graph, new_srcs, new_dests, thd_num);
+//            graph.checkpoint();
+//            graph.tx_begin();
+//            for(uint32_t i = 0; i < updates_to_run; i++) {
+//                graph.delete_edge(new_srcs[i], graph.find(new_srcs[i], new_dests[i]));
+//            }
+//            graph.checkpoint();
+//            graph.tx_commit();
             gettimeofday(&t_end, &tzp);
             avg_delete +=  cal_time_elapsed(&t_start, &t_end);
         }

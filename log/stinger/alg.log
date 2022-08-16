@@ -37,3 +37,6 @@ uniform-24,16,Read,3.46056
 orkut,16,1-HOP,0.110414
 orkut,16,2-HOP,6.05791
 orkut,16,Read,2.50821
+livejournal,16,1-HOP,0.169463
+livejournal,16,2-HOP,0.958721
+livejournal,16,Read,0.163545

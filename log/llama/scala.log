@@ -272,3 +272,15 @@ graph_23_70,16,2-HOP,216.22
 graph_23_70,16,Read,26.443
 graph_23_70,16,e,insert,100000,504794
 graph_23_70,16,e,delete,100000,525488
+uniform-24,1,e,insert,100000,218035
+uniform-24,1,e,delete,100000,687610
+uniform-24,4,e,insert,100000,330080
+uniform-24,4,e,delete,100000,1.60297e+06
+uniform-24,8,e,insert,100000,512635
+uniform-24,8,e,delete,100000,2.99559e+06
+orkut,1,e,insert,100000,338098
+orkut,1,e,delete,100000,559801
+orkut,4,e,insert,100000,518431
+orkut,4,e,delete,100000,1.50953e+06
+orkut,8,e,insert,100000,568790
+orkut,8,e,delete,100000,2.48523e+06

@@ -79,17 +79,31 @@ double test_k_hop(commandLine& P, int k) {
 //    K_HOP(G, k);
     uint64_t n = G->get_vertex_num();
     uint32_t nsrc = n/20;
+    cout<<"nsrc "<<nsrc<<endl;
     srand(n);
     cilk_for(int i=0;i<nsrc;i++){
         auto rdsrc = rand()%n;
-        for (auto e : G->outgoing.get_adjlist(rdsrc)) {
-            uint64_t v = e.nbr;
-            uint64_t w  = (uint64_t) e.data;
+        auto tra = G->outgoing.get_adjlist_iter(rdsrc);
+        for(auto iter=tra.first;iter!=tra.second;iter++) {
+            auto edge = *iter;
+            const uint64_t v = edge.nbr;
             if(k==2){
-                for (auto e2 : G->outgoing.get_adjlist(v))
-                    uint64_t v2 = e2.nbr;
+                auto tra2 = G->outgoing.get_adjlist_iter(v);
+                for(auto iter2=tra2.first;iter2!=tra2.second;iter2++) {
+                    auto edge2 = *iter2;
+                    const uint64_t v2 = edge2.nbr;
+                }
             }
         }
+//        auto rdsrc = rand()%n;
+//        for (auto e : G->outgoing.get_adjlist(rdsrc)) {
+//            uint64_t v = e.nbr;
+//            uint64_t w  = (uint64_t) e.data;
+//            if(k==2){
+//                for (auto e2 : G->outgoing.get_adjlist(v))
+//                    uint64_t v2 = e2.nbr;
+//            }
+//        }
     }
     gettimeofday(&t_end, &tzp);
     return cal_time_elapsed(&t_start, &t_end);
@@ -147,7 +161,7 @@ void run_algorithm(commandLine& P, int thd_num, string gname) {
     PRINT("=============== Run Algorithm BEGIN ===============");
 
     std::vector<std::string> test_ids;
-    test_ids = {"BFS","PR","1-HOP","2-HOP","Read"};
+    test_ids = {"1-HOP","2-HOP"};//,"BFS","PR","Read"
 
     size_t rounds = P.getOptionLongValue("-rounds", 5);
     auto log = P.getOptionValue("-log", "none");
@@ -246,7 +260,7 @@ void batch_ins_del_read(commandLine& P, int thd_num, string gname){
 }
 
 
-// -gname livejournal -core 16 -f ../../../data/ADJgraph/livejournal.adj -log ../../../log/risgraph/edge.log
+// -gname livejournal -thread -core 16 -f ../../../data/ADJgraph/livejournal.adj -log ../../../log/risgraph/edge.log
 int main(int argc, char** argv) {
     srand(time(NULL));
     commandLine P(argc, argv);
@@ -261,11 +275,11 @@ int main(int argc, char** argv) {
                 cout << "Running Aspen using " << thd_num << " threads." << endl;
                 run_algorithm(P, thd_num, gname);
             }
-            for(auto thd_num: threads){
-                set_num_workers(thd_num);
-                cout << "Running Aspen using " << thd_num << " threads." << endl;
-                batch_ins_del_read(P, thd_num, gname);
-            }
+//            for(auto thd_num: threads){
+//                set_num_workers(thd_num);
+//                cout << "Running Aspen using " << thd_num << " threads." << endl;
+//                batch_ins_del_read(P, thd_num, gname);
+//            }
             del_G();
         }
     }

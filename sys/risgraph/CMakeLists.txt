@@ -3,7 +3,7 @@ project(risgraph)
 
 
 if(CMAKE_COMPILER_IS_GNUCXX)
-    SET (CMAKE_CXX_FLAGS "-std=c++14 ${CXX_FLAGS_Common} -O3 -DEDGELONG -mcx16 -march=native -fcilkplus -pthread -fopenmp")
+    SET (CMAKE_CXX_FLAGS "-std=c++14 ${CXX_FLAGS_Common} -DEDGELONG -mcx16 -march=native -fcilkplus -pthread -fopenmp")
     message(STATUS "optional:-std=c++14")
 endif(CMAKE_COMPILER_IS_GNUCXX)
 
@@ -41,4 +41,9 @@ add_executable(risgraph_scala test/risgraph_test_scala.cpp)
 target_link_libraries(risgraph_scala tbb)
 set_target_properties(risgraph_scala PROPERTIES  COMPILE_FLAGS ${COMPILE_FLAGS64}
         LINK_FLAGS ${LINK_FLAGS_COMMON})
-#  -src 9 -maxiters 5 -f ../../../data/slashdot.adj
+
+
+add_executable(risgraph_tst test/risgraph_test.cpp)
+target_link_libraries(risgraph_tst tbb)
+set_target_properties(risgraph_tst PROPERTIES  COMPILE_FLAGS ${COMPILE_FLAGS64}
+        LINK_FLAGS ${LINK_FLAGS_COMMON})

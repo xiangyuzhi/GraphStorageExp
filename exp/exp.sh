@@ -7,55 +7,49 @@
 #../build/sys/teseo/teseo_mem -gname graph500-24 -core 16 -f ../data/ADJgraph/graph500-24.adj -log ../log/teseo/mem.log
 #../build/sys/teseo/teseo_mem -gname livejournal -core 16 -f ../data/ADJgraph/livejournal.adj -log ../log/teseo/mem.log
 
-## ---- for graphone and livegraph and teseo----
+
+#for data in "livejournal" "orkut" "uniform-24" "graph500-24" "twitter";
+#  do
+#    s="../build/sys/teseo/teseo_mem -gname ${data} -core 16 -f ../data/ADJgraph/${data}.adj -log ../log/teseo/mem.log"
+#    echo ${s}
+#    $s
+#  done
+
+
+
+#  ----   alg ----
+#for sys in "pcsr" "ligra" "risgraph";
+#do
+#  for data in "uniform-24" "orkut";
+#  do
+#    s="../build/sys/${sys}/${sys}_alg -gname ${data} -core 16 -f ../data/ADJgraph/${data}.adj -log ../log/${sys}/alg.log"
+#    echo ${s}
+#    $s
+#  done
+#done
+#
+#
+#for sys in "pcsr" "ligra" "risgraph";
+#do
+#  for data in "uniform-24" "orkut";
+#  do
+#    s="../build/sys/${sys}/${sys}_scala -thread -gname ${data} -core 16 -f ../data/ADJgraph/${data}.adj -log ../log/${sys}/scala.log"
+#    echo ${s}
+#    $s
+#  done
+#  s="../build/sys/${sys}/${sys}_scala -log ../log/${sys}/scala.log"
+#  echo ${s}
+#  $s
+#done
 
 
 ## ---- scala ----
 
-for sys in "llama";
-  do
-    s="../build/sys/${sys}/${sys}_scala -log ../log/${sys}/scala.log"
-    echo ${s}
-    $s
-  done
-
-#for thd in 1 4 8 12 16;
-#  do
-#      s="../build/sys/graphone/graphone_scala -gname ${data} -thread -core ${thd} -f ../data/ADJgraph/${data}.adj -log ../log/graphone/scala.log"
-#      echo ${s}
-#      $s
-#  done
-
-for sys in "livegraph" "graphone" "stinger" "risgraph" "llama" "terrace" "aspen" ;
+for sys in "teseo";
 do
-  for data in "orkut" "uniform-24";
+  for ((i=0;i<1;i++))
   do
-    for ((i=0;i<3;i++))
-    do
-      s="../build/sys/${sys}/${sys}_edge -gname ${data} -core 16 -f ../data/ADJgraph/${data}.adj -log ../log/${sys}/edge.log"
-      echo ${s}
-      $s
-    done
-  done
-done
-
-
-for data in "uniform-24" "orkut";
-  do
-    for ((i=0;i<1;i++))
-    do
-      s="../build/sys/teseo/teseo_edge -gname ${data} -core 12 -f ../data/ADJgraph/${data}.adj -log ../log/teseo/edge.log"
-      echo ${s}
-      $s
-    done
-  done
-
-
-for sys in "teseo" "graphone";
-do
-  for ((i=0;i<2;i++))
-  do
-    for v in 20 21 22 23 24 25 26;
+    for v in 21 22 23 24 25 26;
     do
       s="../build/sys/${sys}/${sys}_scala -v ${v} -e 30 -log ../log/${sys}/scala.log"
       echo ${s}
@@ -69,6 +63,48 @@ do
     done
   done
 done
+
+
+
+for sys in "teseo";
+do
+  for data in "orkut" "uniform-24";
+  do
+    for thd in 1 4 8 12 16;
+    do
+      s="../build/sys/${sys}/${sys}_scala -thread -core ${thd} -gname ${data} -f ../data/ADJgraph/${data}.adj -log ../log/${sys}/scala.log"
+      echo ${s}
+      $s
+    done
+  done
+done
+
+
+#for thd in 1 4 8 12 16;
+#  do
+#      s="../build/sys/graphone/graphone_scala -gname ${data} -thread -core ${thd} -f ../data/ADJgraph/${data}.adj -log ../log/graphone/scala.log"
+#      echo ${s}
+#      $s
+#  done
+# "livegraph" "graphone" "stinger"  "llama" "terrace" "aspen" ;
+#for sys in "risgraph";
+#do
+#  for data in "orkut" "uniform-24";
+#  do
+#    for ((i=0;i<3;i++))
+#    do
+#      s="../build/sys/${sys}/${sys}_edge -gname ${data} -core 16 -f ../data/ADJgraph/${data}.adj -log ../log/${sys}/edge.log"
+#      echo ${s}
+#      $s
+#    done
+#  done
+#done
+
+
+
+
+
+
 
 
 
@@ -96,17 +132,18 @@ done
 #  done
 
 
-#data=("uniform-24" "orkut")
-#sys=("pcsr" "risgraph" "teseo")
-#
-#for ((j=0;j<3;j++))
+#for data in  "orkut";
 #do
-#  for ((i=0;i<2;i++))
+#  for sys in "llama";
+#  # "stinger" "uniform-24"
 #  do
-#    echo ${data[i]} ${sys[j]}
-#    s="../build/sys/${sys[j]}/${sys[j]}_scala -thread -gname ${data[i]} -f ../data/ADJgraph/${data[i]}.adj -log ../log/${sys[j]}/scala.log"
-#    echo ${s}
-#    $s
+#    for thd in 1 4 8 16;
+#    do
+#      echo ${data} ${sys}
+#      s="../build/sys/${sys}/${sys}_scala -thread -core ${thd} -gname ${data} -f ../data/ADJgraph/${data}.adj -log ../log/${sys}/scala.log"
+#      echo ${s}
+#      $s
+#    done
 #  done
 #done
 #
@@ -134,25 +171,7 @@ done
 
 
 
-#data=("uniform-24" "orkut")
-## "livejournal" "graph500-24"
-#sys=("aspen")
-##  "teseo" "aspen"
-#
-#
-#for ((j=0;j<1;j++))
-#do
-##  for ((i=0;i<2;i++))
-##  do
-##    echo ${data[i]} ${sys[j]}
-##    s="../build/sys/${sys[j]}/${sys[j]}_scala -thread -gname ${data[i]} -core 16 -f ../data/ADJgraph/${data[i]}.adj -log ../log/${sys[j]}/scala.log"
-##    echo ${s}
-##    $s
-##  done
-#  s="../build/sys/${sys[j]}/${sys[j]}_scala -log ../log/${sys[j]}/scala.log"
-#  echo ${s}
-#  $s
-#done
+
 
 
 

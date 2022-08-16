@@ -14,7 +14,7 @@
 #include "type.hpp"
 #include "io.hpp"
 #include "storage.hpp"
-
+#include "omp.h"
 
 void load_graph(commandLine& P){
     auto filename = P.getOptionValue("-f", "none");
@@ -129,25 +129,14 @@ double test_k_hop(commandLine& P, int k) {
     cilk_for(int i=0;i<nsrc;i++){
         auto rdsrc = rand()%n;
         auto tra = G->outgoing.get_adjlist_iter(rdsrc);
-        for(auto iter=tra.first;iter!=tra.second;iter++) {
-            auto edge = *iter;
-            const uint64_t v = edge.nbr;
+        for (auto e : G->outgoing.get_adjlist(rdsrc)) {
+            uint64_t v = e.nbr;
+            uint64_t w  = (uint64_t) e.data;
             if(k==2){
-                auto tra2 = G->outgoing.get_adjlist_iter(v);
-                for(auto iter2=tra2.first;iter2!=tra2.second;iter2++) {
-                    auto edge2 = *iter2;
-                    const uint64_t v2 = edge2.nbr;
-                }
+                for (auto e2 : G->outgoing.get_adjlist(v))
+                    uint64_t v2 = e2.nbr;
             }
         }
-//        for (auto e : G->outgoing.get_adjlist(rdsrc)) {
-//            uint64_t v = e.nbr;
-//            uint64_t w  = (uint64_t) e.data;
-//            if(k==2){
-//                for (auto e2 : G->outgoing.get_adjlist(v))
-//                    uint64_t v2 = e2.nbr;
-//            }
-//        }
     }
     gettimeofday(&t_end, &tzp);
     return cal_time_elapsed(&t_start, &t_end);
@@ -212,7 +201,8 @@ void run_algorithm(commandLine& P) {
     PRINT("=============== Run Algorithm BEGIN ===============");
 
     std::vector<std::string> test_ids;
-    //    test_ids = {"1-HOP","2-HOP","BFS","SSSP","PR","CC","LP","Read","TC"};
+//    test_ids = {"BFS","SSSP","PR","CC","LP","TC"};
+//    test_ids = {"1-HOP","2-HOP","Read"};
     test_ids = {"1-HOP","2-HOP","Read"};
 
     size_t rounds = P.getOptionLongValue("-rounds", 5);
@@ -238,7 +228,9 @@ void run_algorithm(commandLine& P) {
 }
 
 
+// -gname orkut -core 16 -f ../../../data/ADJgraph/orkut.adj -log ../../../log/risgraph/alg.log
 // -gname livejournal -core 16 -f ../../../data/ADJgraph/livejournal.adj -log ../../../log/risgraph/alg.log
+// -gname slashdot -core 16 -f ../../../data/ADJgraph/slashdot.adj -log ../../../log/risgraph/alg.log
 int main(int argc, char** argv) {
     commandLine P(argc, argv );
     auto thd_num = P.getOptionLongValue("-core", 1);

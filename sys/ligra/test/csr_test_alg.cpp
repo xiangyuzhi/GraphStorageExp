@@ -75,11 +75,11 @@ double test_k_hop(commandLine& P, int k) {
         const auto u_interval = G->traverse(rdsrc);
         for(uint64_t i = u_interval.first; i < u_interval.second; i++){
             uint64_t v = out_e[i];
-            auto w = (uint32_t)out_w[i];
+            uint64_t w = out_w[i];
             if(k==2){
                 const auto u2 = G->traverse(v);
                 for(uint64_t j = u2.first; j < u2.second; j++) {
-                    uint64_t v2 = out_e[i];
+                    uint64_t v2 = out_e[j];
                 }
             }
         }

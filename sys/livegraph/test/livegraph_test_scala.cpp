@@ -123,8 +123,7 @@ void read_edges(graph *GA, vector<uint32_t> &new_srcs, vector<uint32_t> &new_des
 }
 
 
-double test_read(commandLine& P) {
-    auto thd_num = P.getOptionLongValue("-core", 1);
+double test_read(commandLine& P, int thd_num) {
     auto r = random_aspen();
     uint64_t n = G->get_max_vertex_id();
     double a = 0.5;
@@ -146,7 +145,7 @@ double test_read(commandLine& P) {
     return cal_time_elapsed(&t_start, &t_end);
 }
 
-double execute(commandLine& P, string testname) {
+double execute(commandLine& P, string testname, int thd_num) {
     if (testname == "BFS") {
         return test_bfs(P);
     } else if (testname == "PR") {
@@ -156,7 +155,7 @@ double execute(commandLine& P, string testname) {
     }else if (testname == "2-HOP") {
         return test_k_hop(P, 2);
     } else if (testname == "Read") {
-        return test_read(P);
+        return test_read(P, thd_num);
     } else {
         std::cout << "Unknown test: " << testname << ". Quitting." << std::endl;
         exit(0);
@@ -167,7 +166,7 @@ void run_algorithm(commandLine& P, int thd_num, string gname) {
     PRINT("=============== Run Algorithm BEGIN ===============");
 
     std::vector<std::string> test_ids;
-    test_ids = {"BFS","PR","1-HOP","2-HOP","Read"};
+    test_ids = {"Read"};// "BFS","PR","1-HOP","2-HOP",
 
     size_t rounds = P.getOptionLongValue("-rounds", 5);
     auto log = P.getOptionValue("-log", "none");
@@ -176,7 +175,7 @@ void run_algorithm(commandLine& P, int thd_num, string gname) {
     for (auto test_id : test_ids) {
         std::vector<double> total_time;
         for (size_t i=0; i<rounds; i++) {
-            double tm = execute(P, test_id);
+            double tm = execute(P, test_id, thd_num);
 
             std::cout << "\ttest=" << test_id << "\ttime=" << tm << "\titeration=" << i << std::endl;
             total_time.emplace_back(tm);
@@ -344,11 +343,11 @@ int main(int argc, char** argv) {
                 run_algorithm(P, thd_num, gname);
             }
 
-            for(auto thd_num: threads){
-                set_num_workers(thd_num);
-                cout << "Running LiveGraph using " << thd_num << " threads." << endl;
-                batch_ins_del_read(P, thd_num, gname);
-            }
+//            for(auto thd_num: threads){
+//                set_num_workers(thd_num);
+//                cout << "Running LiveGraph using " << thd_num << " threads." << endl;
+//                batch_ins_del_read(P, thd_num, gname);
+//            }
             del_G();
         }
     }

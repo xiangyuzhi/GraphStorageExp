@@ -1,7 +1,7 @@
 
 set(CMAKE_CXX_STANDARD 17)
 if(CMAKE_COMPILER_IS_GNUCXX)
-    SET (CMAKE_CXX_FLAGS "-std=c++17 ${CXX_FLAGS_Common} -O3 -fopenmp")
+    SET (CMAKE_CXX_FLAGS "-std=c++17 ${CXX_FLAGS_Common} -fopenmp")
     message(STATUS "optional:-std=c++17")
 endif(CMAKE_COMPILER_IS_GNUCXX)
 

@@ -90,3 +90,17 @@ uniform-24,16,e,insert,1000000,649760
 uniform-24,16,e,delete,1000000,1.00687e+06
 uniform-24,16,e,insert,10000000,718310
 uniform-24,16,e,delete,10000000,820591
+orkut,16,e,insert,10,238095
+orkut,16,e,delete,10,5e+06
+orkut,16,e,insert,100,350877
+orkut,16,e,delete,100,5e+06
+orkut,16,e,insert,1000,370508
+orkut,16,e,delete,1000,992063
+orkut,16,e,insert,10000,408847
+orkut,16,e,delete,10000,949217
+orkut,16,e,insert,100000,541044
+orkut,16,e,delete,100000,1.00838e+06
+orkut,16,e,insert,1000000,729644
+orkut,16,e,delete,1000000,982060
+orkut,16,e,insert,10000000,781325
+orkut,16,e,delete,10000000,874379

@@ -187,3 +187,11 @@ graph_23_70,16,2-HOP,10.6496
 graph_23_70,16,Read,138.909
 graph_23_70,16,e,insert,100000,208784
 graph_23_70,16,e,delete,100000,201742
+uniform-24,1,Read,34.4657
+uniform-24,4,Read,7.64604
+uniform-24,8,Read,3.88759
+uniform-24,12,Read,3.21179
+orkut,1,Read,16.284
+orkut,4,Read,3.63588
+orkut,8,Read,1.84258
+orkut,12,Read,1.49245

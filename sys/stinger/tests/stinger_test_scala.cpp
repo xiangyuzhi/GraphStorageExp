@@ -166,6 +166,36 @@ void insert_edges(graph *GA, std::vector<uint32_t> &new_srcs, std::vector<uint32
     threads.clear();
 }
 
+template<typename graph>
+void delete_edges(graph *GA, std::vector<uint32_t> &new_srcs, std::vector<uint32_t> &new_dests, int num_threads){
+    auto routine_insert_edges = [GA, &new_srcs, &new_dests](int thread_id, uint64_t start, uint64_t length){
+        for(int64_t pos = start, end = start + length; pos < end; pos++){
+            while(1){
+                try{
+                    stinger_remove_edge (G, 0 ,new_srcs[pos] , new_dests[pos] );
+                    break;
+                }
+                catch (exception e){
+                    continue;
+                }
+            }
+        }
+    };
+    int64_t edges_per_thread = new_srcs.size() / num_threads;
+    int64_t odd_threads = new_srcs.size() % num_threads;
+    vector<thread> threads;
+    int64_t start = 0;
+    for(int thread_id = 0; thread_id < num_threads; thread_id ++){
+        int64_t length = edges_per_thread + (thread_id < odd_threads);
+        threads.emplace_back(routine_insert_edges, thread_id, start, length);
+        start += length;
+    }
+    for(auto& t : threads) t.join();
+    threads.clear();
+}
+
+
+
 void batch_ins_del_read(commandLine& P, int thd_num, string gname){
     PRINT("=============== Batch Insert BEGIN ===============");
 
@@ -204,18 +234,18 @@ void batch_ins_del_read(commandLine& P, int thd_num, string gname){
                 new_srcs.push_back(edge.first);
                 new_dests.push_back(edge.second);
             }
-            std::vector<update> updates;
-            for (int i = 0; i < updates_to_run; i++){
-                update u = {
-                        0, // type
-                        new_srcs[i], // source
-                        new_dests[i], // destination
-                        1, // weight
-                        int(ts)*100, // time
-                        0 // result
-                };
-                updates.push_back(u);
-            }
+//            std::vector<update> updates;
+//            for (int i = 0; i < updates_to_run; i++){
+//                update u = {
+//                        0, // type
+//                        new_srcs[i], // source
+//                        new_dests[i], // destination
+//                        1, // weight
+//                        int(ts)*100, // time
+//                        0 // result
+//                };
+//                updates.push_back(u);
+//            }
             gettimeofday(&t_start, &tzp);
             insert_edges(G, new_srcs, new_dests, thd_num);
             //stinger_batch_insert_edges<update>(G, updates.begin(), updates.end());
@@ -223,10 +253,11 @@ void batch_ins_del_read(commandLine& P, int thd_num, string gname){
             avg_insert += cal_time_elapsed(&t_start, &t_end);
 
             gettimeofday(&t_start, &tzp);
-            for(uint32_t i = 0; i < updates_to_run; i++) {
-                if(new_srcs[i]!= new_dests[i])
-                    stinger_remove_edge (G, 0 ,new_srcs[i] , new_dests[i] );
-            }
+            delete_edges(G, new_srcs, new_dests, thd_num);
+//            for(uint32_t i = 0; i < updates_to_run; i++) {
+//                if(new_srcs[i]!= new_dests[i])
+//                    stinger_remove_edge (G, 0 ,new_srcs[i] , new_dests[i] );
+//            }
             gettimeofday(&t_end, &tzp);
             avg_delete +=  cal_time_elapsed(&t_start, &t_end);
 
@@ -256,17 +287,20 @@ int main(int argc, char** argv) {
             auto gname = P.getOptionValue("-gname", "none");
             load_graph(P);
             std::vector<uint32_t> threads = {1,4,8,12};
-            for(auto thd_num : threads){
-                set_num_workers(thd_num);
-                cout << "Running Aspen using " << thd_num << " threads." << endl;
-                run_algorithm(P, thd_num, gname);
-            }
-
-            for(auto thd_num: threads){
-                set_num_workers(thd_num);
-                cout << "Running Aspen using " << thd_num << " threads." << endl;
-                batch_ins_del_read(P, thd_num, gname);
-            }
+//            for(auto thd_num : threads){
+//                set_num_workers(thd_num);
+//                cout << "Running Stinger using " << thd_num << " threads." << endl;
+//                run_algorithm(P, thd_num, gname);
+//            }
+            auto thd_num = P.getOptionLongValue("-core", 1);
+            set_num_workers(thd_num);
+            cout << "Running Stinger using " << thd_num << " threads." << endl;
+            batch_ins_del_read(P, thd_num, gname);
+//            for(auto thd_num: threads){
+//                set_num_workers(thd_num);
+//                cout << "Running Stinger using " << thd_num << " threads." << endl;
+//                batch_ins_del_read(P, thd_num, gname);
+//            }
             del_G();
         }
     }
