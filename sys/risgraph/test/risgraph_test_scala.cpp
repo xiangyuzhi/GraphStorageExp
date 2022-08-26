@@ -55,9 +55,22 @@ void load_graph(commandLine& P){
 
 
 double test_bfs(commandLine& P) {
-    long bfs_src = P.getOptionLongValue("-src",9);
+    uint32_t bfs_src = 9;
+    bool thread = P.getOption("-thread");
+    if(!thread) {
+        uint64_t n = G->get_vertex_num();
+        size_t maxdeg = 0;
+        size_t maxid = 9;
+        for(uint32_t i=1;i<n;i++){
+            size_t src_degree = G->get_outgoing_degree(i);
+            if(src_degree > maxdeg) {
+                maxdeg = src_degree;
+                maxid = i;
+            }
+        }
+        bfs_src = maxid;
+    }
     std::cout << "Running BFS from source = " << bfs_src << std::endl;
-
     gettimeofday(&t_start, &tzp);
     BFS(G, bfs_src);
     gettimeofday(&t_end, &tzp);
@@ -161,7 +174,7 @@ void run_algorithm(commandLine& P, int thd_num, string gname) {
     PRINT("=============== Run Algorithm BEGIN ===============");
 
     std::vector<std::string> test_ids;
-    test_ids = {"1-HOP","2-HOP"};//,"BFS","PR","Read"
+    test_ids = {"BFS","PR","Read"};//,"1-HOP","2-HOP"
 
     size_t rounds = P.getOptionLongValue("-rounds", 5);
     auto log = P.getOptionValue("-log", "none");
@@ -300,7 +313,7 @@ int main(int argc, char** argv) {
             double c = 0.1;
             auto r = random_aspen();
             size_t nn = 1 << (log2_up(1L<<logv) - 1);
-            auto rmat = rMat<uint32_t>(nn, r.ith_rand(100), a, b, c);
+            auto rmat = rMat<uint32_t>(num_nodes, r.ith_rand(100), a, b, c);
             for(uint32_t i=0; i< num_edges; i++){
                 std::pair<uint32_t, uint32_t> edge = rmat(i);
                 G->add_edge({edge.first, edge.second, 1}, true);

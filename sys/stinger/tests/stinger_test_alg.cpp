@@ -170,6 +170,8 @@ void run_algorithm(commandLine& P) {
 
 
 // -gname livejournal -core 16 -f ../../../data/ADJgraph/livejournal.adj -log ../../../log/stinger/alg.log
+// -gname orkut -core 16 -f ../../../data/ADJgraph/orkut.adj -log ../../../log/stinger/alg.log
+// -gname uniform-24 -core 16 -f ../../../data/ADJgraph/uniform-24.adj -log ../../../log/stinger/alg.log
 int main(int argc, char** argv) {
     commandLine P(argc, argv );
     auto thd_num = P.getOptionLongValue("-core", 1);

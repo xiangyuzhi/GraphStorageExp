@@ -211,7 +211,7 @@ void run_algorithm(commandLine& P) {
 
     std::vector<std::string> test_ids;
     //    test_ids = {"1-HOP","2-HOP","BFS","SSSP","PR","CC","LP","Read","TC"};
-    test_ids = {"1-HOP","2-HOP","Read"};
+    test_ids = {"Read"};//"1-HOP","2-HOP",
 
     size_t rounds = P.getOptionLongValue("-rounds", 5);
     auto gname = P.getOptionValue("-gname", "none");
@@ -236,6 +236,8 @@ void run_algorithm(commandLine& P) {
 }
 
 
+// -gname livejournal -core 16 -f ../../../data/ADJgraph/livejournal.adj -log ../../../log/terrace/alg.log
+// -gname orkut -core 16 -f ../../../data/ADJgraph/orkut.adj -log ../../../log/terrace/alg.log
 // -gname livejournal -core 16 -f ../../../data/ADJgraph/livejournal.adj -log ../../../log/terrace/alg.log
 int main(int argc, char** argv) {
     srand(time(NULL));

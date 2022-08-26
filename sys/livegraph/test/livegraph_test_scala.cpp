@@ -336,26 +336,25 @@ int main(int argc, char** argv) {
         {
             auto gname = P.getOptionValue("-gname", "none");
             load_graph(P);
-            std::vector<uint32_t> threads = {1,4,8,12};
-            for(auto thd_num : threads){
-                set_num_workers(thd_num);
-                cout << "Running LiveGraph using " << thd_num << " threads." << endl;
-                run_algorithm(P, thd_num, gname);
-            }
-
+//            std::vector<uint32_t> threads = {1,4,8,12};
+//            for(auto thd_num : threads){
+//                set_num_workers(thd_num);
+//                cout << "Running LiveGraph using " << thd_num << " threads." << endl;
+//                run_algorithm(P, thd_num, gname);
+//            }
 //            for(auto thd_num: threads){
 //                set_num_workers(thd_num);
 //                cout << "Running LiveGraph using " << thd_num << " threads." << endl;
 //                batch_ins_del_read(P, thd_num, gname);
 //            }
+            auto thd_num = P.getOptionLongValue("-core", 1);
+            run_algorithm(P, thd_num, gname);
+            batch_ins_del_read(P, thd_num, gname);
             del_G();
         }
     }
 
     else {
-
-
-
         auto insert_f = [&](uint32_t deg, uint32_t logv){
             G = new lg::Graph();
             m_pHashMap = new tbb::concurrent_hash_map<uint64_t, /* vertex_t */ uint64_t>();

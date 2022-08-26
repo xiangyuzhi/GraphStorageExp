@@ -99,5 +99,11 @@ uniform-24,16,1-HOP,0.459155
 uniform-24,16,2-HOP,2.92679
 uniform-24,16,Read,2.4539
 orkut,16,1-HOP,0.108077
-orkut,16,2-HOP,4.8259
+orkut,16,2-HOP,3.3259
 orkut,16,Read,1.67321
+uniform-24,16,BFS,0.465845
+uniform-24,16,SSSP,7.26985
+uniform-24,16,PR,46.5367
+uniform-24,16,CC,9.90845
+uniform-24,16,LP,56.0376
+uniform-24,16,TC,123.439

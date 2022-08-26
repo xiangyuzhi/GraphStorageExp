@@ -73,9 +73,7 @@ void PR(Graph& G, long maxIters) {
         // using flat snapshot
         vertex_map(Frontier, PR_Vertex<T,Graph>(p_curr, G));
         vertex_map(Frontier, PR_Vertex_Reset<T>(p_next));
-
         G.edge_map(Frontier, PR_F<T>(p_curr, p_next), sparse_t, dense_t, fetch_t, other_t, stay_dense);
-
         swap(p_curr,p_next);
     }
     free(p_next);

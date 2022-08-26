@@ -50,17 +50,17 @@ double test_k_hop(G& GA, commandLine& P, int k) {
     uint32_t n = GA.num_vertices();
     uint32_t nsrc = n/20;
     srand(n);
+
     parallel_for(0, nsrc, [&] (size_t i) {
         auto src = rand()%n;
-        const auto& v = GA.find_vertex(src).value;
         auto map_f = [&] (uintV ngh_id, size_t ind) {
             if(k==2){
                 auto map_f2 = [&] (uintV nnid, size_t ind) {};
                 const auto& v2 = GA.find_vertex(ngh_id).value;
                 v2.map_elms(ngh_id, map_f2);
             }
-            //GA.find_vertex(ngh_id).value.degree();
         };
+        const auto& v = GA.find_vertex(src).value;
         v.map_elms(src, map_f);
     });
     tmr.stop();
@@ -180,8 +180,8 @@ void run_algorithm(commandLine& P) {
     std::ofstream alg_file(log, ios::app);
 
     std::vector<std::string> test_ids;
-//    test_ids = {"1-HOP","2-HOP","BFS","SSSP","PR","CC","LP","Read","TC"};
-    test_ids = {"1-HOP","2-HOP","Read"};
+    test_ids = {"1-HOP","2-HOP","BFS","PR","CC","LP","Read","TC"};
+//    test_ids = {"1-HOP","2-HOP","Read"};
 
     for (auto test_id : test_ids) {
         std::vector<double> total_time;
@@ -203,7 +203,8 @@ void run_algorithm(commandLine& P) {
 
 
 // -gname livejournal -core 16 -f ../../../data/ADJgraph/livejournal.adj -log ../../../log/aspen/alg.log
-// -gname friendster -core 16 -f ../../../data/ADJgraph/friendster.adj -log ../../../log/aspen/alg.log
+// -gname orkut -core 16 -f ../../../data/ADJgraph/orkut.adj -log ../../../log/aspen/alg.log
+// -gname uniform-24 -core 16 -f ../../../data/ADJgraph/uniform-24.adj -log ../../../log/aspen/alg.log
 int main(int argc, char** argv) {
 
     commandLine P(argc, argv );

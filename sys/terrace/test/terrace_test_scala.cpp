@@ -169,7 +169,7 @@ void run_algorithm(commandLine& P, int thd_num, string gname) {
     PRINT("=============== Run Algorithm BEGIN ===============");
     Graph &Ga = *G;
     std::vector<std::string> test_ids;
-    test_ids = {"BFS","PR","1-HOP","2-HOP","Read"};
+    test_ids = {"Read"};//"BFS","PR","1-HOP","2-HOP",
     size_t rounds = P.getOptionLongValue("-rounds", 5);
     auto log = P.getOptionValue("-log", "none");
     std::ofstream alg_file(log, ios::app);
@@ -274,6 +274,7 @@ int main(int argc, char** argv) {
     bool thread = P.getOption("-thread");
     if(thread){
         {
+            set_num_workers(16);
             auto gname = P.getOptionValue("-gname", "none");
             load_graph(P);
             std::vector<uint32_t> threads = {1,4,8,12};
@@ -283,11 +284,11 @@ int main(int argc, char** argv) {
                 run_algorithm(P, thd_num, gname);
             }
 
-            for(auto thd_num: threads){
-                set_num_workers(thd_num);
-                cout << "Running Terrace using " << thd_num << " threads." << endl;
-                batch_ins_del_read(P, thd_num, gname);
-            }
+//            for(auto thd_num: threads){
+//                set_num_workers(thd_num);
+//                cout << "Running Terrace using " << thd_num << " threads." << endl;
+//                batch_ins_del_read(P, thd_num, gname);
+//            }
             del_graph();
         }
     }

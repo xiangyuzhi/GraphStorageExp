@@ -201,9 +201,9 @@ void run_algorithm(commandLine& P) {
     PRINT("=============== Run Algorithm BEGIN ===============");
 
     std::vector<std::string> test_ids;
-//    test_ids = {"BFS","SSSP","PR","CC","LP","TC"};
+    test_ids = {"BFS","SSSP","PR","CC","LP","TC"};
 //    test_ids = {"1-HOP","2-HOP","Read"};
-    test_ids = {"1-HOP","2-HOP","Read"};
+//    test_ids = {"1-HOP","2-HOP","Read"};
 
     size_t rounds = P.getOptionLongValue("-rounds", 5);
     auto gname = P.getOptionValue("-gname", "none");
@@ -230,7 +230,7 @@ void run_algorithm(commandLine& P) {
 
 // -gname orkut -core 16 -f ../../../data/ADJgraph/orkut.adj -log ../../../log/risgraph/alg.log
 // -gname livejournal -core 16 -f ../../../data/ADJgraph/livejournal.adj -log ../../../log/risgraph/alg.log
-// -gname slashdot -core 16 -f ../../../data/ADJgraph/slashdot.adj -log ../../../log/risgraph/alg.log
+// -gname uniform-24 -core 16 -f ../../../data/ADJgraph/uniform-24.adj -log ../../../log/risgraph/alg.log
 int main(int argc, char** argv) {
     commandLine P(argc, argv );
     auto thd_num = P.getOptionLongValue("-core", 1);

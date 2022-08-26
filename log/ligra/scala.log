@@ -18,6 +18,9 @@ uniform-24,12,PR,10.392
 uniform-24,12,1-HOP,0.353369
 uniform-24,12,2-HOP,0.440281
 uniform-24,12,Read,1.3607
+uniform-24,16,1-HOP,0.366202
+uniform-24,16,2-HOP,0.450389
+uniform-24,16,Read,1.0625
 orkut,1,BFS,0.187841
 orkut,1,PR,17.402
 orkut,1,1-HOP,0.0131913
@@ -38,6 +41,9 @@ orkut,12,PR,2.21758
 orkut,12,1-HOP,0.0753063
 orkut,12,2-HOP,0.107195
 orkut,12,Read,0.637384
+orkut,16,1-HOP,0.080448
+orkut,16,2-HOP,0.109964
+orkut,16,Read,0.509498
 graph_20_30,16,BFS,0.00859933
 graph_20_30,16,PR,0.267426
 graph_20_30,16,1-HOP,0.0259887
@@ -188,7 +194,7 @@ graph_25_30,16,PR,45.0403
 graph_25_30,16,1-HOP,1.123
 graph_25_30,16,2-HOP,24.5274
 graph_25_30,16,Read,20.5032
-graph_26_30,16,BFS,4.02716
+graph_26_30,16,BFS,1.62716
 graph_26_30,16,PR,103.812
 graph_26_30,16,1-HOP,2.25787
 graph_26_30,16,2-HOP,42.1239

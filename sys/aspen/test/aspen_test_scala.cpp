@@ -59,34 +59,22 @@ template <class G>
 double test_k_hop(G& GA, commandLine& P, int k) {
     timer tmr; tmr.start();
 //    K_HOP(GA, k);
-    if(k==1){
-        uint32_t n = GA.num_vertices();
-        uint32_t nsrc = n/20;
-        srand(n);
-        parallel_for(0, nsrc, [&] (size_t i) {
-            auto src = rand()%n;
-            const auto& v = GA.find_vertex(src).value;
-            auto map_f = [&] (uintV ngh_id, size_t ind) {
-                GA.find_vertex(ngh_id).value.degree();
-            };
-            v.map_elms(src, map_f);
-        });
-    }
-    else {
-        uint32_t n = GA.num_vertices();
-        uint32_t nsrc = n/20;
-        srand(n);
-        parallel_for(0, nsrc, [&] (size_t _) {
-            auto src = rand()%n;
-            const auto& v = GA.find_vertex(src).value;
-            auto map_f = [&] (uintV ngh_id, size_t ind) {
+    uint32_t n = GA.num_vertices();
+    uint32_t nsrc = n/20;
+    srand(n);
+
+    parallel_for(0, nsrc, [&] (size_t i) {
+        auto src = rand()%n;
+        auto map_f = [&] (uintV ngh_id, size_t ind) {
+            if(k==2){
                 auto map_f2 = [&] (uintV nnid, size_t ind) {};
                 const auto& v2 = GA.find_vertex(ngh_id).value;
                 v2.map_elms(ngh_id, map_f2);
-            };
-            v.map_elms(src, map_f);
-        });
-    }
+            }
+        };
+        const auto& v = GA.find_vertex(src).value;
+        v.map_elms(src, map_f);
+    });
     tmr.stop();
     return (tmr.get_total());
 }
@@ -250,7 +238,7 @@ int main(int argc, char** argv) {
     if(thread){
         {
             auto gname = P.getOptionValue("-gname", "none");
-            std::vector<uint32_t> threads = {1,4,8,12};
+            std::vector<uint32_t> threads = {1,4,8,12,16};
             auto VG = initialize_treeplus_graph(P);
             for(auto thd_num : threads){
                 set_num_workers(thd_num);
@@ -267,13 +255,13 @@ int main(int argc, char** argv) {
     }
 
     else {
-
+        set_num_workers(16);
         auto insert_f = [&](uint32_t deg, uint32_t logv) {
             cout << "v: " << logv << " e: " << deg << endl;
             auto VG = empty_treeplus_graph();
             auto r = pbbs::random();
             using pair_vertex = tuple<uintV, uintV>;
-
+            uint32_t v = (1L << logv);
             uint32_t e = (1L << logv) * deg;
             num_edges = e;
             auto updates = pbbs::sequence<pair_vertex>(e);
@@ -281,11 +269,11 @@ int main(int argc, char** argv) {
             double b = 0.1;
             double c = 0.1;
             size_t nn = 1 << (pbbs::log2_up((1L << logv)) - 1);
-            auto rmat = rMat<uintV>(nn, r.ith_rand(100), a, b, c);
+            auto rmat = rMat<uintV>(v, r.ith_rand(100), a, b, c);
             parallel_for(0, updates.size(), [&](size_t i) {
                 updates[i] = rmat(i);
             });
-            VG.insert_edges_batch(e, updates.begin(), false, true, nn, false);
+            VG.insert_edges_batch(e, updates.begin(), false, true, v, false);
 
             string gname = "graph_" + to_string(logv) + "_" + to_string(deg);
             run_algorithm(P, 16, VG, gname);
@@ -293,18 +281,23 @@ int main(int argc, char** argv) {
         };
 
         {
-            std::vector<uint32_t> vertices = {20,21,22,23,24,25,26};
-            for(auto v : vertices){
-                insert_f(30,v);
-            }
+            auto v = P.getOptionIntValue("-v", -1);
+            auto e = P.getOptionIntValue("-e", -1);
+            insert_f(e, v);
         }
-
-        {
-            std::vector<uint32_t> edges = {10,20,30,40,50,60,70};
-            for(auto e : edges){
-                insert_f(e, 23);
-            }
-        }
+//        {
+//            std::vector<uint32_t> vertices = {23,24,25,26};
+//            for(auto v : vertices){
+//                insert_f(30,v);
+//            }
+//        }
+//
+//        {
+//            std::vector<uint32_t> edges = {10,20,30,40,50,60,70};
+//            for(auto e : edges){
+//                insert_f(e, 23);
+//            }
+//        }
     }
 
 }

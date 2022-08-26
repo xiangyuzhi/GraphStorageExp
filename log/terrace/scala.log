@@ -153,3 +153,11 @@ graph_23_70,16,2-HOP,68.1373
 graph_23_70,16,Read,3.95581
 graph_23_70,16,e,insert,100000,156847
 graph_23_70,16,e,delete,100000,960379
+uniform-24,1,Read,9.42732
+uniform-24,4,Read,10.4231
+uniform-24,8,Read,9.04277
+uniform-24,12,Read,6.6202
+orkut,1,Read,6.05852
+orkut,4,Read,3.62355
+orkut,8,Read,2.90051
+orkut,12,Read,2.46852
