@@ -13,7 +13,7 @@ add_subdirectory(sys/pcsr)
 add_subdirectory(sys/risgraph)
 add_subdirectory(sys/llama)
 
-#add_subdirectory(exp)
+add_subdirectory(exp)
 
 #set(CMAKE_CXX_COMPILER /home/zxy/Desktop/Code/cilk/OpenCilk-12.0.0-Linux/bin/clang++)
 #set(CMAKE_CXX_STANDARD 17)

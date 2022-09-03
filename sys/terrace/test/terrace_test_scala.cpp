@@ -170,7 +170,7 @@ void run_algorithm(commandLine& P, int thd_num, string gname) {
     Graph &Ga = *G;
     std::vector<std::string> test_ids;
     test_ids = {"BFS","PR","1-HOP","2-HOP","Read"};
-    size_t rounds = P.getOptionLongValue("-rounds", 1);
+    size_t rounds = P.getOptionLongValue("-rounds", 5);
     auto log = P.getOptionValue("-log", "none");
     std::ofstream alg_file(log, ios::app);
 
@@ -339,17 +339,9 @@ int main(int argc, char** argv) {
         };
 
         {
-            std::vector<uint32_t> vertices = {20,21,22,23,24,25,26};
-            for(auto v : vertices){
-                insert_f(30,v);
-            }
-        }
-
-        {
-            std::vector<uint32_t> edges = {10,20,30,40,50,60,70};
-            for(auto e : edges){
-                insert_f(e, 23);
-            }
+            auto v = P.getOptionIntValue("-v", -1);
+            auto e = P.getOptionIntValue("-e", -1);
+            insert_f(e, v);
         }
     }
     printf("!!!!! TEST OVER !!!!!\n");

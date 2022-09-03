@@ -27,8 +27,8 @@ void batch_ins_del_read(commandLine& P){
         std::cout << "Running batch size: " << update_sizes[us] << std::endl;
 
         if (update_sizes[us] < 10000000)
-            n_trials = 1;
-        else n_trials = 1;
+            n_trials = 20;
+        else n_trials = 5;
         size_t updates_to_run = update_sizes[us];
         auto perm = get_random_permutation(updates_to_run);
         for (size_t ts=0; ts<n_trials; ts++) {

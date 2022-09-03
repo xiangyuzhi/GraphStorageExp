@@ -52,6 +52,9 @@ void batch_ins_del_read(commandLine& P) {
         cout << "Running batch size: " << update_sizes[us] << endl;
 
         size_t updates_to_run = update_sizes[us];
+        if (update_sizes[us] < 10000000)
+            n_trials = 20;
+        else n_trials = 5;
         for (size_t ts=0; ts<n_trials; ts++) {
             auto updates = pbbs::sequence<pair_vertex>(updates_to_run);
             double a = 0.5;

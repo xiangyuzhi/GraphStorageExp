@@ -168,7 +168,7 @@ void run_algorithm(commandLine& P, int thd_num, string gname) {
     std::vector<std::string> test_ids;
     test_ids = {"Read"};// "BFS","PR","1-HOP","2-HOP",
 
-    size_t rounds = P.getOptionLongValue("-rounds", 1);
+    size_t rounds = P.getOptionLongValue("-rounds", 5);
     auto log = P.getOptionValue("-log", "none");
     std::ofstream alg_file(log, ios::app);
 
@@ -275,12 +275,11 @@ void batch_ins_del_read(commandLine& P, int thd_num, string gname){
         printf("GN: %lu \n",G->get_max_vertex_id() );
         double avg_insert = 0;
         double avg_delete = 0;
-        double avg_read = 0;
         std::cout << "Running batch size: " << update_sizes[us] << std::endl;
 
         if (update_sizes[us] < 10000000)
-            n_trials = 1;
-        else n_trials = 1;
+            n_trials = 20;
+        else n_trials = 5;
         size_t updates_to_run = update_sizes[us];
         auto perm = get_random_permutation(updates_to_run);
         for (size_t ts=0; ts<n_trials; ts++) {
@@ -347,9 +346,6 @@ int main(int argc, char** argv) {
                 cout << "Running LiveGraph using " << thd_num << " threads." << endl;
                 batch_ins_del_read(P, thd_num, gname);
             }
-//            auto thd_num = P.getOptionLongValue("-core", 1);
-//            run_algorithm(P, thd_num, gname);
-//            batch_ins_del_read(P, thd_num, gname);
             del_G();
         }
     }
@@ -404,22 +400,11 @@ int main(int argc, char** argv) {
         };
 
         {
-
             auto v = P.getOptionIntValue("-v", -1);
             auto e = P.getOptionIntValue("-e", -1);
             insert_f(e, v);
-//            std::vector<uint32_t> vertices = {20,21,22,23,24,25,26};
-//            for(auto v : vertices){
-//                insert_f(30,v);
-//            }
         }
 
-//        {
-//            std::vector<uint32_t> edges = {10,20,30,40,50,60,70};
-//            for(auto e : edges){
-//                insert_f(e, 23);
-//            }
-//        }
     }
     printf("!!!!! TEST OVER !!!!!\n");
     return 0;

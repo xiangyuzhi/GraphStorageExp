@@ -141,7 +141,7 @@ double execute(commandLine& P, string testname) {
 void run_algorithm(commandLine& P) {
     PRINT("=============== Run Algorithm BEGIN ===============");
 
-    size_t rounds = P.getOptionLongValue("-rounds", 1);
+    size_t rounds = P.getOptionLongValue("-rounds", 5);
     auto gname = P.getOptionValue("-gname", "none");
     auto thd_num = P.getOptionLongValue("-core", 1);
     auto log = P.getOptionValue("-log", "none");
