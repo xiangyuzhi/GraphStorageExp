@@ -149,8 +149,8 @@ void run_algorithm(commandLine& P) {
     std::ofstream alg_file(log, ios::app);
 
     std::vector<std::string> test_ids;
-//    test_ids = {"1-HOP","2-HOP","BFS","SSSP","PR","CC","TC","LP"};
-    test_ids = {"1-HOP","2-HOP","Read"};
+    test_ids = {"Read","1-HOP","2-HOP","BFS","SSSP","PR","CC","LP","TC"};
+//    test_ids = {"1-HOP","2-HOP","Read"};
 
     for (auto test_id : test_ids) {
         std::vector<double> total_time;

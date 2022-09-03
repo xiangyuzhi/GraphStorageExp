@@ -112,10 +112,9 @@ void run_algorithm(commandLine& P, int thd_num, string gname) {
     PRINT("=============== Run Algorithm BEGIN ===============");
 
     std::vector<std::string> test_ids;
-    //    test_ids = {"1-HOP","2-HOP","BFS","SSSP","PR","CC","LP","Read","TC"};
     test_ids = {"BFS","PR","1-HOP","2-HOP","Read"};
 
-    size_t rounds = P.getOptionLongValue("-rounds", 5);
+    size_t rounds = P.getOptionLongValue("-rounds", 1);
     auto log = P.getOptionValue("-log", "none");
     std::ofstream alg_file(log, ios::app);
 
@@ -156,8 +155,8 @@ void batch_ins_del_read(commandLine& P, int thd_num, string gname){
         std::cout << "Running batch size: " << update_sizes[us] << std::endl;
 
         if (update_sizes[us] < 10000000)
-            n_trials = 20;
-        else n_trials = 5;
+            n_trials = 1;
+        else n_trials = 1;
         size_t updates_to_run = update_sizes[us];
         auto perm = get_random_permutation(updates_to_run);
         for (size_t ts=0; ts<n_trials; ts++) {

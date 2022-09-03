@@ -134,12 +134,12 @@ template<typename Graph>
 void run_algorithm(commandLine& P, int thd_num, Graph &VG, string gname) {
     cout<<"=============== Run Algorithm BEGIN ==============="<<endl;
 
-    size_t rounds = P.getOptionLongValue("-rounds", 4);
+    size_t rounds = P.getOptionLongValue("-rounds", 1);
     auto log = P.getOptionValue("-log", "none");
     std::ofstream alg_file(log, ios::app);
 
     std::vector<std::string> test_ids;
-    test_ids = {"BFS","PR","1-HOP","2-HOP","Read"};
+    test_ids = {"BFS","1-HOP","2-HOP","Read"};//"PR",
 
     for (auto test_id : test_ids) {
         std::vector<double> total_time;
@@ -186,8 +186,8 @@ void batch_ins_del_read(commandLine& P, int thd_num, Graph &VG, string gname) {
         cout << "Running batch size: " << update_sizes[us] << endl;
 
         if (update_sizes[us] < 10000000)
-            n_trials = 20;
-        else n_trials = 5;
+            n_trials = 1;
+        else n_trials = 1;
         size_t updates_to_run = update_sizes[us];
         for (size_t ts=0; ts<n_trials; ts++) {
             auto updates = pbbs::sequence<pair_vertex>(updates_to_run);
@@ -225,7 +225,6 @@ void batch_ins_del_read(commandLine& P, int thd_num, Graph &VG, string gname) {
         double delete_throughput = updates_to_run / time_d;
         printf("batch_size = %zu, average delete: %f, throughput %e\n", updates_to_run, time_d, delete_throughput);
         log_file<< gname<<"," <<thd_num<<",e,delete,"<< update_sizes[us] <<","<<delete_throughput << "\n";
-
     }
 }
 

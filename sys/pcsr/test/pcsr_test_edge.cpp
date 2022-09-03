@@ -14,7 +14,7 @@ void batch_ins_del_read(commandLine& P){
     std::ofstream log_file(log, ios::app);
 
     PCSR &Ga = *G;
-    std::vector<uint32_t> update_sizes = {100000};//10, 100, 1000 ,10000,100000,1000000, 10000000
+    std::vector<uint32_t> update_sizes = {10, 100, 1000 ,10000,100000,1000000, 10000000};//
     auto r = random_aspen();
     auto update_times = std::vector<double>();
     size_t n_trials = 1;
@@ -27,8 +27,8 @@ void batch_ins_del_read(commandLine& P){
         std::cout << "Running batch size: " << update_sizes[us] << std::endl;
 
         if (update_sizes[us] < 10000000)
-            n_trials = 20;
-        else n_trials = 5;
+            n_trials = 1;
+        else n_trials = 1;
         size_t updates_to_run = update_sizes[us];
         auto perm = get_random_permutation(updates_to_run);
         for (size_t ts=0; ts<n_trials; ts++) {
@@ -54,21 +54,6 @@ void batch_ins_del_read(commandLine& P){
             gettimeofday(&t_end, &tzp);
             avg_insert += cal_time_elapsed(&t_start, &t_end);
 
-
-//            gettimeofday(&t_start, &tzp);
-//            for(uint32_t i = 0; i < updates_to_run; i++) {
-//                Ga.find_value(new_srcs[i], new_dests[i]);
-//            }
-//            gettimeofday(&t_end, &tzp);
-//            avg_read += cal_time_elapsed(&t_start, &t_end);
-
-            // doesnpt implment del
-//            gettimeofday(&t_start, &tzp);
-//            for(uint32_t i = 0; i < updates_to_run; i++) {
-//                Ga.(new_srcs[i], new_dests[i]);
-//            }
-//            gettimeofday(&t_end, &tzp);
-//            avg_delete +=  cal_time_elapsed(&t_start, &t_end);
         }
         double time_i = (double) avg_insert / n_trials;
         double insert_throughput = updates_to_run / time_i;

@@ -141,15 +141,15 @@ double execute(commandLine& P, string testname) {
 void run_algorithm(commandLine& P) {
     PRINT("=============== Run Algorithm BEGIN ===============");
 
-    size_t rounds = P.getOptionLongValue("-rounds", 5);
+    size_t rounds = P.getOptionLongValue("-rounds", 1);
     auto gname = P.getOptionValue("-gname", "none");
     auto thd_num = P.getOptionLongValue("-core", 1);
     auto log = P.getOptionValue("-log", "none");
     std::ofstream alg_file(log, ios::app);
 
     std::vector<std::string> test_ids;
-    //    test_ids = {"1-HOP","2-HOP","BFS","SSSP","PR","CC","LP","Read","TC"};
-    test_ids = {"1-HOP","2-HOP","Read"};
+    test_ids = {"Read","1-HOP","2-HOP","BFS","SSSP","PR","CC","LP"};
+//    test_ids = {"1-HOP","2-HOP","Read"};
 
     for (auto test_id : test_ids) {
         std::vector<double> total_time;

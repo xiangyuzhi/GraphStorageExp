@@ -30,8 +30,8 @@ protected:
     const bool m_is_directed; // whether the graph is directed
     uint64_t m_num_vertices; // total number of vertices
     uint64_t m_num_edges; // total number of edges
-    std::unordered_map<uint64_t, uint64_t> m_ext2log; // dictionary external vertex id -> logical vertex id
-    uint64_t* m_log2ext {nullptr}; // dictionary logical vertex id -> external vertex id
+//    std::unordered_map<uint64_t, uint64_t> m_ext2log; // dictionary external vertex id -> logical vertex id
+//    uint64_t* m_log2ext {nullptr}; // dictionary logical vertex id -> external vertex id
     uint64_t* m_out_v {nullptr}; // vertex array for the outgoing edges
     uint64_t* m_out_e {nullptr}; // edge array for the outgoing edges
     double* m_out_w {nullptr}; // weights associated to the outgoing edges

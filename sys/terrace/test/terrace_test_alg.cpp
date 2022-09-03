@@ -210,10 +210,10 @@ void run_algorithm(commandLine& P) {
     Graph Ga = *G;
 
     std::vector<std::string> test_ids;
-    //    test_ids = {"1-HOP","2-HOP","BFS","SSSP","PR","CC","LP","Read","TC"};
-    test_ids = {"Read"};//"1-HOP","2-HOP",
+    test_ids = {"Read","1-HOP","2-HOP","BFS","PR","CC","LP","TC"};
+//    test_ids = {"Read"};//"1-HOP","2-HOP",
 
-    size_t rounds = P.getOptionLongValue("-rounds", 5);
+    size_t rounds = P.getOptionLongValue("-rounds", 1);
     auto gname = P.getOptionValue("-gname", "none");
     auto thd_num = P.getOptionLongValue("-core", 1);
     auto log = P.getOptionValue("-log", "none");

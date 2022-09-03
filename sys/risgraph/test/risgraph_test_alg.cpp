@@ -201,11 +201,10 @@ void run_algorithm(commandLine& P) {
     PRINT("=============== Run Algorithm BEGIN ===============");
 
     std::vector<std::string> test_ids;
-    test_ids = {"BFS","SSSP","PR","CC","LP","TC"};
-//    test_ids = {"1-HOP","2-HOP","Read"};
+    test_ids = {"Read","1-HOP","2-HOP","BFS","SSSP","PR","CC","LP"};
 //    test_ids = {"1-HOP","2-HOP","Read"};
 
-    size_t rounds = P.getOptionLongValue("-rounds", 5);
+    size_t rounds = P.getOptionLongValue("-rounds", 1);
     auto gname = P.getOptionValue("-gname", "none");
     auto thd_num = P.getOptionLongValue("-core", 1);
     auto log = P.getOptionValue("-log", "none");

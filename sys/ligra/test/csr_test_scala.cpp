@@ -110,7 +110,7 @@ double execute(commandLine& P, string testname) {
 void run_algorithm(commandLine& P, int thd_num, string gname) {
     PRINT("=============== Run Algorithm BEGIN ===============");
 
-    size_t rounds = P.getOptionLongValue("-rounds", 5);
+    size_t rounds = P.getOptionLongValue("-rounds", 1);
     auto log = P.getOptionValue("-log", "none");
     std::ofstream alg_file(log, ios::app);
 
@@ -143,7 +143,7 @@ int main(int argc, char** argv) {
         {
             auto gname = P.getOptionValue("-gname", "none");
             load_graph(P);
-            std::vector<uint32_t> threads = {1,4,8,12};
+            std::vector<uint32_t> threads = {1,4,8,12,16};
             for(auto thd_num : threads){
                 set_num_workers(thd_num);
                 cout << "Running Aspen using " << thd_num << " threads." << endl;
@@ -165,7 +165,7 @@ int main(int argc, char** argv) {
             double c = 0.1;
             auto r = random_aspen();
             size_t nn = 1 << (log2_up(1L<<logv) - 1);
-            auto rmat = rMat<uint32_t>(nn, r.ith_rand(100), a, b, c);
+            auto rmat = rMat<uint32_t>(num_nodes, r.ith_rand(100), a, b, c);
 
             G = new CSR(true, true);
             std::vector<std::pair<uint32_t ,std::pair<uint32_t,double> > > in_e;
@@ -182,18 +182,23 @@ int main(int argc, char** argv) {
         };
 
         {
-            std::vector<uint32_t> vertices = {20,21,22,23,24,25,26};
-            for(auto v : vertices){
-                insert_f(30,v);
-            }
+            auto v = P.getOptionIntValue("-v", -1);
+            auto e = P.getOptionIntValue("-e", -1);
+            insert_f(e, v);
         }
-
-        {
-            std::vector<uint32_t> edges = {10,20,30,40,50,60,70};
-            for(auto e : edges){
-                insert_f(e, 23);
-            }
-        }
+//        {
+//            std::vector<uint32_t> vertices = {20,21,22,23,24,25,26};
+//            for(auto v : vertices){
+//                insert_f(30,v);
+//            }
+//        }
+//
+//        {
+//            std::vector<uint32_t> edges = {10,20,30,40,50,60,70};
+//            for(auto e : edges){
+//                insert_f(e, 23);
+//            }
+//        }
     }
 
     printf("!!!!! TEST OVER !!!!!\n");

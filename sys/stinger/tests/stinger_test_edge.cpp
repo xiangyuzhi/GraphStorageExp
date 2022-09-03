@@ -7,17 +7,9 @@
 
 template<typename graph>
 void insert_edges(graph *GA, std::vector<uint32_t> &new_srcs, std::vector<uint32_t> &new_dests, int num_threads){
-    auto routine_insert_edges = [GA, &new_srcs, &new_dests](int thread_id, uint64_t start, uint64_t length){
+    auto routine_insert_edges = [&](int thread_id, uint64_t start, uint64_t length){
         for(int64_t pos = start, end = start + length; pos < end; pos++){
-            while(1){
-                try{
-                    stinger_insert_edge(GA, 0,new_srcs[pos] , new_dests[pos], 1, 0);
-                    break;
-                }
-                catch (exception e){
-                    continue;
-                }
-            }
+            stinger_insert_edge(GA, 0,new_srcs[pos] , new_dests[pos], 1, 0);
         }
     };
     int64_t edges_per_thread = new_srcs.size() / num_threads;
@@ -35,17 +27,10 @@ void insert_edges(graph *GA, std::vector<uint32_t> &new_srcs, std::vector<uint32
 
 template<typename graph>
 void delete_edges(graph *GA, std::vector<uint32_t> &new_srcs, std::vector<uint32_t> &new_dests, int num_threads){
-    auto routine_insert_edges = [GA, &new_srcs, &new_dests](int thread_id, uint64_t start, uint64_t length){
+    auto routine_insert_edges = [&](int thread_id, uint64_t start, uint64_t length){
         for(int64_t pos = start, end = start + length; pos < end; pos++){
-            while(1){
-                try{
-                    stinger_remove_edge (GA, 0 ,new_srcs[pos] , new_dests[pos] );
-                    break;
-                }
-                catch (exception e){
-                    continue;
-                }
-            }
+            if(new_srcs[pos] != new_dests[pos])
+                stinger_remove_edge (GA, 0 ,new_srcs[pos] , new_dests[pos] );
         }
     };
     int64_t edges_per_thread = new_srcs.size() / num_threads;
@@ -72,7 +57,7 @@ void batch_ins_del_read(commandLine& P){
     std::ofstream log_file(log, ios::app);
 
     stinger &Ga = *G;
-    std::vector<uint32_t> update_sizes = {10, 100, 1000, 10000, 100000, 1000000, 10000000};//10, 100, 1000 ,10000,,1000000, 10000000
+    std::vector<uint32_t> update_sizes = {10, 100, 1000, 10000, 100000, 1000000, 10000000};
     auto r = random_aspen();
     auto update_times = std::vector<double>();
     size_t n_trials = 1;
@@ -83,9 +68,9 @@ void batch_ins_del_read(commandLine& P){
         double avg_read = 0;
         std::cout << "Running batch size: " << update_sizes[us] << std::endl;
 
-//        if (update_sizes[us] < 10000000)
-//            n_trials = 20;
-//        else n_trials = 5;
+        if (update_sizes[us] < 10000000)
+            n_trials = 1;
+        else n_trials = 1;
         size_t updates_to_run = update_sizes[us];
         auto perm = get_random_permutation(updates_to_run);
         for (size_t ts=0; ts<n_trials; ts++) {
@@ -103,18 +88,18 @@ void batch_ins_del_read(commandLine& P){
                 new_srcs.push_back(edge.first);
                 new_dests.push_back(edge.second);
             }
-            std::vector<update> updates;
-            for (int i = 0; i < updates_to_run; i++){
-                update u = {
-                        0, // type
-                        new_srcs[i], // source
-                        new_dests[i], // destination
-                        1, // weight
-                        int(ts)*100, // time
-                        0 // result
-                };
-                updates.push_back(u);
-            }
+//            std::vector<update> updates;
+//            for (int i = 0; i < updates_to_run; i++){
+//                update u = {
+//                        0, // type
+//                        new_srcs[i], // source
+//                        new_dests[i], // destination
+//                        1, // weight
+//                        int(ts)*100, // time
+//                        0 // result
+//                };
+//                updates.push_back(u);
+//            }
             gettimeofday(&t_start, &tzp);
             insert_edges(G, new_srcs, new_dests, thd_num);
 //            stinger_batch_insert_edges<update>(G, updates.begin(), updates.end());
@@ -138,11 +123,6 @@ void batch_ins_del_read(commandLine& P){
         double insert_throughput = updates_to_run / time_i;
         printf("batch_size = %zu, average insert: %f, throughput %e\n", updates_to_run, time_i, insert_throughput);
         log_file<< gname<<","<<thd_num<<",e,insert,"<< update_sizes[us] <<","<<insert_throughput << "\n";
-
-//        double time_r = (double) avg_read / n_trials;
-//        double read_throughput = updates_to_run / time_r;
-//        printf("batch_size = %zu, average read: %f, throughput %e\n", updates_to_run, time_r, read_throughput);
-//        log_file<< gname<<","<<thd_num<<",e,read,"<< update_sizes[us] <<","<<read_throughput << "\n";
 
         double time_d = (double) avg_delete / n_trials;
         double delete_throughput = updates_to_run / time_d;

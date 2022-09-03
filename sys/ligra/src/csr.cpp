@@ -53,7 +53,7 @@ CSR::~CSR(){
     m_in_e = nullptr;
     m_in_w = nullptr;
 
-    free_array(m_log2ext); m_log2ext = nullptr;
+//    free_array(m_log2ext); m_log2ext = nullptr;
 }
 
 template<typename T>
@@ -81,38 +81,17 @@ bool CSR::is_directed() const {
 }
 
 bool CSR::has_vertex(uint64_t vertex_id) const {
-    return m_ext2log.count(vertex_id);
+//    return m_ext2log.count(vertex_id);
+    return (vertex_id<m_num_vertices);
 }
 
 double CSR::get_weight(uint64_t source, uint64_t destination) const {
-    uint64_t logical_source_id = 0, logical_destination_id = 0;
-    try {
-        logical_source_id = m_ext2log.at(source);
-        logical_destination_id = m_ext2log.at(destination);
-    } catch(out_of_range& e){ // either source or destination do not exist
-        return numeric_limits<double>::signaling_NaN();
-    }
 
-    auto offset = get_out_interval(logical_source_id);
-    for(uint64_t i = offset.first, end = offset.second; i < end && m_out_e[i] <= logical_destination_id; i++){
-        if(m_out_e[i] == logical_destination_id){
-            return m_out_w[i];
-        }
+    auto offset = get_out_interval(source);
+    uint32_t loc = lower_bound(m_out_e + offset.first, m_out_e + offset.second, destination) - m_out_e;
+    if(m_out_e[loc] == destination) {
+        return m_out_w[loc];
     }
-//    if(offset.second - offset.first <= 4){
-//        for(uint64_t i = offset.first, end = offset.second; i < end && m_out_e[i] <= logical_destination_id; i++){
-//            if(m_out_e[i] == logical_destination_id){
-//                return m_out_w[i];
-//            }
-//        }
-//    }
-//    else {
-//        uint32_t loc = lower_bound(m_out_e + offset.first, m_out_e + offset.second, logical_destination_id) - m_out_e;
-//        if(m_out_e[loc] == logical_destination_id) {
-//            return m_out_w[loc];
-//        }
-//    }
-
     return numeric_limits<double>::signaling_NaN();
 }
 
@@ -144,10 +123,10 @@ uint64_t CSR::get_in_degree(uint64_t logical_vertex_id) const {
 }
 
 uint64_t CSR::get_random_vertex_id() const {
-    std::mt19937_64 generator { /* seed */ std::random_device{}() };
-    std::uniform_int_distribution<uint64_t> distribution{ 0, m_num_vertices -1 };
-    uint64_t outcome = distribution(generator);
-    return m_log2ext[outcome];
+//    std::mt19937_64 generator { /* seed */ std::random_device{}() };
+//    std::uniform_int_distribution<uint64_t> distribution{ 0, m_num_vertices -1 };
+//    uint64_t outcome = distribution(generator);
+//    return m_log2ext[outcome];
 }
 
 void CSR::set_timeout(uint64_t seconds) {
@@ -167,14 +146,14 @@ void CSR::load(std::vector<std::pair<uint32_t ,std::pair<uint32_t,double> > >& e
 
     m_num_edges = M_edge;
     m_num_vertices = N_vertex;
-    m_ext2log.reserve(m_num_vertices);
-    m_log2ext = alloca_array<uint64_t>(m_num_vertices);
+//    m_ext2log.reserve(m_num_vertices);
+//    m_log2ext = alloca_array<uint64_t>(m_num_vertices);
 
-    for(uint64_t i = 0; i < m_num_vertices; i++){
-        uint64_t vertex_id = i;
-        m_ext2log[vertex_id] = i;
-        m_log2ext[i] = vertex_id;
-    }
+//    for(uint64_t i = 0; i < m_num_vertices; i++){
+//        uint64_t vertex_id = i;
+//        m_ext2log[vertex_id] = i;
+//        m_log2ext[i] = vertex_id;
+//    }
 
     sort(edges.begin(), edges.end());
 

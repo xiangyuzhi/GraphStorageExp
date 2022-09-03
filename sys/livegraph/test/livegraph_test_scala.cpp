@@ -168,7 +168,7 @@ void run_algorithm(commandLine& P, int thd_num, string gname) {
     std::vector<std::string> test_ids;
     test_ids = {"Read"};// "BFS","PR","1-HOP","2-HOP",
 
-    size_t rounds = P.getOptionLongValue("-rounds", 5);
+    size_t rounds = P.getOptionLongValue("-rounds", 1);
     auto log = P.getOptionValue("-log", "none");
     std::ofstream alg_file(log, ios::app);
 
@@ -279,8 +279,8 @@ void batch_ins_del_read(commandLine& P, int thd_num, string gname){
         std::cout << "Running batch size: " << update_sizes[us] << std::endl;
 
         if (update_sizes[us] < 10000000)
-            n_trials = 20;
-        else n_trials = 5;
+            n_trials = 1;
+        else n_trials = 1;
         size_t updates_to_run = update_sizes[us];
         auto perm = get_random_permutation(updates_to_run);
         for (size_t ts=0; ts<n_trials; ts++) {
@@ -336,20 +336,20 @@ int main(int argc, char** argv) {
         {
             auto gname = P.getOptionValue("-gname", "none");
             load_graph(P);
-//            std::vector<uint32_t> threads = {1,4,8,12};
-//            for(auto thd_num : threads){
-//                set_num_workers(thd_num);
-//                cout << "Running LiveGraph using " << thd_num << " threads." << endl;
-//                run_algorithm(P, thd_num, gname);
-//            }
-//            for(auto thd_num: threads){
-//                set_num_workers(thd_num);
-//                cout << "Running LiveGraph using " << thd_num << " threads." << endl;
-//                batch_ins_del_read(P, thd_num, gname);
-//            }
-            auto thd_num = P.getOptionLongValue("-core", 1);
-            run_algorithm(P, thd_num, gname);
-            batch_ins_del_read(P, thd_num, gname);
+            std::vector<uint32_t> threads = {1,4,8,12,16};
+            for(auto thd_num : threads){
+                set_num_workers(thd_num);
+                cout << "Running LiveGraph using " << thd_num << " threads." << endl;
+                run_algorithm(P, thd_num, gname);
+            }
+            for(auto thd_num: threads){
+                set_num_workers(thd_num);
+                cout << "Running LiveGraph using " << thd_num << " threads." << endl;
+                batch_ins_del_read(P, thd_num, gname);
+            }
+//            auto thd_num = P.getOptionLongValue("-core", 1);
+//            run_algorithm(P, thd_num, gname);
+//            batch_ins_del_read(P, thd_num, gname);
             del_G();
         }
     }

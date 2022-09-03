@@ -173,15 +173,14 @@ void run_algorithm(commandLine& P) {
     auto VG = initialize_treeplus_graph(P);
     // Run the algorithm on it
 
-    size_t rounds = P.getOptionLongValue("-rounds", 4);
+    size_t rounds = P.getOptionLongValue("-rounds", 5);
     auto gname = P.getOptionValue("-gname", "none");
     auto thd_num = P.getOptionLongValue("-core", 1);
     auto log = P.getOptionValue("-log", "none");
     std::ofstream alg_file(log, ios::app);
 
     std::vector<std::string> test_ids;
-    test_ids = {"1-HOP","2-HOP","BFS","PR","CC","LP","Read","TC"};
-//    test_ids = {"1-HOP","2-HOP","Read"};
+    test_ids = {"Read","1-HOP","2-HOP","BFS","PR","CC","LP","TC"};
 
     for (auto test_id : test_ids) {
         std::vector<double> total_time;

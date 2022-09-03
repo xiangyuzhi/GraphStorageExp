@@ -132,14 +132,14 @@ double test_read(G& GA, commandLine& P) {
     size_t nn = 1 << (log2_up(n) - 1);
     auto rmat = rMat<uint32_t>(nn, r.ith_rand(100), a, b, c);
     new_srcs.clear();new_dests.clear();
-    uint32_t updates = num_edges/20;
+    uint32_t updates = num_edges;
     for( uint32_t i = 0; i < updates; i++) {
         std::pair<uint32_t, uint32_t> edge = rmat(i);
         new_srcs.push_back(edge.first);
         new_dests.push_back(edge.second);
     }
     gettimeofday(&start, &tzp);
-    parallel_for(uint32_t i = 0; i < updates; i++) {
+    parallel_for_256(uint32_t i = 0; i < updates; i++) {
         GA.is_edge(new_srcs[i], new_dests[i]);
     }
     gettimeofday(&end, &tzp);
@@ -169,8 +169,8 @@ void run_algorithm(commandLine& P, int thd_num, string gname) {
     PRINT("=============== Run Algorithm BEGIN ===============");
     Graph &Ga = *G;
     std::vector<std::string> test_ids;
-    test_ids = {"Read"};//"BFS","PR","1-HOP","2-HOP",
-    size_t rounds = P.getOptionLongValue("-rounds", 5);
+    test_ids = {"BFS","PR","1-HOP","2-HOP","Read"};
+    size_t rounds = P.getOptionLongValue("-rounds", 1);
     auto log = P.getOptionValue("-log", "none");
     std::ofstream alg_file(log, ios::app);
 
@@ -186,6 +186,7 @@ void run_algorithm(commandLine& P, int thd_num, string gname) {
         std::cout << "\ttest=" << test_id<< "\ttime=" << avg_time << "\tgraph=" << gname << std::endl;
         alg_file << gname<<","<< thd_num<<","<<test_id<<","<< avg_time << std::endl;
     }
+
     alg_file.close();
     PRINT("=============== Run Algorithm END ===============");
 }
@@ -266,7 +267,7 @@ void batch_ins_del_read(commandLine& P, int thd_num, string gname){
 
 
 // -gname livejournal -core 16 -f ../../../data/ADJgraph/livejournal.adj -log ../../../log/terrace/edge.log
-
+// -gname slashdot -core 16 -f ../../../data/ADJgraph/slashdot.adj
 int main(int argc, char** argv) {
     srand(time(NULL));
 
@@ -274,21 +275,21 @@ int main(int argc, char** argv) {
     bool thread = P.getOption("-thread");
     if(thread){
         {
-            set_num_workers(16);
             auto gname = P.getOptionValue("-gname", "none");
+            auto thd_num = P.getOptionLongValue("-core", 1);
+            set_num_workers(thd_num);
             load_graph(P);
-            std::vector<uint32_t> threads = {1,4,8,12};
+            std::vector<uint32_t> threads = {1,4,8,12,16};
             for(auto thd_num : threads){
                 set_num_workers(thd_num);
                 cout << "Running Terrace using " << thd_num << " threads." << endl;
                 run_algorithm(P, thd_num, gname);
             }
-
-//            for(auto thd_num: threads){
-//                set_num_workers(thd_num);
-//                cout << "Running Terrace using " << thd_num << " threads." << endl;
-//                batch_ins_del_read(P, thd_num, gname);
-//            }
+            for(auto thd_num: threads){
+                set_num_workers(thd_num);
+                cout << "Running Terrace using " << thd_num << " threads." << endl;
+                batch_ins_del_read(P, thd_num, gname);
+            }
             del_graph();
         }
     }

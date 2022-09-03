@@ -105,20 +105,6 @@ void batch_ins_del_read(commandLine& P){
             gettimeofday(&t_end, &tzp);
             avg_insert += cal_time_elapsed(&t_start, &t_end);
 
-
-//            gettimeofday(&t_start, &tzp);
-//            for(uint32_t i = 0; i < updates_to_run; i++) {
-////                auto adjl = G->get_outgoing_adjlist(i);
-//                auto adjitr = G->get_outgoing_adjlist_range(raw_edges[i].first);
-//                for(auto iter = adjitr.first ; iter != adjitr.second;iter++){
-//                    auto edge = *iter;
-//                    uint64_t dst = edge.nbr;
-//                    if(dst == raw_edges[i].second) break;
-//                }
-//            }
-//            gettimeofday(&t_end, &tzp);
-//            avg_read += cal_time_elapsed(&t_start, &t_end);
-
             gettimeofday(&t_start, &tzp);
             cilk_for(uint32_t i = 0; i < updates_to_run; i++) {
                 const auto &e = raw_edges[i];
@@ -134,11 +120,6 @@ void batch_ins_del_read(commandLine& P){
         double insert_throughput = updates_to_run / time_i;
         printf("batch_size = %zu, average insert: %f, throughput %e\n", updates_to_run, time_i, insert_throughput);
         log_file<< gname<<","<<thd_num<<",e,insert,"<< update_sizes[us] <<","<<insert_throughput << "\n";
-
-//        double time_r = (double) avg_read / n_trials;
-//        double read_throughput = updates_to_run / time_r;
-//        printf("batch_size = %zu, average read: %f, throughput %e\n", updates_to_run, time_r, read_throughput);
-//        log_file<< gname<<","<<thd_num<<",e,read,"<< update_sizes[us] <<","<<read_throughput << "\n";
 
         double time_d = (double) avg_delete / n_trials;
         double delete_throughput = updates_to_run / time_d;
