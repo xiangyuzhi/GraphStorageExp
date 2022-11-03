@@ -169,7 +169,7 @@ void run_algorithm(commandLine& P) {
 }
 
 
-// -gname livejournal -core 16 -f ../../../data/ADJgraph/livejournal.adj -log ../../../log/ligra/alg.log
+// -gname livejournal -core 16 -f ../../../data/ADJgraph/livejournal.adj
 int main(int argc, char** argv) {
 
     commandLine P(argc, argv );
