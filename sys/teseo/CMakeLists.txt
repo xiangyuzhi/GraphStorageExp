@@ -30,6 +30,9 @@ TARGET_LINK_LIBRARIES(teseo_alg teseo1 td)
 add_executable(teseo_edge tests/teseo_test_edge.cpp)
 TARGET_LINK_LIBRARIES(teseo_edge teseo1 td)
 
+add_executable(teseo_propotion tests/teseo_test_propotion.cpp)
+TARGET_LINK_LIBRARIES(teseo_propotion teseo1 td)
+
 add_executable(teseo_mem tests/teseo_test_memory.cpp)
 TARGET_LINK_LIBRARIES(teseo_mem teseo1 td)
 

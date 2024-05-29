@@ -22,6 +22,9 @@ include_directories(include/algorithms)
 add_executable(livegraph_edge test/livegraph_test_edge.cpp)
 target_link_libraries(livegraph_edge lg tbb)
 
+add_executable(livegraph_propotion test/livegraph_test_propotion.cpp)
+target_link_libraries(livegraph_propotion lg tbb)
+
 add_executable(livegraph_alg test/livegraph_test_alg.cpp)
 target_link_libraries(livegraph_alg lg tbb)
 

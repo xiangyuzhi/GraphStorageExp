@@ -19,6 +19,9 @@ add_subdirectory(src)
 add_executable(terrace_edge test/terrace_test_edge.cpp)
 target_link_libraries(terrace_edge terrc)
 
+add_executable(terrace_propotion test/terrace_test_propotion.cpp)
+target_link_libraries(terrace_propotion terrc)
+
 add_executable(terrace_alg test/terrace_test_alg.cpp)
 target_link_libraries(terrace_alg terrc)
 

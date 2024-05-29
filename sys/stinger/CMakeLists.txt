@@ -18,6 +18,9 @@ target_link_libraries(stinger_alg stinger)
 add_executable(stinger_edge tests/stinger_test_edge.cpp)
 target_link_libraries(stinger_edge stinger)
 
+add_executable(stinger_propotion tests/stinger_test_propotion.cpp)
+target_link_libraries(stinger_propotion stinger)
+
 add_executable(stinger_mem tests/stinger_test_memory.cpp)
 target_link_libraries(stinger_mem stinger)
 

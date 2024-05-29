@@ -17,6 +17,7 @@ include_directories(include/utils)
 include_directories(include/algorithms)
 
 add_executable(llama_edge tests/llama_test_edge.cpp)
+add_executable(llama_propotion tests/llama_test_propotion.cpp)
 add_executable(llama_alg tests/llama_test_alg.cpp)
 add_executable(llama_mem tests/llama_test_memory.cpp)
 add_executable(llama_scala tests/llama_test_scala.cpp)

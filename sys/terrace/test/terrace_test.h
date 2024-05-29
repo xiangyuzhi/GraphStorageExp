@@ -39,6 +39,8 @@ using namespace graphstore;
 Graph *G;
 std::vector<uint32_t> new_srcs;
 std::vector<uint32_t> new_dests;
+std::vector<uint32_t> query_srcs;
+std::vector<uint32_t> query_dests;
 uint32_t num_nodes;
 uint64_t num_edges;
 std::string src, dest;

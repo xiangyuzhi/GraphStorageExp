@@ -32,6 +32,11 @@ target_link_libraries(risgraph_edge tbb)
 set_target_properties(risgraph_edge PROPERTIES  COMPILE_FLAGS ${COMPILE_FLAGS64}
         LINK_FLAGS ${LINK_FLAGS_COMMON})
 
+add_executable(risgraph_propotion test/risgraph_test_propotion.cpp)
+target_link_libraries(risgraph_propotion tbb)
+set_target_properties(risgraph_propotion PROPERTIES  COMPILE_FLAGS ${COMPILE_FLAGS64}
+        LINK_FLAGS ${LINK_FLAGS_COMMON})
+
 add_executable(risgraph_mem test/risgraph_test_memory.cpp)
 target_link_libraries(risgraph_mem tbb)
 set_target_properties(risgraph_mem PROPERTIES  COMPILE_FLAGS ${COMPILE_FLAGS64}
